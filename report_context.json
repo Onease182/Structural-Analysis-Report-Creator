@@ -1,0 +1,2817 @@
+{
+  "CLIENT_NAME": "Puspa Kumari Bhandari",
+  "BUILDING_USE": "Residential",
+  "LOCATION": "Dharan",
+  "WARD": "16",
+  "MUNICIPALITY": "Dharan",
+  "PLOT_NO": "[to be provided]",
+  "SHEET_NO": "[to be provided]",
+  "LAND_AREA": "0-1-8.5",
+  "PLINTH_AREA": "719.4 sq.ft",
+  "DESIGNER": "Er. Anij Bhandari",
+  "DESIGNER_REG": "NEC No. 13925 Civil \"A\" Category",
+  "CHECKER": "[to be provided]",
+  "REPORT_DATE": "03 November 2026",
+  "CERTIFY_SAFE": false,
+  "SOIL_CLASS": "Type B",
+  "SBC": "150",
+  "FOUNDATION_TYPE": "Isolated Footing & Eccentric Footing",
+  "FOUNDATION_DEPTH": "[to be provided]",
+  "IMPORTANCE_FACTOR": "1",
+  "ZONE_FACTOR_Z": "0.3",
+  "DUCTILITY_R": "4",
+  "OVERSTRENGTH_U": "1.5",
+  "OVERSTRENGTH_S": "1.25",
+  "SPECTRAL_SHAPE": "2.5",
+  "SEISMIC_WEIGHT": "[to be provided]",
+  "LL_ROOM": "3",
+  "LL_CORRIDOR": "4",
+  "LL_ROOF": "1.5",
+  "DENSITY_MASONRY": "19.265 kN/m3",
+  "FLOOR_FINISH": "[to be provided]",
+  "CONCRETE_GRADE": "M20",
+  "STEEL_GRADE": "Fe500",
+  "NUM_BAYS_X": "1",
+  "NUM_BAYS_Y": "5",
+  "SOFTWARE_VERSION": "ETABS 2015 V15.0.0",
+  "WALL_TYPES": "Non-load bearing brick wall",
+  "DESIGN_CODES": [
+    "NBC 105:2020 : Seismic Design of Buildings in Nepal",
+    "IS 456:2000 : Code of practice for plain and reinforced concrete",
+    "IS 875:1987 : Code of practice for design loads (other than earthquake)",
+    "SP 16:1980 : Design aids for reinforced concrete to IS 456",
+    "IS 13920:1993 : Ductile detailing of reinforced concrete structures subjected to seismic forces"
+  ],
+  "HAS_SLAB_DESIGN": false,
+  "HAS_FOOTING_DESIGN": false,
+  "SEISMIC_CODE": "NBC 105:2020",
+  "STRUCTURAL_SYSTEM": "RCC Special Moment Resisting Frame (SMRF)",
+  "CEMENT_TYPE": "Ordinary Portland Cement (OPC)",
+  "CONSULTANCY_NAME": "Swarup Engineering Consultancy",
+  "CONSULTANCY_ADDRESS": "Dharan-12, Sunsari",
+  "KT": "0.075",
+  "DENSITY_RCC": "25",
+  "POISSON": "0.2",
+  "CHECKER_GIVEN": false,
+  "SITE_ADDRESS": "Dharan-16",
+  "MODEL_FILENAME": "Chatra_bdr.EDB",
+  "NUM_STORIES": "3",
+  "TOTAL_HEIGHT": "9.525",
+  "STOREY_HEIGHT": "3.175 m",
+  "FUNDAMENTAL_PERIOD": "0.659",
+  "MODAL_MASS_X": "1",
+  "MODAL_MASS_Y": "1",
+  "MAX_DRIFT_X": "0.00458",
+  "MAX_DRIFT_Y": "0.00237",
+  "MAX_BASE_SHEAR_X": "232",
+  "MAX_BASE_SHEAR_Y": "232",
+  "MAX_BEAM_REINFORCEMENT": "404 mm²",
+  "MAX_COLUMN_REINFORCEMENT_RATIO": "[to be provided]",
+  "NUM_BEAMS": "48",
+  "NUM_COLUMNS": "20",
+  "NUM_SLABS": "16",
+  "NUM_WALLS": "0",
+  "NUM_WALLS_GIVEN": false,
+  "EC_CONCRETE": "22,361",
+  "T_EMPIRICAL": "0.508",
+  "ELASTIC_SPECTRA": "0.75",
+  "CD": "0.125",
+  "BASE_SHEAR_HAND": "[to be provided]",
+  "_tables": {
+    "materials": {
+      "columns": [
+        "Material",
+        "Type",
+        "Grade",
+        "SymType"
+      ],
+      "rows": [
+        [
+          "4000Psi",
+          "Concrete",
+          "Unknown",
+          "Isotropic"
+        ],
+        [
+          "A416Gr270",
+          "Tendon",
+          "Unknown",
+          "Uniaxial"
+        ],
+        [
+          "A615Gr60",
+          "Rebar",
+          "Unknown",
+          "Uniaxial"
+        ],
+        [
+          "A992Fy50",
+          "Steel",
+          "Unknown",
+          "Isotropic"
+        ],
+        [
+          "HYSD500",
+          "Rebar",
+          "Unknown",
+          "Uniaxial"
+        ],
+        [
+          "M20",
+          "Concrete",
+          "Unknown",
+          "Isotropic"
+        ],
+        [
+          "M25",
+          "Concrete",
+          "Unknown",
+          "Isotropic"
+        ]
+      ],
+      "caption": "Material properties",
+      "note": null
+    },
+    "frame_sections": {
+      "columns": [
+        "Name",
+        "Material",
+        "Shape",
+        "Area"
+      ],
+      "rows": [
+        [
+          "Beam 250 x 380",
+          "M20",
+          "Concrete Rectangular",
+          "0.095"
+        ],
+        [
+          "Column 355 x 355",
+          "M20",
+          "Concrete Rectangular",
+          "0.126"
+        ],
+        [
+          "ConcBm",
+          "M25",
+          "Concrete Rectangular",
+          "0.1875"
+        ],
+        [
+          "ConcCol",
+          "M25",
+          "Concrete Rectangular",
+          "0.1406"
+        ],
+        [
+          "Hidden Beam 125 x 125",
+          "M20",
+          "Concrete Rectangular",
+          "0.0156"
+        ],
+        [
+          "S. Beam 250X250",
+          "M20",
+          "Concrete Rectangular",
+          "0.0625"
+        ],
+        [
+          "SteelBm",
+          "A992Fy50",
+          "Steel I/Wide Flange",
+          "0.0071"
+        ],
+        [
+          "SteelCol",
+          "A992Fy50",
+          "Steel I/Wide Flange",
+          "0.0306"
+        ]
+      ],
+      "caption": "Frame section properties",
+      "note": null
+    },
+    "area_sections": {
+      "columns": [
+        "Name",
+        "Type",
+        "Material",
+        "TotalThick"
+      ],
+      "rows": [
+        [
+          "Deck1",
+          "Deck",
+          "4000Psi",
+          "0.1625"
+        ],
+        [
+          "Slab 125",
+          "Slab",
+          "M20",
+          "0.125"
+        ],
+        [
+          "Stair Slab",
+          "Slab",
+          "M20",
+          "0.175"
+        ],
+        [
+          "Wall1",
+          "Wall",
+          "4000Psi",
+          "0.25"
+        ]
+      ],
+      "caption": "Area section properties",
+      "note": null
+    },
+    "load_patterns": {
+      "columns": [
+        "Name",
+        "Type",
+        "SelfWtMult",
+        "AutoLoad"
+      ],
+      "rows": [
+        [
+          "~LLRF",
+          "Other",
+          "0",
+          ""
+        ],
+        [
+          "Dead",
+          "Dead",
+          "1",
+          ""
+        ],
+        [
+          "EQX-ULS",
+          "Seismic",
+          "0",
+          "User Coefficient"
+        ],
+        [
+          "EQX-ULS(1/3)",
+          "Seismic",
+          "0",
+          "User Coefficient"
+        ],
+        [
+          "EQX-ULS(2/3)",
+          "Seismic",
+          "0",
+          "User Coefficient"
+        ],
+        [
+          "EQX-ULS(3/3)",
+          "Seismic",
+          "0",
+          "User Coefficient"
+        ],
+        [
+          "EQY-ULS",
+          "Seismic",
+          "0",
+          "User Coefficient"
+        ],
+        [
+          "EQY-ULS(1/3)",
+          "Seismic",
+          "0",
+          "User Coefficient"
+        ],
+        [
+          "EQY-ULS(2/3)",
+          "Seismic",
+          "0",
+          "User Coefficient"
+        ],
+        [
+          "EQY-ULS(3/3)",
+          "Seismic",
+          "0",
+          "User Coefficient"
+        ],
+        [
+          "Floor Finish",
+          "Super Dead",
+          "0",
+          ""
+        ],
+        [
+          "Live",
+          "Live",
+          "0",
+          ""
+        ],
+        [
+          "Roof Live",
+          "Roof Live",
+          "0",
+          ""
+        ],
+        [
+          "Stair Dead",
+          "Super Dead",
+          "0",
+          ""
+        ],
+        [
+          "Stair Live",
+          "Live",
+          "0",
+          ""
+        ],
+        [
+          "Wall Load",
+          "Super Dead",
+          "0",
+          ""
+        ],
+        [
+          "Water Tank",
+          "Super Dead",
+          "0",
+          ""
+        ]
+      ],
+      "caption": "Load patterns",
+      "note": null
+    },
+    "load_cases": {
+      "columns": [
+        "Name",
+        "LoadType",
+        "LoadName",
+        "LoadSF",
+        "MassSource"
+      ],
+      "rows": [
+        [
+          "Dead",
+          "Load",
+          "Dead",
+          "1",
+          "MsSrc1"
+        ],
+        [
+          "Dead",
+          "Load",
+          "Stair Dead",
+          "1",
+          ""
+        ],
+        [
+          "Dead",
+          "Load",
+          "Wall Load",
+          "1",
+          ""
+        ],
+        [
+          "Dead",
+          "Load",
+          "Floor Finish",
+          "1",
+          ""
+        ],
+        [
+          "Dead",
+          "Load",
+          "Water Tank",
+          "1",
+          ""
+        ],
+        [
+          "EQX-ULS",
+          "Load",
+          "EQX-ULS",
+          "1",
+          "MsSrc1"
+        ],
+        [
+          "EQY-ULS",
+          "Load",
+          "EQY-ULS",
+          "1",
+          "MsSrc1"
+        ],
+        [
+          "Live",
+          "Load",
+          "Live",
+          "1",
+          "MsSrc1"
+        ],
+        [
+          "Live",
+          "Load",
+          "Stair Live",
+          "1",
+          ""
+        ],
+        [
+          "Roof Live",
+          "Load",
+          "Roof Live",
+          "1",
+          "MsSrc1"
+        ]
+      ],
+      "caption": "Load cases",
+      "note": null
+    },
+    "load_combinations": {
+      "columns": [
+        "Name",
+        "Type",
+        "LoadName",
+        "SF"
+      ],
+      "rows": [
+        [
+          "0.9DL+EQX",
+          "Linear Add",
+          "Dead",
+          "0.9"
+        ],
+        [
+          "0.9DL+EQX",
+          "",
+          "EQX-ULS",
+          "1"
+        ],
+        [
+          "0.9DL+EQY",
+          "Linear Add",
+          "Dead",
+          "0.9"
+        ],
+        [
+          "0.9DL+EQY",
+          "",
+          "EQY-ULS",
+          "1"
+        ],
+        [
+          "0.9DL-EQX",
+          "Linear Add",
+          "Dead",
+          "0.9"
+        ],
+        [
+          "0.9DL-EQX",
+          "",
+          "EQX-ULS",
+          "-1"
+        ],
+        [
+          "0.9DL-EQY",
+          "Linear Add",
+          "Dead",
+          "0.9"
+        ],
+        [
+          "0.9DL-EQY",
+          "",
+          "EQY-ULS",
+          "-1"
+        ],
+        [
+          "1.2DL+0.3LL+EQX",
+          "Linear Add",
+          "Dead",
+          "1.200"
+        ],
+        [
+          "1.2DL+0.3LL+EQX",
+          "",
+          "Live",
+          "0.3"
+        ],
+        [
+          "1.2DL+0.3LL+EQX",
+          "",
+          "EQX-ULS",
+          "1"
+        ],
+        [
+          "1.2DL+0.3LL+EQY",
+          "Linear Add",
+          "Dead",
+          "1.200"
+        ],
+        [
+          "1.2DL+0.3LL+EQY",
+          "",
+          "Live",
+          "0.3"
+        ],
+        [
+          "1.2DL+0.3LL+EQY",
+          "",
+          "EQY-ULS",
+          "1"
+        ],
+        [
+          "1.2DL+0.3LL-EQX",
+          "Linear Add",
+          "Dead",
+          "1.200"
+        ],
+        [
+          "1.2DL+0.3LL-EQX",
+          "",
+          "Live",
+          "0.3"
+        ],
+        [
+          "1.2DL+0.3LL-EQX",
+          "",
+          "EQX-ULS",
+          "-1"
+        ],
+        [
+          "1.2DL+0.3LL-EQY",
+          "Linear Add",
+          "Dead",
+          "1.200"
+        ],
+        [
+          "1.2DL+0.3LL-EQY",
+          "",
+          "Live",
+          "0.3"
+        ],
+        [
+          "1.2DL+0.3LL-EQY",
+          "",
+          "EQY-ULS",
+          "-1"
+        ],
+        [
+          "1.2DL+1.5LL",
+          "Linear Add",
+          "Dead",
+          "1.200"
+        ],
+        [
+          "1.2DL+1.5LL",
+          "",
+          "Live",
+          "1.500"
+        ],
+        [
+          "1.2DL+1.5LL",
+          "",
+          "Roof Live",
+          "1.500"
+        ],
+        [
+          "DL + LL",
+          "Linear Add",
+          "Dead",
+          "1"
+        ],
+        [
+          "DL + LL",
+          "",
+          "Live",
+          "1"
+        ],
+        [
+          "ENV-ULS",
+          "Envelope",
+          "1.2DL+1.5LL",
+          "1"
+        ],
+        [
+          "ENV-ULS",
+          "",
+          "1.2DL+0.3LL+EQX",
+          "1"
+        ],
+        [
+          "ENV-ULS",
+          "",
+          "1.2DL+0.3LL-EQX",
+          "1"
+        ],
+        [
+          "ENV-ULS",
+          "",
+          "1.2DL+0.3LL+EQY",
+          "1"
+        ],
+        [
+          "ENV-ULS",
+          "",
+          "1.2DL+0.3LL-EQY",
+          "1"
+        ],
+        [
+          "ENV-ULS",
+          "",
+          "0.9DL+EQX",
+          "1"
+        ],
+        [
+          "ENV-ULS",
+          "",
+          "0.9DL-EQX",
+          "1"
+        ],
+        [
+          "ENV-ULS",
+          "",
+          "0.9DL+EQY",
+          "1"
+        ],
+        [
+          "ENV-ULS",
+          "",
+          "0.9DL-EQY",
+          "1"
+        ]
+      ],
+      "caption": "Load combinations",
+      "note": null
+    },
+    "mass_source": {
+      "columns": [
+        "Name",
+        "IncLateral",
+        "SourceSelf",
+        "SourceLoads",
+        "Multiplier"
+      ],
+      "rows": [
+        [
+          "MsSrc1",
+          "Yes",
+          "No",
+          "Yes",
+          "1"
+        ],
+        [
+          "MsSrc1",
+          "",
+          "",
+          "",
+          "0.3"
+        ],
+        [
+          "MsSrc1",
+          "",
+          "",
+          "",
+          "0.3"
+        ],
+        [
+          "MsSrc1",
+          "",
+          "",
+          "",
+          "1"
+        ],
+        [
+          "MsSrc1",
+          "",
+          "",
+          "",
+          "1"
+        ],
+        [
+          "MsSrc1",
+          "",
+          "",
+          "",
+          "1"
+        ],
+        [
+          "MsSrc1",
+          "",
+          "",
+          "",
+          "1"
+        ]
+      ],
+      "caption": "Mass source definition",
+      "note": null
+    },
+    "modal_periods": {
+      "columns": [
+        "Case",
+        "Mode",
+        "Period (s)",
+        "Frequency (Hz)"
+      ],
+      "rows": [
+        [
+          "Modal",
+          "1",
+          "0.659",
+          "1.518"
+        ],
+        [
+          "Modal",
+          "2",
+          "0.545",
+          "1.834"
+        ],
+        [
+          "Modal",
+          "3",
+          "0.44",
+          "2.275"
+        ],
+        [
+          "Modal",
+          "4",
+          "0.222",
+          "4.503"
+        ],
+        [
+          "Modal",
+          "5",
+          "0.22",
+          "4.537"
+        ],
+        [
+          "Modal",
+          "6",
+          "0.181",
+          "5.519"
+        ],
+        [
+          "Modal",
+          "7",
+          "0.144",
+          "6.947"
+        ],
+        [
+          "Modal",
+          "8",
+          "0.139",
+          "7.215"
+        ],
+        [
+          "Modal",
+          "9",
+          "0.128",
+          "7.795"
+        ],
+        [
+          "Modal",
+          "10",
+          "0.005",
+          "215.77"
+        ],
+        [
+          "Modal",
+          "11",
+          "0.004",
+          "233.34"
+        ],
+        [
+          "Modal",
+          "12",
+          "0.004",
+          "242.01"
+        ]
+      ],
+      "caption": "Modal periods and frequencies",
+      "note": null
+    },
+    "modal_mass_ratios": {
+      "columns": [
+        "Mode",
+        "Period (s)",
+        "UX",
+        "UY",
+        "RZ",
+        "SumUX",
+        "SumUY",
+        "SumRZ"
+      ],
+      "rows": [
+        [
+          "1",
+          "0.659",
+          "0.5957",
+          "2.63e-05",
+          "0.2496",
+          "0.5957",
+          "2.63e-05",
+          "0.2496"
+        ],
+        [
+          "2",
+          "0.545",
+          "0.0001",
+          "0.8418",
+          "3.027e-05",
+          "0.5958",
+          "0.8418",
+          "0.2496"
+        ],
+        [
+          "3",
+          "0.44",
+          "0.2631",
+          "0.0001",
+          "0.6164",
+          "0.8588",
+          "0.8419",
+          "0.866"
+        ],
+        [
+          "4",
+          "0.222",
+          "0.066",
+          "0.0276",
+          "0.031",
+          "0.9248",
+          "0.8696",
+          "0.897"
+        ],
+        [
+          "5",
+          "0.22",
+          "0.0197",
+          "0.0914",
+          "0.0086",
+          "0.9444",
+          "0.9609",
+          "0.9056"
+        ],
+        [
+          "6",
+          "0.181",
+          "0.0116",
+          "7.551e-06",
+          "0.051",
+          "0.9561",
+          "0.9609",
+          "0.9566"
+        ],
+        [
+          "7",
+          "0.144",
+          "0.0386",
+          "0.0001",
+          "0.0145",
+          "0.9947",
+          "0.961",
+          "0.9711"
+        ],
+        [
+          "8",
+          "0.139",
+          "0.0003",
+          "0.0388",
+          "0",
+          "0.995",
+          "0.9998",
+          "0.9711"
+        ],
+        [
+          "9",
+          "0.128",
+          "0.0047",
+          "0.0002",
+          "0.0283",
+          "0.9996",
+          "1",
+          "0.9994"
+        ],
+        [
+          "10",
+          "0.005",
+          "0",
+          "0",
+          "0",
+          "0.9996",
+          "1",
+          "0.9994"
+        ],
+        [
+          "11",
+          "0.004",
+          "0",
+          "0",
+          "0",
+          "0.9996",
+          "1",
+          "0.9994"
+        ],
+        [
+          "12",
+          "0.004",
+          "0",
+          "0",
+          "0",
+          "0.9996",
+          "1",
+          "0.9994"
+        ]
+      ],
+      "caption": "Modal participating mass ratios",
+      "note": null
+    },
+    "base_reactions": {
+      "columns": [
+        "OutputCase",
+        "StepType",
+        "FX (kN)",
+        "FY (kN)",
+        "FZ (kN)",
+        "MX (kN-m)",
+        "MY (kN-m)",
+        "MZ (kN-m)"
+      ],
+      "rows": [
+        [
+          "Dead",
+          "",
+          "0",
+          "0",
+          "1,566.8",
+          "10,609.3",
+          "-3,216.8",
+          "0"
+        ],
+        [
+          "Live",
+          "",
+          "0",
+          "0",
+          "207.24",
+          "1,305.4",
+          "-422.86",
+          "0"
+        ],
+        [
+          "EQX-ULS",
+          "Step By Step",
+          "-231.99",
+          "0",
+          "-1.885e-06",
+          "-2.097e-05",
+          "-1,389.9",
+          "1,697.7"
+        ],
+        [
+          "EQX-ULS",
+          "Step By Step",
+          "-231.99",
+          "0",
+          "-2.005e-06",
+          "-2.22e-05",
+          "-1,389.9",
+          "1,793.1"
+        ],
+        [
+          "EQX-ULS",
+          "Step By Step",
+          "-231.99",
+          "0",
+          "-1.766e-06",
+          "-1.974e-05",
+          "-1,389.9",
+          "1,602.2"
+        ],
+        [
+          "EQY-ULS",
+          "Step By Step",
+          "0",
+          "-231.99",
+          "0",
+          "1,389.9",
+          "0",
+          "-479.59"
+        ],
+        [
+          "EQY-ULS",
+          "Step By Step",
+          "0",
+          "-231.99",
+          "0",
+          "1,389.9",
+          "0",
+          "-516.48"
+        ],
+        [
+          "EQY-ULS",
+          "Step By Step",
+          "0",
+          "-231.99",
+          "0",
+          "1,389.9",
+          "0",
+          "-442.71"
+        ],
+        [
+          "DL + LL",
+          "",
+          "0",
+          "0",
+          "1,774.0",
+          "11,914.7",
+          "-3,639.6",
+          "0"
+        ]
+      ],
+      "caption": "Base reactions",
+      "note": null
+    },
+    "story_forces": {
+      "columns": [
+        "Story",
+        "OutputCase",
+        "Location",
+        "VX (kN)",
+        "VY (kN)"
+      ],
+      "rows": [
+        [
+          "Story3",
+          "EQX-ULS",
+          "Top",
+          "-51.47",
+          "0"
+        ],
+        [
+          "Story3",
+          "EQX-ULS",
+          "Bottom",
+          "-51.47",
+          "0"
+        ],
+        [
+          "Story3",
+          "EQX-ULS",
+          "Top",
+          "-51.47",
+          "0"
+        ],
+        [
+          "Story3",
+          "EQX-ULS",
+          "Bottom",
+          "-51.47",
+          "0"
+        ],
+        [
+          "Story3",
+          "EQX-ULS",
+          "Top",
+          "-51.47",
+          "0"
+        ],
+        [
+          "Story3",
+          "EQX-ULS",
+          "Bottom",
+          "-51.47",
+          "0"
+        ],
+        [
+          "Story3",
+          "EQY-ULS",
+          "Top",
+          "0",
+          "-51.47"
+        ],
+        [
+          "Story3",
+          "EQY-ULS",
+          "Bottom",
+          "0",
+          "-51.47"
+        ],
+        [
+          "Story3",
+          "EQY-ULS",
+          "Top",
+          "0",
+          "-51.47"
+        ],
+        [
+          "Story3",
+          "EQY-ULS",
+          "Bottom",
+          "0",
+          "-51.47"
+        ],
+        [
+          "Story3",
+          "EQY-ULS",
+          "Top",
+          "0",
+          "-51.47"
+        ],
+        [
+          "Story3",
+          "EQY-ULS",
+          "Bottom",
+          "0",
+          "-51.47"
+        ],
+        [
+          "Story2",
+          "EQX-ULS",
+          "Top",
+          "-154.31",
+          "0"
+        ],
+        [
+          "Story2",
+          "EQX-ULS",
+          "Bottom",
+          "-154.31",
+          "0"
+        ],
+        [
+          "Story2",
+          "EQX-ULS",
+          "Top",
+          "-154.31",
+          "0"
+        ],
+        [
+          "Story2",
+          "EQX-ULS",
+          "Bottom",
+          "-154.31",
+          "0"
+        ],
+        [
+          "Story2",
+          "EQX-ULS",
+          "Top",
+          "-154.31",
+          "0"
+        ],
+        [
+          "Story2",
+          "EQX-ULS",
+          "Bottom",
+          "-154.31",
+          "0"
+        ],
+        [
+          "Story2",
+          "EQY-ULS",
+          "Top",
+          "0",
+          "-154.31"
+        ],
+        [
+          "Story2",
+          "EQY-ULS",
+          "Bottom",
+          "0",
+          "-154.31"
+        ],
+        [
+          "Story2",
+          "EQY-ULS",
+          "Top",
+          "0",
+          "-154.31"
+        ],
+        [
+          "Story2",
+          "EQY-ULS",
+          "Bottom",
+          "0",
+          "-154.31"
+        ],
+        [
+          "Story2",
+          "EQY-ULS",
+          "Top",
+          "0",
+          "-154.31"
+        ],
+        [
+          "Story2",
+          "EQY-ULS",
+          "Bottom",
+          "0",
+          "-154.31"
+        ],
+        [
+          "Story1",
+          "EQX-ULS",
+          "Top",
+          "-231.99",
+          "0"
+        ],
+        [
+          "Story1",
+          "EQX-ULS",
+          "Bottom",
+          "-231.99",
+          "0"
+        ],
+        [
+          "Story1",
+          "EQX-ULS",
+          "Top",
+          "-231.99",
+          "0"
+        ],
+        [
+          "Story1",
+          "EQX-ULS",
+          "Bottom",
+          "-231.99",
+          "0"
+        ],
+        [
+          "Story1",
+          "EQX-ULS",
+          "Top",
+          "-231.99",
+          "0"
+        ],
+        [
+          "Story1",
+          "EQX-ULS",
+          "Bottom",
+          "-231.99",
+          "0"
+        ]
+      ],
+      "caption": "Storey shear forces",
+      "note": "Showing 30 of 36 rows; complete data is in 05_Story_Forces.csv."
+    },
+    "centers": {
+      "columns": [
+        "Story",
+        "Diaphragm",
+        "XCM (m)",
+        "YCM (m)",
+        "XCR (m)",
+        "YCR (m)"
+      ],
+      "rows": [
+        [
+          "Story1",
+          "D1",
+          "1.981",
+          "5.761",
+          "",
+          ""
+        ],
+        [
+          "Story2",
+          "D2",
+          "2.006",
+          "7.603",
+          "",
+          ""
+        ],
+        [
+          "Story3",
+          "D3",
+          "2.108",
+          "9.877",
+          "",
+          ""
+        ]
+      ],
+      "caption": "Centers of mass and rigidity",
+      "note": null
+    },
+    "storey_drifts": {
+      "columns": [
+        "Story",
+        "OutputCase",
+        "Direction",
+        "Drift"
+      ],
+      "rows": [
+        [
+          "Story3",
+          "EQX-ULS",
+          "X",
+          "0.002603"
+        ],
+        [
+          "Story3",
+          "EQX-ULS",
+          "X",
+          "0.002719"
+        ],
+        [
+          "Story3",
+          "EQX-ULS",
+          "X",
+          "0.002487"
+        ],
+        [
+          "Story3",
+          "EQY-ULS",
+          "Y",
+          "0.001772"
+        ],
+        [
+          "Story3",
+          "EQY-ULS",
+          "Y",
+          "0.001805"
+        ],
+        [
+          "Story3",
+          "EQY-ULS",
+          "Y",
+          "0.001815"
+        ],
+        [
+          "Story2",
+          "EQX-ULS",
+          "X",
+          "0.004312"
+        ],
+        [
+          "Story2",
+          "EQX-ULS",
+          "X",
+          "0.004577"
+        ],
+        [
+          "Story2",
+          "EQX-ULS",
+          "X",
+          "0.004047"
+        ],
+        [
+          "Story2",
+          "EQY-ULS",
+          "Y",
+          "0.002334"
+        ],
+        [
+          "Story2",
+          "EQY-ULS",
+          "Y",
+          "0.002362"
+        ],
+        [
+          "Story2",
+          "EQY-ULS",
+          "Y",
+          "0.002371"
+        ],
+        [
+          "Story1",
+          "EQX-ULS",
+          "X",
+          "0.003165"
+        ],
+        [
+          "Story1",
+          "EQX-ULS",
+          "X",
+          "0.003383"
+        ],
+        [
+          "Story1",
+          "EQX-ULS",
+          "X",
+          "0.002948"
+        ],
+        [
+          "Story1",
+          "EQY-ULS",
+          "Y",
+          "0.002105"
+        ],
+        [
+          "Story1",
+          "EQY-ULS",
+          "Y",
+          "0.002126"
+        ],
+        [
+          "Story1",
+          "EQY-ULS",
+          "Y",
+          "0.00214"
+        ]
+      ],
+      "caption": "Storey drifts",
+      "note": null
+    },
+    "joint_reactions": {
+      "columns": [
+        "Story",
+        "Label",
+        "OutputCase",
+        "FX (kN)",
+        "FY (kN)",
+        "FZ (kN)",
+        "MX (kN-m)",
+        "MY (kN-m)",
+        "MZ (kN-m)"
+      ],
+      "rows": [
+        [
+          "Base",
+          "3",
+          "ENV-ULS",
+          "41.16",
+          "30.79",
+          "410.65",
+          "62.33",
+          "78.50",
+          "4.072"
+        ],
+        [
+          "Base",
+          "7",
+          "1.2DL+0.3LL+EQX",
+          "-39.00",
+          "3.767",
+          "389.23",
+          "-5.073",
+          "-75.19",
+          "4.072"
+        ],
+        [
+          "Base",
+          "7",
+          "ENV-ULS",
+          "29.16",
+          "30.38",
+          "389.23",
+          "61.54",
+          "66.10",
+          "4.072"
+        ],
+        [
+          "Base",
+          "7",
+          "1.2DL+0.3LL+EQX",
+          "-41.11",
+          "0.9883",
+          "384.77",
+          "-10.32",
+          "-79.53",
+          "2.300"
+        ],
+        [
+          "Base",
+          "3",
+          "1.2DL+1.5LL",
+          "8.937",
+          "-2.106",
+          "383.61",
+          "1.206",
+          "8.726",
+          "0.0194"
+        ],
+        [
+          "Base",
+          "7",
+          "1.2DL+1.5LL",
+          "-8.961",
+          "-1.673",
+          "356.57",
+          "0.7015",
+          "-9.977",
+          "0.0194"
+        ],
+        [
+          "Base",
+          "4",
+          "ENV-ULS",
+          "47.13",
+          "25.12",
+          "356.34",
+          "58.54",
+          "92.81",
+          "4.072"
+        ],
+        [
+          "Base",
+          "4",
+          "1.2DL+0.3LL+EQY",
+          "7.974",
+          "-29.20",
+          "347.22",
+          "58.54",
+          "8.698",
+          "0.4393"
+        ],
+        [
+          "Base",
+          "4",
+          "1.2DL+0.3LL+EQY",
+          "5.733",
+          "-30.17",
+          "345.78",
+          "56.61",
+          "4.124",
+          "-0.258"
+        ],
+        [
+          "Base",
+          "8",
+          "ENV-ULS",
+          "36.56",
+          "25.97",
+          "332.99",
+          "56.31",
+          "81.93",
+          "4.072"
+        ],
+        [
+          "Base",
+          "8",
+          "1.2DL+0.3LL+EQX",
+          "-41.02",
+          "3.438",
+          "332.99",
+          "-5.064",
+          "-81.91",
+          "4.072"
+        ],
+        [
+          "Base",
+          "8",
+          "1.2DL+0.3LL+EQX",
+          "-46.79",
+          "0.9794",
+          "329.12",
+          "-9.977",
+          "-93.62",
+          "2.300"
+        ],
+        [
+          "Base",
+          "4",
+          "1.2DL+1.5LL",
+          "8.005",
+          "-3.180",
+          "327.61",
+          "2.328",
+          "7.713",
+          "0.0194"
+        ],
+        [
+          "Base",
+          "8",
+          "1.2DL+0.3LL+EQY",
+          "-5.986",
+          "-27.29",
+          "325.55",
+          "56.31",
+          "-5.889",
+          "0.4393"
+        ],
+        [
+          "Base",
+          "8",
+          "1.2DL+0.3LL+EQY",
+          "-8.219",
+          "-28.27",
+          "324.12",
+          "54.37",
+          "-10.46",
+          "-0.258"
+        ],
+        [
+          "Base",
+          "3",
+          "DL + LL",
+          "6.983",
+          "-1.694",
+          "305.63",
+          "0.9499",
+          "6.801",
+          "0.0165"
+        ],
+        [
+          "Base",
+          "7",
+          "0.9DL+EQX",
+          "-36.89",
+          "4.187",
+          "304.05",
+          "-5.253",
+          "-72.85",
+          "4.067"
+        ],
+        [
+          "Base",
+          "8",
+          "1.2DL+1.5LL",
+          "-7.849",
+          "-1.230",
+          "302.44",
+          "0.2388",
+          "-8.855",
+          "0.0194"
+        ],
+        [
+          "Base",
+          "7",
+          "0.9DL+EQX",
+          "-39.01",
+          "1.408",
+          "299.59",
+          "-10.50",
+          "-77.18",
+          "2.295"
+        ],
+        [
+          "Base",
+          "3",
+          "1.2DL+0.3LL+EQY",
+          "6.901",
+          "-32.70",
+          "297.30",
+          "62.33",
+          "7.060",
+          "0.4393"
+        ],
+        [
+          "Base",
+          "3",
+          "1.2DL+0.3LL+EQY",
+          "6.105",
+          "-33.79",
+          "295.35",
+          "60.27",
+          "5.393",
+          "-0.258"
+        ],
+        [
+          "Base",
+          "7",
+          "DL + LL",
+          "-7.009",
+          "-1.401",
+          "283.94",
+          "0.6",
+          "-7.821",
+          "0.0165"
+        ],
+        [
+          "Base",
+          "7",
+          "1.2DL+0.3LL+EQY",
+          "-6.244",
+          "-32.17",
+          "271.94",
+          "61.54",
+          "-6.676",
+          "0.4393"
+        ],
+        [
+          "Base",
+          "4",
+          "0.9DL+EQY",
+          "6.112",
+          "-28.42",
+          "270.81",
+          "57.98",
+          "6.912",
+          "0.4344"
+        ],
+        [
+          "Base",
+          "7",
+          "1.2DL+0.3LL+EQY",
+          "-7.034",
+          "-33.26",
+          "269.95",
+          "59.47",
+          "-8.336",
+          "-0.258"
+        ],
+        [
+          "Base",
+          "4",
+          "0.9DL+EQY",
+          "3.872",
+          "-29.40",
+          "269.36",
+          "56.04",
+          "2.338",
+          "-0.263"
+        ],
+        [
+          "Base",
+          "3",
+          "1.2DL+0.3LL+EQX",
+          "-25.07",
+          "-4.525",
+          "265.81",
+          "11.99",
+          "-60.64",
+          "4.072"
+        ],
+        [
+          "Base",
+          "8",
+          "0.9DL+EQX",
+          "-39.19",
+          "3.746",
+          "262.72",
+          "-5.127",
+          "-79.85",
+          "4.067"
+        ],
+        [
+          "Base",
+          "3",
+          "1.2DL+0.3LL+EQX",
+          "-27.21",
+          "-7.293",
+          "261.44",
+          "6.760",
+          "-65.00",
+          "2.300"
+        ],
+        [
+          "Base",
+          "8",
+          "0.9DL+EQX",
+          "-44.97",
+          "1.287",
+          "258.85",
+          "-10.04",
+          "-91.56",
+          "2.295"
+        ],
+        [
+          "Base",
+          "8",
+          "0.9DL+EQY",
+          "-4.163",
+          "-26.98",
+          "255.28",
+          "56.25",
+          "-3.825",
+          "0.4344"
+        ],
+        [
+          "Base",
+          "4",
+          "DL + LL",
+          "6.205",
+          "-2.579",
+          "254.72",
+          "1.875",
+          "5.954",
+          "0.0165"
+        ],
+        [
+          "Base",
+          "8",
+          "0.9DL+EQY",
+          "-6.396",
+          "-27.96",
+          "253.85",
+          "54.31",
+          "-8.392",
+          "-0.263"
+        ],
+        [
+          "Base",
+          "1",
+          "ENV-ULS",
+          "30.50",
+          "27.73",
+          "241.65",
+          "56.12",
+          "55.54",
+          "4.072"
+        ],
+        [
+          "Base",
+          "5",
+          "ENV-ULS",
+          "17.82",
+          "27.40",
+          "238.48",
+          "55.96",
+          "42.41",
+          "4.072"
+        ],
+        [
+          "Base",
+          "2",
+          "ENV-ULS",
+          "32.37",
+          "36.27",
+          "234.96",
+          "57.53",
+          "61.26",
+          "4.072"
+        ],
+        [
+          "Base",
+          "2",
+          "1.2DL+0.3LL+EQY",
+          "7.366",
+          "-26.76",
+          "234.96",
+          "56.09",
+          "7.864",
+          "0.4393"
+        ],
+        [
+          "Base",
+          "8",
+          "DL + LL",
+          "-6.077",
+          "-1.026",
+          "234.23",
+          "0.2091",
+          "-6.880",
+          "0.0165"
+        ],
+        [
+          "Base",
+          "6",
+          "1.2DL+0.3LL+EQY",
+          "-6.312",
+          "-26.40",
+          "234.09",
+          "55.47",
+          "-6.429",
+          "0.4393"
+        ],
+        [
+          "Base",
+          "6",
+          "ENV-ULS",
+          "20.79",
+          "34.45",
+          "234.09",
+          "56.64",
+          "49.29",
+          "4.072"
+        ]
+      ],
+      "caption": "Joint (support) reactions",
+      "note": "Showing 40 of 96 rows (governing first); complete data is in 11_Joint_Reactions.csv."
+    },
+    "column_design": {
+      "columns": [
+        "Story",
+        "Label",
+        "DesignSect",
+        "P (kN)",
+        "MMajor (kN-m)",
+        "MMinor (kN-m)",
+        "PMMCombo",
+        "RatioRebar"
+      ],
+      "rows": [
+        [
+          "Story3",
+          "C3",
+          "Column 355 x 355",
+          "52.56",
+          "35.84",
+          "12.62",
+          "1.2DL+0.3LL-EQX",
+          "0.8 %"
+        ],
+        [
+          "Story3",
+          "C3",
+          "Column 355 x 355",
+          "62.48",
+          "-37.45",
+          "-7.011",
+          "1.2DL+0.3LL-EQX",
+          "0.8 %"
+        ],
+        [
+          "Story3",
+          "C4",
+          "Column 355 x 355",
+          "75.81",
+          "47.83",
+          "-7.264",
+          "1.2DL+0.3LL-EQX",
+          "0.8 %"
+        ],
+        [
+          "Story3",
+          "C4",
+          "Column 355 x 355",
+          "86.32",
+          "-37.44",
+          "11.38",
+          "1.2DL+0.3LL-EQX",
+          "0.8 %"
+        ],
+        [
+          "Story3",
+          "C7",
+          "Column 355 x 355",
+          "52.76",
+          "-36.29",
+          "12.75",
+          "1.2DL+0.3LL+EQX",
+          "0.8 %"
+        ],
+        [
+          "Story3",
+          "C7",
+          "Column 355 x 355",
+          "62.68",
+          "37.62",
+          "-6.936",
+          "1.2DL+0.3LL+EQX",
+          "0.8 %"
+        ],
+        [
+          "Story3",
+          "C8",
+          "Column 355 x 355",
+          "76.22",
+          "-48.74",
+          "-7.250",
+          "1.2DL+0.3LL+EQX",
+          "0.8 %"
+        ],
+        [
+          "Story3",
+          "C8",
+          "Column 355 x 355",
+          "86.73",
+          "38.88",
+          "12.72",
+          "1.2DL+0.3LL+EQX",
+          "0.8 %"
+        ],
+        [
+          "Story2",
+          "C1",
+          "Column 355 x 355",
+          "61.98",
+          "37.79",
+          "5.188",
+          "1.2DL+0.3LL-EQX",
+          "0.8 %"
+        ],
+        [
+          "Story2",
+          "C1",
+          "Column 355 x 355",
+          "72.54",
+          "-41.59",
+          "-6.611",
+          "1.2DL+0.3LL-EQX",
+          "0.8 %"
+        ],
+        [
+          "Story2",
+          "C2",
+          "Column 355 x 355",
+          "40.59",
+          "15.64",
+          "45.39",
+          "1.2DL+0.3LL-EQY",
+          "0.8 %"
+        ],
+        [
+          "Story2",
+          "C2",
+          "Column 355 x 355",
+          "51.16",
+          "-21.21",
+          "-49.81",
+          "1.2DL+0.3LL-EQY",
+          "0.84 %"
+        ],
+        [
+          "Story2",
+          "C3",
+          "Column 355 x 355",
+          "202.71",
+          "64.80",
+          "18.49",
+          "1.2DL+0.3LL-EQX",
+          "0.84 %"
+        ],
+        [
+          "Story2",
+          "C3",
+          "Column 355 x 355",
+          "213.27",
+          "-74.14",
+          "-15.54",
+          "1.2DL+0.3LL-EQX",
+          "0.88 %"
+        ],
+        [
+          "Story2",
+          "C4",
+          "Column 355 x 355",
+          "203.66",
+          "70.12",
+          "19.35",
+          "1.2DL+0.3LL-EQX",
+          "0.88 %"
+        ],
+        [
+          "Story2",
+          "C4",
+          "Column 355 x 355",
+          "214.22",
+          "-79.84",
+          "19.85",
+          "1.2DL+0.3LL-EQX",
+          "1.05 %"
+        ],
+        [
+          "Story2",
+          "C5",
+          "Column 355 x 355",
+          "62.49",
+          "-38.75",
+          "5.447",
+          "1.2DL+0.3LL+EQX",
+          "0.8 %"
+        ],
+        [
+          "Story2",
+          "C5",
+          "Column 355 x 355",
+          "73.05",
+          "41.59",
+          "-6.752",
+          "1.2DL+0.3LL+EQX",
+          "0.8 %"
+        ],
+        [
+          "Story2",
+          "C6",
+          "Column 355 x 355",
+          "41.35",
+          "-16.70",
+          "45.05",
+          "1.2DL+0.3LL-EQY",
+          "0.8 %"
+        ],
+        [
+          "Story2",
+          "C6",
+          "Column 355 x 355",
+          "51.91",
+          "19.75",
+          "-46.98",
+          "1.2DL+0.3LL-EQY",
+          "0.81 %"
+        ],
+        [
+          "Story2",
+          "C7",
+          "Column 355 x 355",
+          "198.58",
+          "-65.64",
+          "18.33",
+          "1.2DL+0.3LL+EQX",
+          "0.85 %"
+        ],
+        [
+          "Story2",
+          "C7",
+          "Column 355 x 355",
+          "209.15",
+          "73.63",
+          "-15.29",
+          "1.2DL+0.3LL+EQX",
+          "0.88 %"
+        ],
+        [
+          "Story2",
+          "C8",
+          "Column 355 x 355",
+          "200.51",
+          "-72.00",
+          "19.14",
+          "1.2DL+0.3LL+EQX",
+          "0.89 %"
+        ],
+        [
+          "Story2",
+          "C8",
+          "Column 355 x 355",
+          "211.07",
+          "79.68",
+          "-19.55",
+          "1.2DL+0.3LL+EQX",
+          "1.05 %"
+        ],
+        [
+          "Story1",
+          "C1",
+          "Column 355 x 355",
+          "209.32",
+          "35.84",
+          "4.186",
+          "1.2DL+0.3LL-EQX",
+          "0.8 %"
+        ],
+        [
+          "Story1",
+          "C1",
+          "Column 355 x 355",
+          "71.69",
+          "-8.954",
+          "56.12",
+          "0.9DL+EQY",
+          "0.84 %"
+        ],
+        [
+          "Story1",
+          "C2",
+          "Column 355 x 355",
+          "150.02",
+          "14.17",
+          "34.64",
+          "1.2DL+0.3LL-EQY",
+          "0.8 %"
+        ],
+        [
+          "Story1",
+          "C2",
+          "Column 355 x 355",
+          "104.99",
+          "-5.410",
+          "-65.30",
+          "0.9DL-EQY",
+          "0.87 %"
+        ],
+        [
+          "Story1",
+          "C3",
+          "Column 355 x 355",
+          "400.08",
+          "48.24",
+          "8.002",
+          "1.2DL+0.3LL-EQX",
+          "0.8 %"
+        ],
+        [
+          "Story1",
+          "C3",
+          "Column 355 x 355",
+          "410.65",
+          "-90.50",
+          "-10.14",
+          "1.2DL+0.3LL-EQX",
+          "1.06 %"
+        ],
+        [
+          "Story1",
+          "C4",
+          "Column 355 x 355",
+          "345.78",
+          "49.02",
+          "-16.24",
+          "1.2DL+0.3LL-EQX",
+          "0.8 %"
+        ],
+        [
+          "Story1",
+          "C4",
+          "Column 355 x 355",
+          "356.34",
+          "-103.22",
+          "-17.50",
+          "1.2DL+0.3LL-EQX",
+          "1.47 %"
+        ],
+        [
+          "Story1",
+          "C5",
+          "Column 355 x 355",
+          "206.13",
+          "-35.44",
+          "4.123",
+          "1.2DL+0.3LL+EQX",
+          "0.8 %"
+        ],
+        [
+          "Story1",
+          "C5",
+          "Column 355 x 355",
+          "67.64",
+          "8.559",
+          "55.96",
+          "0.9DL+EQY",
+          "0.84 %"
+        ],
+        [
+          "Story1",
+          "C6",
+          "Column 355 x 355",
+          "144.49",
+          "-12.16",
+          "31.58",
+          "1.2DL+0.3LL-EQY",
+          "0.8 %"
+        ],
+        [
+          "Story1",
+          "C6",
+          "Column 355 x 355",
+          "100.72",
+          "6.048",
+          "-63.54",
+          "0.9DL-EQY",
+          "0.86 %"
+        ],
+        [
+          "Story1",
+          "C7",
+          "Column 355 x 355",
+          "378.67",
+          "-46.45",
+          "7.573",
+          "1.2DL+0.3LL+EQX",
+          "0.8 %"
+        ],
+        [
+          "Story1",
+          "C7",
+          "Column 355 x 355",
+          "389.23",
+          "90.91",
+          "-10.32",
+          "1.2DL+0.3LL+EQX",
+          "1.08 %"
+        ],
+        [
+          "Story1",
+          "C8",
+          "Column 355 x 355",
+          "322.42",
+          "-46.58",
+          "-15.14",
+          "1.2DL+0.3LL+EQX",
+          "0.8 %"
+        ],
+        [
+          "Story1",
+          "C8",
+          "Column 355 x 355",
+          "332.99",
+          "103.35",
+          "-18.95",
+          "1.2DL+0.3LL+EQX",
+          "1.5 %"
+        ]
+      ],
+      "caption": "Column design summary (IS 456:2000)",
+      "note": null
+    },
+    "beam_design": {
+      "columns": [
+        "Story",
+        "Label",
+        "DesignSect",
+        "Location",
+        "MomentTop (kN-m)",
+        "AsTop (mm²)",
+        "MomentBot (kN-m)",
+        "AsBot (mm²)"
+      ],
+      "rows": [
+        [
+          "Story1",
+          "B10",
+          "Beam 250 x 380",
+          "End-J",
+          "-53.79",
+          "404",
+          "31.21",
+          "249.00"
+        ],
+        [
+          "Story1",
+          "B10",
+          "Beam 250 x 380",
+          "End-I",
+          "-54.21",
+          "398",
+          "31.69",
+          "258"
+        ],
+        [
+          "Story1",
+          "B9",
+          "Beam 250 x 380",
+          "End-I",
+          "-49.29",
+          "392",
+          "0",
+          "196"
+        ],
+        [
+          "Story1",
+          "B3",
+          "Beam 250 x 380",
+          "End-I",
+          "-44.42",
+          "377",
+          "0",
+          "189"
+        ],
+        [
+          "Story1",
+          "B2",
+          "Beam 250 x 380",
+          "End-J",
+          "-43.09",
+          "372",
+          "0",
+          "186"
+        ],
+        [
+          "Story1",
+          "B9",
+          "Beam 250 x 380",
+          "End-J",
+          "-49.67",
+          "370",
+          "-12.48",
+          "185"
+        ],
+        [
+          "Story2",
+          "B9",
+          "Beam 250 x 380",
+          "End-I",
+          "-44.29",
+          "362",
+          "6.715",
+          "185"
+        ],
+        [
+          "Story2",
+          "B10",
+          "Beam 250 x 380",
+          "End-J",
+          "-47.33",
+          "360",
+          "-8.789",
+          "185"
+        ],
+        [
+          "Story2",
+          "B10",
+          "Beam 250 x 380",
+          "End-I",
+          "-49.09",
+          "359",
+          "4.253",
+          "185"
+        ],
+        [
+          "Story1",
+          "B5",
+          "Beam 250 x 380",
+          "End-I",
+          "-45.46",
+          "356",
+          "10.35",
+          "185"
+        ],
+        [
+          "Story1",
+          "B2",
+          "Beam 250 x 380",
+          "End-I",
+          "-42.61",
+          "348",
+          "-4.620",
+          "185"
+        ],
+        [
+          "Story1",
+          "B6",
+          "Beam 250 x 380",
+          "End-I",
+          "-41.57",
+          "344",
+          "12.39",
+          "185"
+        ],
+        [
+          "Story1",
+          "B3",
+          "Beam 250 x 380",
+          "End-J",
+          "-36.95",
+          "344",
+          "7.181",
+          "266"
+        ],
+        [
+          "Story1",
+          "B5",
+          "Beam 250 x 380",
+          "End-J",
+          "-39.74",
+          "334",
+          "4.863",
+          "185"
+        ],
+        [
+          "Story1",
+          "B1",
+          "Beam 250 x 380",
+          "End-J",
+          "-39.65",
+          "327",
+          "22.13",
+          "185"
+        ],
+        [
+          "Story2",
+          "B9",
+          "Beam 250 x 380",
+          "End-J",
+          "-42.85",
+          "321",
+          "-13.48",
+          "185"
+        ],
+        [
+          "Story1",
+          "B1",
+          "Beam 250 x 380",
+          "End-I",
+          "-39.66",
+          "321",
+          "24.85",
+          "201"
+        ],
+        [
+          "Story1",
+          "B4",
+          "Beam 250 x 380",
+          "End-I",
+          "-39.69",
+          "315",
+          "25.09",
+          "198"
+        ],
+        [
+          "Story1",
+          "B4",
+          "Beam 250 x 380",
+          "End-J",
+          "-38.55",
+          "315",
+          "23.85",
+          "194"
+        ],
+        [
+          "Story1",
+          "B8",
+          "Beam 250 x 380",
+          "End-J",
+          "-42.06",
+          "301",
+          "-8.620",
+          "185"
+        ],
+        [
+          "Story1",
+          "B8",
+          "Beam 250 x 380",
+          "End-I",
+          "-37.73",
+          "290",
+          "22.66",
+          "187"
+        ],
+        [
+          "Story2",
+          "B3",
+          "Beam 250 x 380",
+          "End-J",
+          "-32.61",
+          "280",
+          "12.93",
+          "185"
+        ],
+        [
+          "Story2",
+          "B6",
+          "Beam 250 x 380",
+          "End-I",
+          "-32.78",
+          "278",
+          "11.74",
+          "185"
+        ],
+        [
+          "Story2",
+          "B3",
+          "Beam 250 x 380",
+          "End-I",
+          "-32.08",
+          "275",
+          "15.07",
+          "185"
+        ],
+        [
+          "Story1",
+          "B7",
+          "Beam 250 x 380",
+          "End-I",
+          "-37.06",
+          "273",
+          "8.165",
+          "185"
+        ],
+        [
+          "Story1",
+          "B6",
+          "Beam 250 x 380",
+          "End-J",
+          "-34.14",
+          "271",
+          "8.172",
+          "207"
+        ],
+        [
+          "Story1",
+          "B7",
+          "Beam 250 x 380",
+          "End-J",
+          "-37.62",
+          "267",
+          "-13.91",
+          "185"
+        ],
+        [
+          "Story2",
+          "B6",
+          "Beam 250 x 380",
+          "End-J",
+          "-32.32",
+          "257",
+          "14.43",
+          "185"
+        ],
+        [
+          "Story2",
+          "B5",
+          "Beam 250 x 380",
+          "End-J",
+          "-25.26",
+          "224",
+          "8.358",
+          "185"
+        ],
+        [
+          "Story2",
+          "B2",
+          "Beam 250 x 380",
+          "End-J",
+          "-25.69",
+          "222",
+          "8.480",
+          "185"
+        ],
+        [
+          "Story1",
+          "B6",
+          "Beam 250 x 380",
+          "Middle",
+          "12.88",
+          "185",
+          "9.902",
+          "220"
+        ],
+        [
+          "Story1",
+          "B5",
+          "Beam 250 x 380",
+          "Middle",
+          "1.052",
+          "185",
+          "21.96",
+          "212"
+        ],
+        [
+          "Story2",
+          "B11",
+          "Beam 250 x 380",
+          "End-I",
+          "-8.225",
+          "201",
+          "-3.076",
+          "185"
+        ],
+        [
+          "Story2",
+          "B8",
+          "Beam 250 x 380",
+          "End-I",
+          "-23.22",
+          "192",
+          "3.171",
+          "185"
+        ],
+        [
+          "Story2",
+          "B8",
+          "Beam 250 x 380",
+          "End-J",
+          "-23.51",
+          "190",
+          "-4.343",
+          "185"
+        ],
+        [
+          "Story2",
+          "B6",
+          "Beam 250 x 380",
+          "Middle",
+          "11.22",
+          "185",
+          "8.947",
+          "187"
+        ],
+        [
+          "Story3",
+          "B9",
+          "Beam 250 x 380",
+          "End-J",
+          "-23.86",
+          "187",
+          "-7.018",
+          "185"
+        ],
+        [
+          "Story3",
+          "B10",
+          "Beam 250 x 380",
+          "End-J",
+          "-6.425",
+          "185",
+          "-8.415",
+          "185"
+        ],
+        [
+          "Story3",
+          "B10",
+          "Beam 250 x 380",
+          "End-I",
+          "3.652",
+          "185",
+          "3.525",
+          "185"
+        ],
+        [
+          "Story3",
+          "B10",
+          "Beam 250 x 380",
+          "Middle",
+          "5.374",
+          "185",
+          "5.287",
+          "185"
+        ]
+      ],
+      "caption": "Beam design summary (IS 456:2000)",
+      "note": "Showing 40 of 144 rows (governing first); complete data is in 08_Beam_Design.csv."
+    }
+  },
+  "_figures": {
+    "key_frame": {
+      "path": "E:\\Apps\\structural report\\figures\\01_key_frame.png",
+      "caption": "Key frame diagram (extracted joint geometry)"
+    },
+    "grid_plan": {
+      "path": "E:\\Apps\\structural report\\figures\\02_grid_plan.png",
+      "caption": "Beam and column grid plan"
+    },
+    "sectional_view": {
+      "path": "E:\\Apps\\structural report\\figures\\03_sectional_view.png",
+      "caption": "Beam and column sectional view"
+    },
+    "modal_periods": {
+      "path": "E:\\Apps\\structural report\\figures\\04_mode_1.png",
+      "caption": "Modal periods"
+    },
+    "modal_mass": {
+      "path": "E:\\Apps\\structural report\\figures\\05_modal_mass.png",
+      "caption": "Cumulative modal mass participation"
+    },
+    "storey_drift_x": {
+      "path": "E:\\Apps\\structural report\\figures\\06_drift_x.png",
+      "caption": "Storey drift in X direction"
+    },
+    "storey_drift_y": {
+      "path": "E:\\Apps\\structural report\\figures\\06_drift_y.png",
+      "caption": "Storey drift in Y direction"
+    },
+    "base_reaction": {
+      "path": "E:\\Apps\\structural report\\figures\\07_joint_reaction.png",
+      "caption": "Base reaction summary"
+    },
+    "moment_diagram": {
+      "path": "E:\\Apps\\structural report\\figures\\08_moment.png",
+      "caption": "Beam moment demand"
+    },
+    "axial_force": {
+      "path": "E:\\Apps\\structural report\\figures\\09_axial.png",
+      "caption": "Column axial force demand"
+    },
+    "beam_design": {
+      "path": "E:\\Apps\\structural report\\figures\\10_beam_design.png",
+      "caption": "Beam reinforcement demand"
+    },
+    "column_design": {
+      "path": "E:\\Apps\\structural report\\figures\\11_column_design.png",
+      "caption": "Column reinforcement ratio"
+    },
+    "reinforcement": {
+      "path": "E:\\Apps\\structural report\\figures\\12_reinforcement.png",
+      "caption": "Governing reinforcement areas"
+    }
+  },
+  "HAS_RESPONSE_SPECTRUM": false,
+  "HAS_BEAM_DESIGN": true,
+  "HAS_COLUMN_DESIGN": true,
+  "HAS_WALL_DESIGN": false,
+  "HAS_STAIRCASE_DESIGN": false,
+  "HAS_REINFORCEMENT_OUTPUT": true,
+  "VALIDATION_STATUS": "PASS WITH WARNINGS",
+  "_meta": {
+    "generated_at": "2026-11-03T18:21:46.860177+05:45",
+    "missing_required_fields": [],
+    "defaults_used": [
+      "SEISMIC_CODE = 'NBC 105:2020'",
+      "STRUCTURAL_SYSTEM = 'RCC Special Moment Resisting Frame (SMRF)'",
+      "CEMENT_TYPE = 'Ordinary Portland Cement (OPC)'",
+      "CONSULTANCY_NAME = 'Swarup Engineering Consultancy'",
+      "CONSULTANCY_ADDRESS = 'Dharan-12, Sunsari'",
+      "OVERSTRENGTH_U = 1.5",
+      "OVERSTRENGTH_S = 1.25",
+      "KT = 0.075",
+      "SPECTRAL_SHAPE = 2.5",
+      "DENSITY_RCC = 25",
+      "POISSON = 0.2",
+      "DESIGN_CODES = ['NBC 105:2020 : Seismic Design of Buildings in Nepal', 'IS 456:2000 : Code of practice for plain and reinforced concrete', 'IS 875:1987 : Code of practice for design loads (other than earthquake)', 'SP 16:1980 : Design aids for reinforced concrete to IS 456', 'IS 13920:1993 : Ductile detailing of reinforced concrete structures subjected to seismic forces']"
+    ],
+    "problems": [],
+    "tables_found": [
+      "area_sections",
+      "base_reactions",
+      "beam_design",
+      "centers",
+      "column_design",
+      "frame_sections",
+      "joint_reactions",
+      "load_cases",
+      "load_combinations",
+      "load_patterns",
+      "mass_source",
+      "materials",
+      "modal_mass_ratios",
+      "modal_periods",
+      "storey_drifts",
+      "story_forces"
+    ],
+    "figures_found": [
+      "axial_force",
+      "base_reaction",
+      "beam_design",
+      "column_design",
+      "grid_plan",
+      "key_frame",
+      "modal_mass",
+      "modal_periods",
+      "moment_diagram",
+      "reinforcement",
+      "sectional_view",
+      "storey_drift_x",
+      "storey_drift_y"
+    ],
+    "figures_missing": []
+  }
+}
