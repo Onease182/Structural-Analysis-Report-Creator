@@ -1,0 +1,11 @@
+docxtpl
+python-docx
+openpyxl
+pandas
+matplotlib
+pillow
+comtypes
+jinja2
+pyyaml
+lxml
+pytest

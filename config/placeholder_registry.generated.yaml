@@ -1,0 +1,3439 @@
+# Curated candidate registry. Word-generated fields are intentionally excluded.
+"items":
+  -
+    "key": "project.report_title"
+    "description": "Structural report of Residence Building of Chatra Bahadur Ramtel"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 0
+    "example": "Structural report of Residence Building of Chatra Bahadur Ramtel"
+    "inventory_item_indices":
+      - 0
+  -
+    "key": "figure.project.structural_analysis_design_report"
+    "description": "Structural Analysis and Design Report"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 2
+    "example":
+      "alt_text": null
+      "width_inches": 5.7681
+      "height_inches": 0.0069
+    "inventory_item_indices":
+      - 2
+  -
+    "key": "figure.project.report_figure"
+    "description": "Report figure slot; generated or supplied by the engineer."
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 5
+    "example":
+      "alt_text": null
+      "width_inches": 6.9924
+      "height_inches": 6.5938
+    "inventory_item_indices":
+      - 5
+  -
+    "key": "client.consultant_name"
+    "description": "Civira X"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 11
+    "example": "Civira X"
+    "inventory_item_indices":
+      - 11
+  -
+    "key": "building.location"
+    "description": "Damak"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 12
+    "example": "Damak"
+    "inventory_item_indices":
+      - 12
+      - 405
+  -
+    "key": "table.client.general_information"
+    "description": "Table 1: S.N. | General Information:"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": "Column schema needs owner review; sample table has blank/unlabelled headers."
+    "inventory_item_index": 153
+    "example":
+      "rows": 10
+      "columns": 3
+      "header_row":
+        - "S.N."
+        - "General Information:"
+    "columns":
+      -
+        "key": "table.client.general_information.s_n"
+        "header": "S.N."
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.client.general_information.general_information"
+        "header": "General Information:"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.client.general_information.unlabelled_column_3"
+        "header": "Unlabelled column 3"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Fixed intake labels; values supplied from project/client input."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 153
+  -
+    "key": "seismic.analysis_design_in_this_report_follow_codes"
+    "description": "The analysis and design in this report follow the codes and references listed below. Seismic loading, analysis and ductile detailing follow NBC 105:2025."
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 156
+    "example": "The analysis and design in this report follow the codes and references listed below. Seismic loading, analysis and ductile detailing follow NBC 105:2025."
+    "inventory_item_indices":
+      - 156
+  -
+    "key": "table.codes.references"
+    "description": "Table 2: S.N. | Code / Reference | Title | Used for"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 158
+    "example":
+      "rows": 6
+      "columns": 4
+      "header_row":
+        - "S.N."
+        - "Code / Reference"
+        - "Title"
+        - "Used for"
+    "columns":
+      -
+        "key": "table.codes.references.s_n"
+        "header": "S.N."
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.codes.references.code_reference"
+        "header": "Code / Reference"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.codes.references.title"
+        "header": "Title"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.codes.references.for"
+        "header": "Used for"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Applicable code rows are selected from the approved project code list."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 158
+  -
+    "key": "building.storeys_above_grade"
+    "description": "Number of above-grade storeys in the project"
+    "type": "number"
+    "unit": "storey"
+    "format":
+      "decimals": 0
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 164
+    "example": 3
+    "sentence_template": "The building has {{ building.storeys_above_grade }} floors made of {{ building.primary_frame_material }} frames and filled with"
+    "inventory_item_indices":
+      - 164
+      - 413
+  -
+    "key": "building.primary_frame_material"
+    "description": "Primary structural frame material"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 164
+    "example": "reinforced concrete"
+    "sentence_template": "The building has {{ building.storeys_above_grade }} floors made of {{ building.primary_frame_material }} frames and filled with"
+    "inventory_item_indices":
+      - 164
+  -
+    "key": "building.infill_wall_material"
+    "description": "Infill wall material"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 165
+    "example": "brick"
+    "sentence_template": "{{ building.infill_wall_material }} walls. Each floor has a height of {{ building.story_height_m }} meters. The building is laid out in a rectangular grid pattern, with a span of {{ building.span_x_m }} meters horizontally (X-direction) and {{ building.span_y_m }} meters vertically (Y-direction) between columns."
+    "inventory_item_indices":
+      - 165
+  -
+    "key": "building.span_y_m"
+    "description": "Typical vertical Y-direction span"
+    "type": "number"
+    "unit": "m"
+    "format":
+      "decimals": 3
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 165
+    "example": "10.058"
+    "sentence_template": "{{ building.infill_wall_material }} walls. Each floor has a height of {{ building.story_height_m }} meters. The building is laid out in a rectangular grid pattern, with a span of {{ building.span_x_m }} meters horizontally (X-direction) and {{ building.span_y_m }} meters vertically (Y-direction) between columns."
+    "inventory_item_indices":
+      - 165
+  -
+    "key": "building.span_x_m"
+    "description": "Typical horizontal X-direction span"
+    "type": "number"
+    "unit": "m"
+    "format":
+      "decimals": 3
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 165
+    "example": "4.216"
+    "sentence_template": "{{ building.infill_wall_material }} walls. Each floor has a height of {{ building.story_height_m }} meters. The building is laid out in a rectangular grid pattern, with a span of {{ building.span_x_m }} meters horizontally (X-direction) and {{ building.span_y_m }} meters vertically (Y-direction) between columns."
+    "inventory_item_indices":
+      - 165
+  -
+    "key": "building.story_height_m"
+    "description": "Typical storey height"
+    "type": "number"
+    "unit": "m"
+    "format":
+      "decimals": 3
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 165
+    "example": "3.175"
+    "sentence_template": "{{ building.infill_wall_material }} walls. Each floor has a height of {{ building.story_height_m }} meters. The building is laid out in a rectangular grid pattern, with a span of {{ building.span_x_m }} meters horizontally (X-direction) and {{ building.span_y_m }} meters vertically (Y-direction) between columns."
+    "inventory_item_indices":
+      - 165
+      - 413
+  -
+    "key": "figure.building.plan_of_building"
+    "description": "Figure 1: Plan of Building"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 168
+    "example":
+      "alt_text": null
+      "width_inches": 3.2812
+      "height_inches": 6.0489
+    "inventory_item_indices":
+      - 168
+  -
+    "key": "figure.building.section_of_building"
+    "description": "Figure 2: Section of Building"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 175
+    "example":
+      "alt_text": null
+      "width_inches": 6.1318
+      "height_inches": 5.3438
+    "inventory_item_indices":
+      - 175
+  -
+    "key": "table.building.general_information"
+    "description": "Table 1: General Information of the Building"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 181
+    "example":
+      "rows": 9
+      "columns": 3
+      "header_row":
+        - "A.1-01"
+        - "Location of Building"
+        - "Damak"
+    "columns":
+      -
+        "key": "table.building.general_information.a_1_01"
+        "header": "A.1-01"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.building.general_information.location_of_building"
+        "header": "Location of Building"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.building.general_information.damak"
+        "header": "Damak"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Fixed fields for site, permit/design storey counts, and project facts."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 181
+  -
+    "key": "table.elements.sizes_and_materials"
+    "description": "Table 2: General Information on Structural Elements of the Building"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "etabs_api"
+    "required": true
+    "condition": null
+    "inventory_item_index": 185
+    "example":
+      "rows": 6
+      "columns": 4
+      "header_row":
+        - "Element"
+        - "Description"
+        - "Grade of Concrete"
+        - "Remarks"
+    "columns":
+      -
+        "key": "table.elements.sizes_and_materials.element"
+        "header": "Element"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.elements.sizes_and_materials.description"
+        "header": "Description"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.elements.sizes_and_materials.grade_of_concrete"
+        "header": "Grade of Concrete"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.elements.sizes_and_materials.remarks"
+        "header": "Remarks"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Fixed element rows populated from ETABS section/material assignments."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 185
+  -
+    "key": "foundation.structural_system_foundation"
+    "description": "Table 3: Structural System & Foundation"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Include this section/table only when its configured content applies."
+    "inventory_item_index": 199
+    "example": "Table 3: Structural System & Foundation"
+    "inventory_item_indices":
+      - 199
+  -
+    "key": "table.design.structural_system_and_foundation"
+    "description": "Table 3: Structural System & Foundation"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 202
+    "example":
+      "rows": 3
+      "columns": 3
+      "header_row":
+        - "A.3-01"
+        - "Type of Structural System"
+        - "Moment Resisting Frames"
+    "columns":
+      -
+        "key": "table.design.structural_system_and_foundation.a_3_01"
+        "header": "A.3-01"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.design.structural_system_and_foundation.type_of_structural_system"
+        "header": "Type of Structural System"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.design.structural_system_and_foundation.moment_resisting_frames"
+        "header": "Moment Resisting Frames"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Fixed three-row owner-defined table; the foundation row depends on the approved selection."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 202
+  -
+    "key": "codes.clauses.material_properties"
+    "description": "Clause citation value for 2.1"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": "No owner-approved NBC 105:2025 mapping supplied."
+    "inventory_item_index": 208
+    "example": "2.1 (sample citation)"
+    "target_clause_2025": null
+    "mapping_status": "needs_owner_decision"
+    "inventory_item_indices":
+      - 208
+  -
+    "key": "materials.minimum_grade_of_structural_concrete_shall_be"
+    "description": "Minimum grade of structural concrete shall be M20, but M25 for buildings more than 12 m in height."
+    "type": "text"
+    "unit": "m"
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 209
+    "example": "Minimum grade of structural concrete shall be M20, but M25 for buildings more than 12 m in height."
+    "inventory_item_indices":
+      - 209
+  -
+    "key": "materials.as_building_is_less_than_12_m"
+    "description": "As the building is less than 12 m in height, M20 concrete has been taken for all the structural components."
+    "type": "text"
+    "unit": "m"
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 210
+    "example": "As the building is less than 12 m in height, M20 concrete has been taken for all the structural components."
+    "inventory_item_indices":
+      - 210
+  -
+    "key": "figure.materials.material_property_concrete"
+    "description": "Figure 3: Material Property (Concrete)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 212
+    "example":
+      "alt_text": null
+      "width_inches": 3.3787
+      "height_inches": 5.1562
+    "inventory_item_indices":
+      - 212
+  -
+    "key": "materials.tgrade_fe_415_or_less_or"
+    "description": "\\tGrade Fe 415 or less; or"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 217
+    "example": "\\tGrade Fe 415 or less; or"
+    "inventory_item_indices":
+      - 217
+  -
+    "key": "materials.thigh_strength_deformed_steel_bars_produced_by"
+    "description": "\\tHigh strength deformed steel bars produced by thermo-mechanical treatment process having elongation capacity of more than 15 percent; e.g. Grade Fe 500 and Fe 550."
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 218
+    "example": "\\tHigh strength deformed steel bars produced by thermo-mechanical treatment process having elongation capacity of more than 15 percent; e.g. Grade Fe 500 and Fe 550."
+    "inventory_item_indices":
+      - 218
+  -
+    "key": "figure.materials.material_property_rebar"
+    "description": "Figure 4: Material Property (Rebar)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 221
+    "example":
+      "alt_text": null
+      "width_inches": 3.817
+      "height_inches": 4.7241
+    "inventory_item_indices":
+      - 221
+  -
+    "key": "materials.steel_grade_of_fe500_has_been_in"
+    "description": "Steel Grade of Fe500 has been used in the longitudinal and transverse reinforcement."
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 224
+    "example": "Steel Grade of Fe500 has been used in the longitudinal and transverse reinforcement."
+    "inventory_item_indices":
+      - 224
+  -
+    "key": "table.modifiers.effective_stiffness"
+    "description": "Table 4: Effective stiffness of different components"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 228
+    "example":
+      "rows": 3
+      "columns": 4
+      "header_row":
+        - "S No."
+        - "Component"
+        - "Flexural Stiffness (Ultimate)"
+        - "Flexural Stiffness (Serviceability)"
+    "columns":
+      -
+        "key": "table.modifiers.effective_stiffness.s_no"
+        "header": "S No."
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modifiers.effective_stiffness.component"
+        "header": "Component"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modifiers.effective_stiffness.flexural_stiffness_ultimate"
+        "header": "Flexural Stiffness (Ultimate)"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modifiers.effective_stiffness.flexural_stiffness_serviceability"
+        "header": "Flexural Stiffness (Serviceability)"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Fixed component rows; values require project/code confirmation."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 228
+  -
+    "key": "codes.clauses.5_6"
+    "description": "Clause citation value for 5.6"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 240
+    "example": "5.6 (sample citation)"
+    "target_clause_2025": "5.6"
+    "mapping_status": "sample_reference"
+    "inventory_item_indices":
+      - 240
+  -
+    "key": "figure.irregularity.eqxeqxdesign_eccentricity_edi_y_esi_y_0"
+    "description": "EQxEQxDesign eccentricity edi,y = esi,y+0.05*byDesign eccentricity edi,y = esi,y+0.05*by"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 244
+    "example":
+      "alt_text": null
+      "width_inches": 0.5917
+      "height_inches": 0.5931
+    "inventory_item_indices":
+      - 244
+  -
+    "key": "figure.irregularity.eqxeqxdesign_eccentricity_edi_y_esi_y_0_panel_b"
+    "description": "EQxEQxDesign eccentricity edi,y = esi,y+0.05*byDesign eccentricity edi,y = esi,y+0.05*by"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 245
+    "example":
+      "alt_text": null
+      "width_inches": 2.175
+      "height_inches": 0.5368
+    "inventory_item_indices":
+      - 245
+  -
+    "key": "figure.irregularity.cresi_ycmedi_ycm_cresi_ycmedi_ycm_5"
+    "description": "CResi,yCMedi,yCM’CResi,yCMedi,yCM’Figure 5: Accidental Eccentricity"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 251
+    "example":
+      "alt_text": null
+      "width_inches": 3.1924
+      "height_inches": 1.7542
+    "inventory_item_indices":
+      - 251
+  -
+    "key": "figure.irregularity.cresi_ycmedi_ycm_cresi_ycmedi_ycm_5_panel_b"
+    "description": "CResi,yCMedi,yCM’CResi,yCMedi,yCM’Figure 5: Accidental Eccentricity"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 252
+    "example":
+      "alt_text": null
+      "width_inches": 0.0889
+      "height_inches": 1.741
+    "inventory_item_indices":
+      - 252
+  -
+    "key": "foundation.building_was_modeled_using_etabs_19_0"
+    "description": "The building was modeled using the ETABS 19.0.0 software. ETABS 19.0.0 is a specialized program designed specifically for the analysis and design of building systems. It offers a user-friendly interface and advanced features, making it both sophisticated and easy to use. The software provides intuitive modeling capabilities, powerful analytical tools, efficient design procedures, robust numerical methods, and supports various international design codes. With its ability to handle complex structures and nonlinear behaviors, ETABS 19.0.0 is widely preferred by structural engineers in the building industry. For the design of foundation, manual calculation was done."
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "etabs_api"
+    "required": false
+    "condition": "The software/version narrative is project-specific and may be omitted."
+    "inventory_item_index": 258
+    "example": "The building was modeled using the ETABS 19.0.0 software. ETABS 19.0.0 is a specialized program designed specifically for the analysis and design of building systems. It offers a user-friendly interface and advanced features, making it both sophisticated and easy to use. The software provides intuitive modeling capabilities, powerful analytical tools, efficient design procedures, robust numerical methods, and supports various international design codes. With its ability to handle complex structures and nonlinear behaviors, ETABS 19.0.0 is widely preferred by structural engineers in the building industry. For the design of foundation, manual calculation was done."
+    "inventory_item_indices":
+      - 258
+  -
+    "key": "project.standard_rectangular_bricks_are_which_are_well"
+    "description": "Standard rectangular bricks are used, which are well burnt, hand-formed or machine-made, and possess a crushing strength of at least 3.5 N/mm². The preferred brick size is 250 x 100 x 75 mm, with 10 mm thick horizontal and vertical mortar joints."
+    "type": "text"
+    "unit": "mm"
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 268
+    "example": "Standard rectangular bricks are used, which are well burnt, hand-formed or machine-made, and possess a crushing strength of at least 3.5 N/mm². The preferred brick size is 250 x 100 x 75 mm, with 10 mm thick horizontal and vertical mortar joints."
+    "inventory_item_indices":
+      - 268
+  -
+    "key": "project.thick_walls_acceptable_tolerances_are_10_mm"
+    "description": "For thick walls, acceptable tolerances are -10 mm on length, -5 mm on width, and ±3 mm on thickness."
+    "type": "text"
+    "unit": "mm"
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 270
+    "example": "For thick walls, acceptable tolerances are -10 mm on length, -5 mm on width, and ±3 mm on thickness."
+    "inventory_item_indices":
+      - 270
+  -
+    "key": "materials.minimum_thickness_is_half_brick_while_maximum"
+    "description": "The minimum thickness is half-brick, while the maximum thickness is one brick. Internal walls have a thickness of up to 115 mm for brick walls or equivalent materials, while external walls have a thickness of up to 230 mm for brick walls or equivalent materials."
+    "type": "text"
+    "unit": "mm"
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 277
+    "example": "The minimum thickness is half-brick, while the maximum thickness is one brick. Internal walls have a thickness of up to 115 mm for brick walls or equivalent materials, while external walls have a thickness of up to 230 mm for brick walls or equivalent materials."
+    "inventory_item_indices":
+      - 277
+  -
+    "key": "table.loads.load_assessment"
+    "description": "Table 5: Load Assessment for Structural Analysis"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "etabs_api"
+    "required": true
+    "condition": "Column schema needs owner review; sample table has blank/unlabelled headers."
+    "inventory_item_index": 288
+    "example":
+      "rows": 39
+      "columns": 6
+      "header_row":
+        - ""
+    "columns":
+      -
+        "key": "table.loads.load_assessment.unlabelled_column_1"
+        "header": "Unlabelled column 1"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.loads.load_assessment.unlabelled_column_2"
+        "header": "Unlabelled column 2"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.loads.load_assessment.unlabelled_column_3"
+        "header": "Unlabelled column 3"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.loads.load_assessment.unlabelled_column_4"
+        "header": "Unlabelled column 4"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.loads.load_assessment.unlabelled_column_5"
+        "header": "Unlabelled column 5"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.loads.load_assessment.unlabelled_column_6"
+        "header": "Unlabelled column 6"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Load rows from ETABS tables/.e2k and confirmed user load inputs."
+    "row_behavior": "data-driven"
+    "inventory_item_indices":
+      - 288
+  -
+    "key": "figure.loads.wall_load_first_floor_in_kn_m"
+    "description": "Figure 6: Wall Load (First Floor in kN/m)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 293
+    "example":
+      "alt_text": null
+      "width_inches": 4.4811
+      "height_inches": 9.3747
+    "inventory_item_indices":
+      - 293
+  -
+    "key": "figure.loads.wall_load_second_floor_in_kn_m"
+    "description": "Figure 7: Wall Load (Second Floor in kN/m)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 298
+    "example":
+      "alt_text": null
+      "width_inches": 4.7194
+      "height_inches": 8.72
+    "inventory_item_indices":
+      - 298
+  -
+    "key": "figure.loads.wall_load_third_floor_in_kn_m"
+    "description": "Figure 8: Wall Load(Third Floor in kN/m)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 302
+    "example":
+      "alt_text": null
+      "width_inches": 4.6675
+      "height_inches": 8.6667
+    "inventory_item_indices":
+      - 302
+  -
+    "key": "figure.building.floor_finish_first_floor_in_kn_m2"
+    "description": "Figure 9: Floor Finish (First Floor in kN/m2)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 310
+    "example":
+      "alt_text": null
+      "width_inches": 4.7715
+      "height_inches": 8.7929
+    "inventory_item_indices":
+      - 310
+  -
+    "key": "figure.building.floor_finish_second_floor_in_kn_m2"
+    "description": "Figure 10: Floor Finish (Second Floor in kN/m2)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 317
+    "example":
+      "alt_text": null
+      "width_inches": 4.6569
+      "height_inches": 8.7408
+    "inventory_item_indices":
+      - 317
+  -
+    "key": "building.occupancy"
+    "description": "The live loads for the floor and roof are determined using IS 875 part 2, as referenced by the National Building Code. For residential buildings, the appropriate live load values specified in Table 1 of IS 875 Part 2 are considered. Since the building is intended for residential use, the loading intensity for dwelling houses under the residential category is taken into account."
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 325
+    "example": "The live loads for the floor and roof are determined using IS 875 part 2, as referenced by the National Building Code. For residential buildings, the appropriate live load values specified in Table 1 of IS 875 Part 2 are considered. Since the building is intended for residential use, the loading intensity for dwelling houses under the residential category is taken into account."
+    "inventory_item_indices":
+      - 325
+  -
+    "key": "table.loads.live_load_intensity"
+    "description": "Table 6: Live load intensity in different rooms"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 329
+    "example":
+      "rows": 9
+      "columns": 3
+      "header_row":
+        - "S.N"
+        - "OCCUPANCY CLASSIFICATION"
+        - "Uniformly distributed load"
+    "columns":
+      -
+        "key": "table.loads.live_load_intensity.s_n"
+        "header": "S.N"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.loads.live_load_intensity.occupancy_classification"
+        "header": "OCCUPANCY CLASSIFICATION"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.loads.live_load_intensity.uniformly_distributed_load"
+        "header": "Uniformly distributed load"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Rows depend on occupancy/room types and applicable load criteria."
+    "row_behavior": "data-driven"
+    "inventory_item_indices":
+      - 329
+  -
+    "key": "figure.loads.live_load_first_floor_in_kn_m2"
+    "description": "Figure 11: Live Load (First Floor in kN/m2)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 332
+    "example":
+      "alt_text": null
+      "width_inches": 4.1073
+      "height_inches": 8.3333
+    "inventory_item_indices":
+      - 332
+  -
+    "key": "figure.loads.live_load_second_floor_in_kn_m2"
+    "description": "Figure 12: Live Load (Second Floor in kN/m2)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 337
+    "example":
+      "alt_text": null
+      "width_inches": 4.2818
+      "height_inches": 8.7825
+    "inventory_item_indices":
+      - 337
+  -
+    "key": "figure.loads.roof_live_second_floor_in_kn_m2"
+    "description": "Figure 13: Roof Live (Second Floor in kN/m2)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 344
+    "example":
+      "alt_text": null
+      "width_inches": 4.7402
+      "height_inches": 8.5637
+    "inventory_item_indices":
+      - 344
+  -
+    "key": "figure.loads.roof_live_top_floor_in_kn_m2"
+    "description": "Figure 14: Roof live (Top Floor in kN/m2)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 348
+    "example":
+      "alt_text": null
+      "width_inches": 4.4381
+      "height_inches": 8.6991
+    "inventory_item_indices":
+      - 348
+  -
+    "key": "figure.loads.load_cases_considered_in_software"
+    "description": "Figure 15: Load Cases considered in the software"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 355
+    "example":
+      "alt_text": null
+      "width_inches": 6.9924
+      "height_inches": 3.3
+    "inventory_item_indices":
+      - 355
+  -
+    "key": "figure.project.mass_sources_considered"
+    "description": "Figure 15: Mass sources considered"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 360
+    "example":
+      "alt_text": null
+      "width_inches": 4.0195
+      "height_inches": 1.7354
+    "inventory_item_indices":
+      - 360
+  -
+    "key": "figure.project.mass_sources_considered_panel_b"
+    "description": "Figure 15: Mass sources considered"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 362
+    "example":
+      "alt_text": null
+      "width_inches": 6.9924
+      "height_inches": 3.1375
+    "inventory_item_indices":
+      - 362
+  -
+    "key": "project.fundamental_time_period_on_empirical_formula"
+    "description": "Table 8: Fundamental Time Period Based on Empirical Formula"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 372
+    "example": "Table 8: Fundamental Time Period Based on Empirical Formula"
+    "inventory_item_indices":
+      - 372
+  -
+    "key": "table.seismic.empirical_period_calculation"
+    "description": "Table 8: Fundamental Time Period Based on Empirical Formula"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": "Column schema needs owner review; sample table has blank/unlabelled headers."
+    "inventory_item_index": 375
+    "example":
+      "rows": 6
+      "columns": 7
+      "header_row":
+        - "Height of building from foundation or from top of rigid basement (H)"
+        - "9.525"
+        - "m"
+    "columns":
+      -
+        "key": "table.seismic.empirical_period_calculation.height_of_building_foundation_or_top_of"
+        "header": "Height of building from foundation or from top of rigid basement (H)"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.empirical_period_calculation.9_525"
+        "header": "9.525"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.empirical_period_calculation.m"
+        "header": "m"
+        "unit": "m"
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.empirical_period_calculation.unlabelled_column_4"
+        "header": "Unlabelled column 4"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.empirical_period_calculation.unlabelled_column_5"
+        "header": "Unlabelled column 5"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.empirical_period_calculation.unlabelled_column_6"
+        "header": "Unlabelled column 6"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.empirical_period_calculation.unlabelled_column_7"
+        "header": "Unlabelled column 7"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Fixed calculation rows with project-specific inputs/results."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 375
+  -
+    "key": "figure.modal.vertical_distribution_of_uls_seismic_forces_nbc"
+    "description": "Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025 Cl. 6.3)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 379
+    "example":
+      "alt_text": null
+      "width_inches": 3.6684
+      "height_inches": 0.6125
+    "inventory_item_indices":
+      - 379
+  -
+    "key": "modal.tbase_shear_etabs_240_02_kn"
+    "description": "\\tBase shear from ETABS 240.02 kN."
+    "type": "text"
+    "unit": "kN"
+    "format":
+      "decimals": null
+    "source": "etabs_api"
+    "required": true
+    "condition": null
+    "inventory_item_index": 380
+    "example": "\\tBase shear from ETABS 240.02 kN."
+    "inventory_item_indices":
+      - 380
+  -
+    "key": "codes.clauses.vertical_force_distribution"
+    "description": "Clause citation value for 6.3"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 381
+    "example": "6.3 (sample citation)"
+    "target_clause_2025": "6.3"
+    "mapping_status": "sample_reference"
+    "inventory_item_indices":
+      - 381
+  -
+    "key": "table.seismic.vertical_force_distribution"
+    "description": "Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025 Cl. 6.3)"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 383
+    "example":
+      "rows": 6
+      "columns": 7
+      "header_row":
+        - "Level"
+        - "Wi (kg)"
+        - "Elevation hi (m)"
+        - "hi^k"
+        - "Wi·hi^k"
+        - "ULS Fi (kN)"
+        - "Shear Force (kN)"
+    "columns":
+      -
+        "key": "table.seismic.vertical_force_distribution.level"
+        "header": "Level"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.vertical_force_distribution.wi_kg"
+        "header": "Wi (kg)"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.vertical_force_distribution.elevation_hi_m"
+        "header": "Elevation hi (m)"
+        "unit": "m"
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.vertical_force_distribution.hi_k"
+        "header": "hi^k"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.vertical_force_distribution.wi_hi_k"
+        "header": "Wi·hi^k"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.vertical_force_distribution.uls_fi_kn"
+        "header": "ULS Fi (kN)"
+        "unit": "kN"
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.vertical_force_distribution.shear_force_kn"
+        "header": "Shear Force (kN)"
+        "unit": "kN"
+        "format":
+          "decimals": null
+    "row_source": "One row per modeled storey; derived from project seismic weight and elevation."
+    "row_behavior": "data-driven"
+    "inventory_item_indices":
+      - 383
+  -
+    "key": "seismic.distribution_exponent_k"
+    "description": "Exponent used for vertical force distribution"
+    "type": "number"
+    "unit": null
+    "format":
+      "decimals": 3
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 384
+    "example": "1.004"
+    "sentence_template": "k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}."
+    "inventory_item_indices":
+      - 384
+  -
+    "key": "seismic.design_period_used_s"
+    "description": "Fundamental period used in the seismic calculation"
+    "type": "number"
+    "unit": "s"
+    "format":
+      "decimals": 3
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 384
+    "example": "0.508"
+    "sentence_template": "k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}."
+    "inventory_item_indices":
+      - 384
+  -
+    "key": "seismic.spectral_coefficient_cd"
+    "description": "Seismic spectral coefficient Cd"
+    "type": "number"
+    "unit": null
+    "format":
+      "decimals": 4
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 384
+    "example": "0.1458"
+    "sentence_template": "k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}."
+    "inventory_item_indices":
+      - 384
+  -
+    "key": "seismic.zone_factor_z"
+    "description": "Seismic zoning factor Z"
+    "type": "number"
+    "unit": null
+    "format":
+      "decimals": 2
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 384
+    "example": "0.35"
+    "sentence_template": "k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}."
+    "inventory_item_indices":
+      - 384
+  -
+    "key": "seismic.importance_factor_i"
+    "description": "Importance factor I"
+    "type": "number"
+    "unit": null
+    "format":
+      "decimals": 1
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 384
+    "example": "1.0"
+    "sentence_template": "k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}."
+    "inventory_item_indices":
+      - 384
+  -
+    "key": "seismic.response_modification_factor_rmu"
+    "description": "Response modification factor Rμ"
+    "type": "number"
+    "unit": null
+    "format":
+      "decimals": 0
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 384
+    "example": "4"
+    "sentence_template": "k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}."
+    "inventory_item_indices":
+      - 384
+  -
+    "key": "design.overstrength_factor_ultimate_omega_u"
+    "description": "Ultimate overstrength factor Ωu"
+    "type": "number"
+    "unit": null
+    "format":
+      "decimals": 1
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 384
+    "example": "1.5"
+    "sentence_template": "k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}."
+    "inventory_item_indices":
+      - 384
+  -
+    "key": "seismic.soil_class"
+    "description": "Soil class stated with the seismic parameters"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 384
+    "example": "C"
+    "sentence_template": "k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}."
+    "inventory_item_indices":
+      - 384
+  -
+    "key": "modal.rayleigh_time_period_x_direction_eqx_uls"
+    "description": "Table 10: Rayleigh time period, X-direction (EQX-ULS)"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 388
+    "example": "Table 10: Rayleigh time period, X-direction (EQX-ULS)"
+    "inventory_item_indices":
+      - 388
+  -
+    "key": "table.modal.rayleigh_x"
+    "description": "Table 10: Rayleigh time period, X-direction (EQX-ULS)"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 390
+    "example":
+      "rows": 7
+      "columns": 8
+      "header_row":
+        - "Level"
+        - "Wi (kN)"
+        - "di (mm)"
+        - "di (m)"
+        - "di²"
+        - "ULS Fi (kN)"
+        - "Fi·di"
+        - "Wi·di²"
+    "columns":
+      -
+        "key": "table.modal.rayleigh_x.level"
+        "header": "Level"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_x.wi_kn"
+        "header": "Wi (kN)"
+        "unit": "kN"
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_x.di_mm"
+        "header": "di (mm)"
+        "unit": "mm"
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_x.di_m"
+        "header": "di (m)"
+        "unit": "m"
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_x.di"
+        "header": "di²"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_x.uls_fi_kn"
+        "header": "ULS Fi (kN)"
+        "unit": "kN"
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_x.fi_di"
+        "header": "Fi·di"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_x.wi_di"
+        "header": "Wi·di²"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "One row per storey for the X-direction Rayleigh calculation."
+    "row_behavior": "data-driven"
+    "inventory_item_indices":
+      - 390
+  -
+    "key": "modal.rayleigh_time_period_y_direction_eqy_uls"
+    "description": "Table 11: Rayleigh time period, Y-direction (EQY-ULS)"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 391
+    "example": "Table 11: Rayleigh time period, Y-direction (EQY-ULS)"
+    "inventory_item_indices":
+      - 391
+  -
+    "key": "table.modal.rayleigh_y"
+    "description": "Table 11: Rayleigh time period, Y-direction (EQY-ULS)"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 393
+    "example":
+      "rows": 7
+      "columns": 8
+      "header_row":
+        - "Level"
+        - "Wi (kN)"
+        - "di (mm)"
+        - "di (m)"
+        - "di²"
+        - "ULS Fi (kN)"
+        - "Fi·di"
+        - "Wi·di²"
+    "columns":
+      -
+        "key": "table.modal.rayleigh_y.level"
+        "header": "Level"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_y.wi_kn"
+        "header": "Wi (kN)"
+        "unit": "kN"
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_y.di_mm"
+        "header": "di (mm)"
+        "unit": "mm"
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_y.di_m"
+        "header": "di (m)"
+        "unit": "m"
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_y.di"
+        "header": "di²"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_y.uls_fi_kn"
+        "header": "ULS Fi (kN)"
+        "unit": "kN"
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_y.fi_di"
+        "header": "Fi·di"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.rayleigh_y.wi_di"
+        "header": "Wi·di²"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "One row per storey for the Y-direction Rayleigh calculation."
+    "row_behavior": "data-driven"
+    "inventory_item_indices":
+      - 393
+  -
+    "key": "modal.rayleigh_period_s"
+    "description": "Rayleigh fundamental period"
+    "type": "number"
+    "unit": "s"
+    "format":
+      "decimals": 3
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 395
+    "example": "0.531"
+    "sentence_template": "As Empirical time period ({{ modal.empirical_period_s }} sec) is lesser than the Rayleigh time period ({{ modal.rayleigh_period_s }} sec), use {{ modal.selected_period_method }} time period for the calculation."
+    "inventory_item_indices":
+      - 395
+  -
+    "key": "modal.empirical_period_s"
+    "description": "Empirical fundamental period"
+    "type": "number"
+    "unit": "s"
+    "format":
+      "decimals": 3
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 395
+    "example": "0.508"
+    "sentence_template": "As Empirical time period ({{ modal.empirical_period_s }} sec) is lesser than the Rayleigh time period ({{ modal.rayleigh_period_s }} sec), use {{ modal.selected_period_method }} time period for the calculation."
+    "inventory_item_indices":
+      - 395
+  -
+    "key": "modal.selected_period_method"
+    "description": "Method selected for the design period based on the code comparison"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 395
+    "example": "empirical"
+    "sentence_template": "As Empirical time period ({{ modal.empirical_period_s }} sec) is lesser than the Rayleigh time period ({{ modal.rayleigh_period_s }} sec), use {{ modal.selected_period_method }} time period for the calculation."
+    "inventory_item_indices":
+      - 395
+  -
+    "key": "codes.clauses.spectral_shape_factor"
+    "description": "Clause citation value for 4.1.2"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 397
+    "example": "4.1.2 (sample citation)"
+    "target_clause_2025": "4.1.2"
+    "mapping_status": "sample_reference"
+    "inventory_item_indices":
+      - 397
+  -
+    "key": "codes.clauses.seismic_zoning_factor"
+    "description": "Clause citation value for 4.1.4"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 397
+    "example": "4.1.4 (sample citation)"
+    "target_clause_2025": "4.1.4"
+    "mapping_status": "sample_reference"
+    "inventory_item_indices":
+      - 397
+  -
+    "key": "codes.clauses.importance_factor"
+    "description": "Clause citation value for 4.1.5"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 397
+    "example": "4.1.5 (sample citation)"
+    "target_clause_2025": "4.1.5"
+    "mapping_status": "sample_reference"
+    "inventory_item_indices":
+      - 397
+  -
+    "key": "code.edition"
+    "description": "Code edition printed in this caption"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 405
+    "example": "NBC 105:2025"
+    "sentence_template": "Table 12: Seismic design parameters for the RC moment resisting frame in {{ building.location }} ({{ code.edition }})."
+    "inventory_item_indices":
+      - 405
+  -
+    "key": "table.seismic.design_parameters"
+    "description": "Table 12: Seismic design parameters for the RC moment resisting frame in Damak (NBC 105:2025)."
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": "Column schema needs owner review; sample table has blank/unlabelled headers."
+    "inventory_item_index": 407
+    "example":
+      "rows": 15
+      "columns": 4
+      "header_row":
+        - "Fundamental Time Period ="
+        - "0.508"
+        - "Sec"
+    "columns":
+      -
+        "key": "table.seismic.design_parameters.fundamental_time_period"
+        "header": "Fundamental Time Period ="
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.design_parameters.0_508"
+        "header": "0.508"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.design_parameters.sec"
+        "header": "Sec"
+        "unit": "s"
+        "format":
+          "decimals": null
+      -
+        "key": "table.seismic.design_parameters.unlabelled_column_4"
+        "header": "Unlabelled column 4"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Fixed parameter labels; values sourced from approved code/project inputs and calculations."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 407
+  -
+    "key": "table.design.overstrength_factors"
+    "description": "Table 12: Seismic design parameters for the RC moment resisting frame in Damak (NBC 105:2025)."
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 409
+    "example":
+      "rows": 4
+      "columns": 2
+      "header_row":
+        - "Over strength Factor Ultimate limitState ="
+        - "1.5"
+    "columns":
+      -
+        "key": "table.design.overstrength_factors.over_strength_factor_ultimate_limitstate"
+        "header": "Over strength Factor Ultimate limitState ="
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.design.overstrength_factors.1_5"
+        "header": "1.5"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Fixed parameter rows with project/code-dependent values."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 409
+  -
+    "key": "codes.clauses.equivalent_static_method"
+    "description": "Clause citation value for 3.2.1"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 413
+    "example": "3.2.1 (sample citation)"
+    "target_clause_2025": "3.2.1"
+    "mapping_status": "sample_reference"
+    "inventory_item_indices":
+      - 413
+  -
+    "key": "building.total_height_m"
+    "description": "Total building height"
+    "type": "number"
+    "unit": "m"
+    "format":
+      "decimals": 3
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 413
+    "example": "9.525"
+    "sentence_template": "As per Clause {{ codes.clauses.equivalent_static_method }} of {{ code.edition }}, the Equivalent Static Method may be used for all serviceability limit state calculations regardless of the building characteristics. For the ultimate limit state, the Equivalent Static Method may be used when at least one of the listed criteria is satisfied, including that the height of the structure is less than or equal to 15 m. The total height of the building is {{ building.total_height_m }} m ({{ building.storeys_above_grade }} stories × {{ building.story_height_m }} m), which is less than 15 m. Therefore, the Equivalent Static Method is applicable for both ULS and SLS, and Modal Response Spectrum Analysis is not required."
+    "inventory_item_indices":
+      - 413
+  -
+    "key": "codes.clauses.load_combinations"
+    "description": "Clause citation value for 3.6.1"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": "No owner-approved NBC 105:2025 mapping supplied."
+    "inventory_item_index": 418
+    "example": "3.6.1 (sample citation)"
+    "target_clause_2025": null
+    "mapping_status": "needs_owner_decision"
+    "inventory_item_indices":
+      - 418
+      - 419
+  -
+    "key": "codes.clauses.modal_mass_participation"
+    "description": "Clause citation value for 7.3"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 430
+    "example": "7.3 (sample citation)"
+    "target_clause_2025": "7.3"
+    "mapping_status": "sample_reference"
+    "inventory_item_indices":
+      - 430
+  -
+    "key": "codes.limits.modal_mass_participation_pct"
+    "description": "Minimum modal mass participation threshold"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 0
+    "source": "excel"
+    "required": true
+    "condition": "Verify this code limit against the approved edition."
+    "inventory_item_index": 430
+    "example": "90"
+    "sentence_template": "{{ code.edition }} clause {{ codes.clauses.modal_mass_participation }} states that number of modes to be used in the analysis should be such that the sum total of modal masses of all modes considered is at least {{ codes.limits.modal_mass_participation_pct }} percent of the total seismic mass of the structure. The analysis was carried out for {{ modal.modes_included_count }} modes so that the mass participation satisfies this criterion in both orthogonal directions. The table shows time period and mass participation ratio for all modes."
+    "inventory_item_indices":
+      - 430
+  -
+    "key": "modal.modes_included_count"
+    "description": "Number of modes included in the ETABS analysis"
+    "type": "number"
+    "unit": "mode"
+    "format":
+      "decimals": 0
+    "source": "etabs_api"
+    "required": true
+    "condition": null
+    "inventory_item_index": 430
+    "example": "12"
+    "sentence_template": "{{ code.edition }} clause {{ codes.clauses.modal_mass_participation }} states that number of modes to be used in the analysis should be such that the sum total of modal masses of all modes considered is at least {{ codes.limits.modal_mass_participation_pct }} percent of the total seismic mass of the structure. The analysis was carried out for {{ modal.modes_included_count }} modes so that the mass participation satisfies this criterion in both orthogonal directions. The table shows time period and mass participation ratio for all modes."
+    "inventory_item_indices":
+      - 430
+  -
+    "key": "table.modal.periods_and_mass_participation"
+    "description": "Table 13: Time period and mass participation ratio"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "etabs_api"
+    "required": true
+    "condition": null
+    "inventory_item_index": 434
+    "example":
+      "rows": 11
+      "columns": 7
+      "header_row":
+        - "Case"
+        - "Mode"
+        - "Period"
+        - "UX"
+        - "UY"
+        - "Sum UX"
+        - "Sum UY"
+    "columns":
+      -
+        "key": "table.modal.periods_and_mass_participation.case"
+        "header": "Case"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.periods_and_mass_participation.mode"
+        "header": "Mode"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.periods_and_mass_participation.period"
+        "header": "Period"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.periods_and_mass_participation.ux"
+        "header": "UX"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.periods_and_mass_participation.uy"
+        "header": "UY"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.periods_and_mass_participation.sum_ux"
+        "header": "Sum UX"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.modal.periods_and_mass_participation.sum_uy"
+        "header": "Sum UY"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "One row per requested ETABS mode; include the mass-adequacy threshold check."
+    "row_behavior": "data-driven"
+    "inventory_item_indices":
+      - 434
+  -
+    "key": "figure.elements.design_for_frames"
+    "description": "Figure 16: Design check for frames"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 443
+    "example":
+      "alt_text": null
+      "width_inches": 6.9924
+      "height_inches": 7.3882
+    "inventory_item_indices":
+      - 443
+  -
+    "key": "design.column.maximum_reinforcement.provided_reinforcement_area_mm2"
+    "description": "Column maximum reinforcement provided reinforcement area mm2"
+    "type": "number"
+    "unit": "mm²"
+    "format":
+      "decimals": 0
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 450
+    "example": "1557"
+    "sentence_template": "= {{ design.column.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.column.maximum_reinforcement.section_width_mm }}*{{ design.column.maximum_reinforcement.section_depth_mm }})*100% = {{ design.column.maximum_reinforcement.provided_pct }}% < {{ design.column.maximum_reinforcement.limit_pct }}% ({{ design.column.maximum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 450
+  -
+    "key": "design.column.maximum_reinforcement.section_width_mm"
+    "description": "Column maximum reinforcement section width mm"
+    "type": "number"
+    "unit": "mm"
+    "format":
+      "decimals": 0
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 450
+    "example": "355"
+    "sentence_template": "= {{ design.column.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.column.maximum_reinforcement.section_width_mm }}*{{ design.column.maximum_reinforcement.section_depth_mm }})*100% = {{ design.column.maximum_reinforcement.provided_pct }}% < {{ design.column.maximum_reinforcement.limit_pct }}% ({{ design.column.maximum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 450
+  -
+    "key": "design.column.maximum_reinforcement.section_depth_mm"
+    "description": "Column maximum reinforcement section depth mm"
+    "type": "number"
+    "unit": "mm"
+    "format":
+      "decimals": 0
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 450
+    "example": "355"
+    "sentence_template": "= {{ design.column.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.column.maximum_reinforcement.section_width_mm }}*{{ design.column.maximum_reinforcement.section_depth_mm }})*100% = {{ design.column.maximum_reinforcement.provided_pct }}% < {{ design.column.maximum_reinforcement.limit_pct }}% ({{ design.column.maximum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 450
+  -
+    "key": "design.column.maximum_reinforcement.provided_pct"
+    "description": "Column maximum reinforcement provided pct"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 2
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 450
+    "example": "1.24"
+    "sentence_template": "= {{ design.column.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.column.maximum_reinforcement.section_width_mm }}*{{ design.column.maximum_reinforcement.section_depth_mm }})*100% = {{ design.column.maximum_reinforcement.provided_pct }}% < {{ design.column.maximum_reinforcement.limit_pct }}% ({{ design.column.maximum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 450
+  -
+    "key": "design.column.maximum_reinforcement.limit_pct"
+    "description": "Column maximum reinforcement limit pct"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 0
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 450
+    "example": "4"
+    "sentence_template": "= {{ design.column.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.column.maximum_reinforcement.section_width_mm }}*{{ design.column.maximum_reinforcement.section_depth_mm }})*100% = {{ design.column.maximum_reinforcement.provided_pct }}% < {{ design.column.maximum_reinforcement.limit_pct }}% ({{ design.column.maximum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 450
+  -
+    "key": "design.column.maximum_reinforcement.status"
+    "description": "Column maximum reinforcement check status"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 450
+    "example": "pass"
+    "sentence_template": "= {{ design.column.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.column.maximum_reinforcement.section_width_mm }}*{{ design.column.maximum_reinforcement.section_depth_mm }})*100% = {{ design.column.maximum_reinforcement.provided_pct }}% < {{ design.column.maximum_reinforcement.limit_pct }}% ({{ design.column.maximum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 450
+  -
+    "key": "design.column.minimum_reinforcement.provided_pct"
+    "description": "Column minimum reinforcement: Provided reinforcement percentage"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 3
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 454
+    "example": "1.026"
+    "sentence_template": "\\t= {{ design.column.minimum_reinforcement.provided_pct }}%\\t> {{ design.column.minimum_reinforcement.limit_pct }}% ({{ design.column.minimum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 454
+  -
+    "key": "design.column.minimum_reinforcement.limit_pct"
+    "description": "Column minimum reinforcement: Code/project comparison percentage"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 0
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 454
+    "example": "1"
+    "sentence_template": "\\t= {{ design.column.minimum_reinforcement.provided_pct }}%\\t> {{ design.column.minimum_reinforcement.limit_pct }}% ({{ design.column.minimum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 454
+  -
+    "key": "design.column.minimum_reinforcement.status"
+    "description": "Column minimum reinforcement check status"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 454
+    "example": "pass"
+    "sentence_template": "\\t= {{ design.column.minimum_reinforcement.provided_pct }}%\\t> {{ design.column.minimum_reinforcement.limit_pct }}% ({{ design.column.minimum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 454
+  -
+    "key": "design.beam.maximum_reinforcement.provided_reinforcement_area_mm2"
+    "description": "Beam maximum reinforcement provided reinforcement area mm2"
+    "type": "number"
+    "unit": "mm²"
+    "format":
+      "decimals": 3
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 456
+    "example": "678.584"
+    "sentence_template": "= {{ design.beam.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.beam.maximum_reinforcement.section_width_mm }}*{{ design.beam.maximum_reinforcement.section_depth_mm }})*100% = {{ design.beam.maximum_reinforcement.provided_pct }}% < {{ design.beam.maximum_reinforcement.limit_pct }}% ({{ design.beam.maximum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 456
+  -
+    "key": "design.beam.maximum_reinforcement.section_width_mm"
+    "description": "Beam maximum reinforcement section width mm"
+    "type": "number"
+    "unit": "mm"
+    "format":
+      "decimals": 0
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 456
+    "example": "250"
+    "sentence_template": "= {{ design.beam.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.beam.maximum_reinforcement.section_width_mm }}*{{ design.beam.maximum_reinforcement.section_depth_mm }})*100% = {{ design.beam.maximum_reinforcement.provided_pct }}% < {{ design.beam.maximum_reinforcement.limit_pct }}% ({{ design.beam.maximum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 456
+  -
+    "key": "design.beam.maximum_reinforcement.section_depth_mm"
+    "description": "Beam maximum reinforcement section depth mm"
+    "type": "number"
+    "unit": "mm"
+    "format":
+      "decimals": 0
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 456
+    "example": "355"
+    "sentence_template": "= {{ design.beam.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.beam.maximum_reinforcement.section_width_mm }}*{{ design.beam.maximum_reinforcement.section_depth_mm }})*100% = {{ design.beam.maximum_reinforcement.provided_pct }}% < {{ design.beam.maximum_reinforcement.limit_pct }}% ({{ design.beam.maximum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 456
+  -
+    "key": "design.beam.maximum_reinforcement.provided_pct"
+    "description": "Beam maximum reinforcement provided pct"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 3
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 456
+    "example": "0.764"
+    "sentence_template": "= {{ design.beam.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.beam.maximum_reinforcement.section_width_mm }}*{{ design.beam.maximum_reinforcement.section_depth_mm }})*100% = {{ design.beam.maximum_reinforcement.provided_pct }}% < {{ design.beam.maximum_reinforcement.limit_pct }}% ({{ design.beam.maximum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 456
+  -
+    "key": "design.beam.maximum_reinforcement.limit_pct"
+    "description": "Beam maximum reinforcement limit pct"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 1
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 456
+    "example": "2.5"
+    "sentence_template": "= {{ design.beam.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.beam.maximum_reinforcement.section_width_mm }}*{{ design.beam.maximum_reinforcement.section_depth_mm }})*100% = {{ design.beam.maximum_reinforcement.provided_pct }}% < {{ design.beam.maximum_reinforcement.limit_pct }}% ({{ design.beam.maximum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 456
+  -
+    "key": "design.beam.maximum_reinforcement.status"
+    "description": "Beam maximum reinforcement check status"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 456
+    "example": "pass"
+    "sentence_template": "= {{ design.beam.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.beam.maximum_reinforcement.section_width_mm }}*{{ design.beam.maximum_reinforcement.section_depth_mm }})*100% = {{ design.beam.maximum_reinforcement.provided_pct }}% < {{ design.beam.maximum_reinforcement.limit_pct }}% ({{ design.beam.maximum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 456
+  -
+    "key": "design.beam.minimum_reinforcement.provided_pct"
+    "description": "Beam minimum reinforcement: Provided reinforcement percentage"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 3
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 458
+    "example": "0.764"
+    "sentence_template": "= {{ design.beam.minimum_reinforcement.provided_pct }}% >{{ design.beam.minimum_reinforcement.limit_pct }}% ({{ design.beam.minimum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 458
+  -
+    "key": "design.beam.minimum_reinforcement.limit_pct"
+    "description": "Beam minimum reinforcement: Code/project comparison percentage"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 2
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 458
+    "example": "0.26"
+    "sentence_template": "= {{ design.beam.minimum_reinforcement.provided_pct }}% >{{ design.beam.minimum_reinforcement.limit_pct }}% ({{ design.beam.minimum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 458
+  -
+    "key": "design.beam.minimum_reinforcement.status"
+    "description": "Beam minimum reinforcement check status"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 458
+    "example": "pass"
+    "sentence_template": "= {{ design.beam.minimum_reinforcement.provided_pct }}% >{{ design.beam.minimum_reinforcement.limit_pct }}% ({{ design.beam.minimum_reinforcement.status }})"
+    "inventory_item_indices":
+      - 458
+  -
+    "key": "table.design.slab_design_output"
+    "description": "Table 16: | | | | | | |"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "etabs_api"
+    "required": true
+    "condition": "Column schema needs owner review; sample table has blank/unlabelled headers."
+    "inventory_item_index": 461
+    "example":
+      "rows": 88
+      "columns": 8
+      "header_row":
+        - ""
+        - ""
+        - ""
+        - ""
+        - ""
+        - ""
+        - ""
+        - ""
+    "columns":
+      -
+        "key": "table.design.slab_design_output.unlabelled_column_1"
+        "header": "Unlabelled column 1"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.design.slab_design_output.unlabelled_column_2"
+        "header": "Unlabelled column 2"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.design.slab_design_output.unlabelled_column_3"
+        "header": "Unlabelled column 3"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.design.slab_design_output.unlabelled_column_4"
+        "header": "Unlabelled column 4"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.design.slab_design_output.unlabelled_column_5"
+        "header": "Unlabelled column 5"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.design.slab_design_output.unlabelled_column_6"
+        "header": "Unlabelled column 6"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.design.slab_design_output.unlabelled_column_7"
+        "header": "Unlabelled column 7"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.design.slab_design_output.unlabelled_column_8"
+        "header": "Unlabelled column 8"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "ETABS slab design records; column/header semantics are unresolved because the sample header is blank."
+    "row_behavior": "data-driven"
+    "inventory_item_indices":
+      - 461
+  -
+    "key": "table.design.beam_deflection_check"
+    "description": "Table 14: Check for Deflection for beam"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "computed"
+    "required": true
+    "condition": null
+    "inventory_item_index": 467
+    "example":
+      "rows": 14
+      "columns": 2
+      "header_row":
+        - "Item"
+        - "Value"
+    "columns":
+      -
+        "key": "table.design.beam_deflection_check.item"
+        "header": "Item"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.design.beam_deflection_check.value"
+        "header": "Value"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Fixed check labels; values/results depend on the project and calculation."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 467
+  -
+    "key": "figure.elements.tdesign_of_beams"
+    "description": "\\tDesign of Beams"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 469
+    "example":
+      "alt_text": null
+      "width_inches": 6.2196
+      "height_inches": 8.9492
+    "inventory_item_indices":
+      - 469
+  -
+    "key": "figure.elements.tdesign_of_beams_panel_b"
+    "description": "\\tDesign of Beams"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 471
+    "example":
+      "alt_text": null
+      "width_inches": 6.7197
+      "height_inches": 2.1774
+    "inventory_item_indices":
+      - 471
+  -
+    "key": "figure.project.t"
+    "description": "\\t"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 475
+    "example":
+      "alt_text": null
+      "width_inches": 5.2005
+      "height_inches": 7.4479
+    "inventory_item_indices":
+      - 475
+  -
+    "key": "figure.project.t_panel_b"
+    "description": "\\t"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 478
+    "example":
+      "alt_text": null
+      "width_inches": 6.125
+      "height_inches": 4.5175
+    "inventory_item_indices":
+      - 478
+  -
+    "key": "figure.foundation.foundation_reaction_1_5dl_1_5ll"
+    "description": "Figure 17: Foundation reaction(1.5DL+1.5LL)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 486
+    "example":
+      "alt_text": null
+      "width_inches": 5.971
+      "height_inches": 1.925
+    "inventory_item_indices":
+      - 486
+  -
+    "key": "figure.foundation.foundation_reaction_1_5dl_1_5ll_panel_b"
+    "description": "Figure 17: Foundation reaction(1.5DL+1.5LL)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 487
+    "example":
+      "alt_text": null
+      "width_inches": 3.0896
+      "height_inches": 2.1222
+    "inventory_item_indices":
+      - 487
+  -
+    "key": "figure.foundation.foundation_reaction_1_5dl_1_5ll_panel_c"
+    "description": "Figure 17: Foundation reaction(1.5DL+1.5LL)"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 493
+    "example":
+      "alt_text": null
+      "width_inches": 3.4171
+      "height_inches": 5.7716
+    "inventory_item_indices":
+      - 493
+  -
+    "key": "figure.foundation.tdesign_of_foundations"
+    "description": "\\tDesign of Foundations"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 500
+    "example":
+      "alt_text": null
+      "width_inches": 6.9924
+      "height_inches": 5.916
+    "inventory_item_indices":
+      - 500
+  -
+    "key": "figure.foundation.tdesign_of_foundations_panel_b"
+    "description": "\\tDesign of Foundations"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 506
+    "example":
+      "alt_text": null
+      "width_inches": 6.9924
+      "height_inches": 3.991
+    "inventory_item_indices":
+      - 506
+  -
+    "key": "figure.foundation.tdesign_of_foundations_panel_c"
+    "description": "\\tDesign of Foundations"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 508
+    "example":
+      "alt_text": null
+      "width_inches": 6.9924
+      "height_inches": 1.7174
+    "inventory_item_indices":
+      - 508
+  -
+    "key": "figure.foundation.tdesign_of_foundations_panel_d"
+    "description": "\\tDesign of Foundations"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 512
+    "example":
+      "alt_text": null
+      "width_inches": 6.7976
+      "height_inches": 4.5729
+    "inventory_item_indices":
+      - 512
+  -
+    "key": "figure.staircase.tdesign_of_staircases"
+    "description": "\\tDesign of Staircases"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 518
+    "example":
+      "alt_text": null
+      "width_inches": 6.9924
+      "height_inches": 6.1764
+    "inventory_item_indices":
+      - 518
+  -
+    "key": "figure.staircase.tdesign_of_staircases_panel_b"
+    "description": "\\tDesign of Staircases"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 520
+    "example":
+      "alt_text": null
+      "width_inches": 6.9924
+      "height_inches": 3.1194
+    "inventory_item_indices":
+      - 520
+  -
+    "key": "figure.staircase.tdesign_of_staircases_panel_c"
+    "description": "\\tDesign of Staircases"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 522
+    "example":
+      "alt_text": null
+      "width_inches": 6.9924
+      "height_inches": 2.85
+    "inventory_item_indices":
+      - 522
+  -
+    "key": "codes.clauses.serviceability_drift"
+    "description": "Clause citation value for 5.6.3"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": "The sample cites NBC 105:2077; no owner-approved 2025 mapping supplied."
+    "inventory_item_index": 533
+    "example": "5.6.3 (sample citation)"
+    "target_clause_2025": null
+    "mapping_status": "needs_owner_decision"
+    "inventory_item_indices":
+      - 533
+      - 535
+  -
+    "key": "codes.limits.maximum_story_deflection_ratio"
+    "description": "Maximum story deflection-to-height ratio"
+    "type": "number"
+    "unit": "ratio"
+    "format":
+      "decimals": 3
+    "source": "excel"
+    "required": true
+    "condition": "Owner/engineer must verify against the approved NBC 105:2025 edition before use."
+    "inventory_item_index": 535
+    "example": "0.006"
+    "sentence_template": "{{ codes.clauses.serviceability_drift }} of {{ code.edition }} is applied. The maximum deflection in any story due to the minimum specified design lateral force, with partial load factor of 1.0 shall not exceed {{ codes.limits.maximum_story_deflection_ratio }} times the story height. Furthermore, the drift shall not exceed {{ codes.limits.serviceability_story_drift_ratio }} in Serviceability Limit State and {{ codes.limits.ultimate_story_drift_ratio }} in Ultimate Limit State case."
+    "inventory_item_indices":
+      - 535
+  -
+    "key": "codes.limits.serviceability_story_drift_ratio"
+    "description": "Serviceability-limit story drift ratio"
+    "type": "number"
+    "unit": "ratio"
+    "format":
+      "decimals": 3
+    "source": "excel"
+    "required": true
+    "condition": "Owner/engineer must verify against the approved NBC 105:2025 edition before use."
+    "inventory_item_index": 535
+    "example": "0.006"
+    "sentence_template": "{{ codes.clauses.serviceability_drift }} of {{ code.edition }} is applied. The maximum deflection in any story due to the minimum specified design lateral force, with partial load factor of 1.0 shall not exceed {{ codes.limits.maximum_story_deflection_ratio }} times the story height. Furthermore, the drift shall not exceed {{ codes.limits.serviceability_story_drift_ratio }} in Serviceability Limit State and {{ codes.limits.ultimate_story_drift_ratio }} in Ultimate Limit State case."
+    "inventory_item_indices":
+      - 535
+  -
+    "key": "codes.limits.ultimate_story_drift_ratio"
+    "description": "Ultimate-limit story drift ratio"
+    "type": "number"
+    "unit": "ratio"
+    "format":
+      "decimals": 3
+    "source": "excel"
+    "required": true
+    "condition": "Owner/engineer must verify against the approved NBC 105:2025 edition before use."
+    "inventory_item_index": 535
+    "example": "0.025"
+    "sentence_template": "{{ codes.clauses.serviceability_drift }} of {{ code.edition }} is applied. The maximum deflection in any story due to the minimum specified design lateral force, with partial load factor of 1.0 shall not exceed {{ codes.limits.maximum_story_deflection_ratio }} times the story height. Furthermore, the drift shall not exceed {{ codes.limits.serviceability_story_drift_ratio }} in Serviceability Limit State and {{ codes.limits.ultimate_story_drift_ratio }} in Ultimate Limit State case."
+    "inventory_item_indices":
+      - 535
+  -
+    "key": "figure.drift.tdisplacement_drift"
+    "description": "\\tDISPLACEMENT AND DRIFT CHECK"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 542
+    "example":
+      "alt_text": null
+      "width_inches": 6.991
+      "height_inches": 2.8264
+    "inventory_item_indices":
+      - 542
+  -
+    "key": "table.drift.uls_displacement_figures_x_y"
+    "description": "Table 18: |"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "etabs_api"
+    "required": true
+    "condition": null
+    "inventory_item_index": 549
+    "example":
+      "rows": 2
+      "columns": 2
+      "header_row":
+        - "X-direction figure slot"
+        - "Y-direction figure slot"
+    "columns":
+      -
+        "key": "table.drift.uls_displacement_figures_x_y.x_direction_slot"
+        "header": "X-direction figure slot"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.drift.uls_displacement_figures_x_y.y_direction_slot"
+        "header": "Y-direction figure slot"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Two directional figure slots in a fixed layout table."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 549
+  -
+    "key": "table.drift.sls_displacement_figures_x_y"
+    "description": "Table 19: |"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "etabs_api"
+    "required": true
+    "condition": null
+    "inventory_item_index": 563
+    "example":
+      "rows": 2
+      "columns": 2
+      "header_row":
+        - "X-direction figure slot"
+        - "Y-direction figure slot"
+    "columns":
+      -
+        "key": "table.drift.sls_displacement_figures_x_y.x_direction_slot"
+        "header": "X-direction figure slot"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.drift.sls_displacement_figures_x_y.y_direction_slot"
+        "header": "Y-direction figure slot"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Two directional figure slots in a fixed layout table."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 563
+  -
+    "key": "table.drift.uls_story_drift_figures_x_y"
+    "description": "Table 20: |"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "etabs_api"
+    "required": true
+    "condition": null
+    "inventory_item_index": 575
+    "example":
+      "rows": 2
+      "columns": 2
+      "header_row":
+        - "X-direction figure slot"
+        - "Y-direction figure slot"
+    "columns":
+      -
+        "key": "table.drift.uls_story_drift_figures_x_y.x_direction_slot"
+        "header": "X-direction figure slot"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.drift.uls_story_drift_figures_x_y.y_direction_slot"
+        "header": "Y-direction figure slot"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Two directional figure slots in a fixed layout table."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 575
+  -
+    "key": "table.drift.sls_story_drift_figures_x_y"
+    "description": "Table 21: |"
+    "type": "table"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "etabs_api"
+    "required": true
+    "condition": null
+    "inventory_item_index": 579
+    "example":
+      "rows": 2
+      "columns": 2
+      "header_row":
+        - "X-direction figure slot"
+        - "Y-direction figure slot"
+    "columns":
+      -
+        "key": "table.drift.sls_story_drift_figures_x_y.x_direction_slot"
+        "header": "X-direction figure slot"
+        "unit": null
+        "format":
+          "decimals": null
+      -
+        "key": "table.drift.sls_story_drift_figures_x_y.y_direction_slot"
+        "header": "Y-direction figure slot"
+        "unit": null
+        "format":
+          "decimals": null
+    "row_source": "Two directional figure slots in a fixed layout table."
+    "row_behavior": "fixed"
+    "inventory_item_indices":
+      - 579
+  -
+    "key": "figure.drift.tdisplacement_drift_panel_b"
+    "description": "\\tDISPLACEMENT AND DRIFT CHECK"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 584
+    "example":
+      "alt_text": null
+      "width_inches": 6.991
+      "height_inches": 4.1043
+    "inventory_item_indices":
+      - 584
+  -
+    "key": "codes.clauses.structural_irregularity_general"
+    "description": "Clause citation value for 5.5"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": "No owner-approved NBC 105:2025 mapping supplied."
+    "inventory_item_index": 591
+    "example": "5.5 (sample citation)"
+    "target_clause_2025": null
+    "mapping_status": "needs_owner_decision"
+    "inventory_item_indices":
+      - 591
+  -
+    "key": "codes.clauses.torsional_irregularity"
+    "description": "Clause citation value for 5.5.2.1"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": "No owner-approved NBC 105:2025 mapping supplied."
+    "inventory_item_index": 593
+    "example": "5.5.2.1 (sample citation)"
+    "target_clause_2025": null
+    "mapping_status": "needs_owner_decision"
+    "inventory_item_indices":
+      - 593
+  -
+    "key": "codes.limits.torsional_displacement_ratio"
+    "description": "Torsional irregularity displacement ratio threshold"
+    "type": "number"
+    "unit": "ratio"
+    "format":
+      "decimals": 1
+    "source": "excel"
+    "required": true
+    "condition": "Owner/engineer must verify against the approved NBC 105:2025 edition before use."
+    "inventory_item_index": 593
+    "example": "1.5"
+    "sentence_template": "As per the clause {{ codes.clauses.torsional_irregularity }} of {{ code.edition }}, torsion irregularity is considered to exist when the maximum horizontal displacement of any floor in the direction of the lateral force, applied at the centre of mass, at one end of the storey is more than {{ codes.limits.torsional_displacement_ratio }} times its minimum horizontal displacement at the far end of the same storey in that direction."
+    "inventory_item_indices":
+      - 593
+  -
+    "key": "figure.irregularity.torsional_irregularity"
+    "description": "Figure 26: Torsional Irregularity"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 595
+    "example":
+      "alt_text": null
+      "width_inches": 3.0327
+      "height_inches": 1.3433
+    "inventory_item_indices":
+      - 595
+  -
+    "key": "figure.irregularity.soft_story"
+    "description": "Figure 27: Soft story check"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 600
+    "example":
+      "alt_text": null
+      "width_inches": 6.991
+      "height_inches": 2.2783
+    "inventory_item_indices":
+      - 600
+  -
+    "key": "code.clauses.soft_storey"
+    "description": "Clause citation value for 5.5.1.2"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 603
+    "example": "5.5.1.2 (sample citation)"
+    "target_clause_2025": "5.4.1.2"
+    "mapping_status": null
+    "inventory_item_indices":
+      - 603
+  -
+    "key": "codes.limits.soft_storey_adjacent_stiffness_pct"
+    "description": "Soft-storey adjacent-storey stiffness threshold"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 0
+    "source": "excel"
+    "required": true
+    "condition": "Owner/engineer must verify against the approved NBC 105:2025 edition before use."
+    "inventory_item_index": 603
+    "example": "70"
+    "sentence_template": "As per the clause {{ code.clauses.soft_storey }} of {{ code.edition }}, a soft story is the one whose stiffness of the lateral force resisting system is less than {{ codes.limits.soft_storey_adjacent_stiffness_pct }}% of the lateral force resisting system stiffness in an adjacent story above or below, or less than {{ codes.limits.soft_storey_average_stiffness_pct }}% of the average lateral force resisting system stiffness of the three storys above or below."
+    "inventory_item_indices":
+      - 603
+  -
+    "key": "codes.limits.soft_storey_average_stiffness_pct"
+    "description": "Soft-storey three-storey average stiffness threshold"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 0
+    "source": "excel"
+    "required": true
+    "condition": "Owner/engineer must verify against the approved NBC 105:2025 edition before use."
+    "inventory_item_index": 603
+    "example": "80"
+    "sentence_template": "As per the clause {{ code.clauses.soft_storey }} of {{ code.edition }}, a soft story is the one whose stiffness of the lateral force resisting system is less than {{ codes.limits.soft_storey_adjacent_stiffness_pct }}% of the lateral force resisting system stiffness in an adjacent story above or below, or less than {{ codes.limits.soft_storey_average_stiffness_pct }}% of the average lateral force resisting system stiffness of the three storys above or below."
+    "inventory_item_indices":
+      - 603
+  -
+    "key": "figure.irregularity.soft_story_panel_b"
+    "description": "Figure 27: Soft story check"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 605
+    "example":
+      "alt_text": null
+      "width_inches": 1.4007
+      "height_inches": 2.1656
+    "inventory_item_indices":
+      - 605
+  -
+    "key": "figure.irregularity.in_plane_discontinuity"
+    "description": "Figure 28: In-Plane Discontinuity"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 613
+    "example":
+      "alt_text": null
+      "width_inches": 2.2966
+      "height_inches": 1.9933
+    "inventory_item_indices":
+      - 613
+  -
+    "key": "code.clauses.mass_irregularity"
+    "description": "Clause citation value for 5.5.1.5"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 617
+    "example": "5.5.1.5 (sample citation)"
+    "target_clause_2025": "5.4.1.5"
+    "mapping_status": null
+    "inventory_item_indices":
+      - 617
+  -
+    "key": "codes.limits.mass_irregularity_effective_mass_difference_pct"
+    "description": "Mass-irregularity effective-mass difference threshold"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 0
+    "source": "excel"
+    "required": true
+    "condition": "Owner/engineer must verify against the approved NBC 105:2025 edition before use."
+    "inventory_item_index": 617
+    "example": "50"
+    "sentence_template": "If there is a difference of more than {{ codes.limits.mass_irregularity_effective_mass_difference_pct }}% between the effective masses of two consecutive storeys, then there will be the existence of mass irregularity in the structural system of the building as per the clause {{ code.clauses.mass_irregularity }} of {{ code.edition }}. However, for such checks, light roofs, penthouse and mezzanine floors are not to be considered. The Designer is required to carry out the check for mass irregularity in the structural"
+    "inventory_item_indices":
+      - 617
+  -
+    "key": "code.clauses.reentrant_corner"
+    "description": "Clause citation value for 5.5.2.2"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 624
+    "example": "5.5.2.2 (sample citation)"
+    "target_clause_2025": "5.4.2.3"
+    "mapping_status": null
+    "inventory_item_indices":
+      - 624
+  -
+    "key": "codes.limits.reentrant_corner_projection_pct"
+    "description": "Re-entrant-corner projection threshold"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 0
+    "source": "excel"
+    "required": true
+    "condition": "Owner/engineer must verify against the approved NBC 105:2025 edition before use."
+    "inventory_item_index": 624
+    "example": "15"
+    "sentence_template": "As per the clause {{ code.clauses.reentrant_corner }} of {{ code.edition }}, a structure is said to have re-entrant corner irregularity in a direction if its structural configuration has a projection of greater than {{ codes.limits.reentrant_corner_projection_pct }}% of its overall dimensions in that direction."
+    "inventory_item_indices":
+      - 624
+  -
+    "key": "figure.irregularity.re_entrant_corners"
+    "description": "Figure 29: Re-entrant corners"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 627
+    "example":
+      "alt_text": null
+      "width_inches": 2.8173
+      "height_inches": 1.9933
+    "inventory_item_indices":
+      - 627
+  -
+    "key": "code.clauses.diaphragm_discontinuity"
+    "description": "Clause citation value for 5.5.2.3"
+    "type": "text"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": true
+    "condition": null
+    "inventory_item_index": 632
+    "example": "5.5.2.3 (sample citation)"
+    "target_clause_2025": "5.4.2.4"
+    "mapping_status": null
+    "inventory_item_indices":
+      - 632
+  -
+    "key": "codes.limits.diaphragm_opening_area_pct"
+    "description": "Diaphragm opening-area threshold"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 0
+    "source": "excel"
+    "required": true
+    "condition": "Owner/engineer must verify against the approved NBC 105:2025 edition before use."
+    "inventory_item_index": 632
+    "example": "50"
+    "sentence_template": "If the diaphragm of a building has a cutout or open area greater than {{ codes.limits.diaphragm_opening_area_pct }}% of the gross enclosed diaphragm area or if the effective diaphragm stiffness changes more than {{ codes.limits.diaphragm_stiffness_change_pct }}% from one story to the next, then as per the clause {{ code.clauses.diaphragm_discontinuity }} of {{ code.edition }}, the building is said to have diaphragm discontinuity irregularity. The Designer is required to check the existence of such irregularity in the building and provide the details in the structural design report."
+    "inventory_item_indices":
+      - 632
+  -
+    "key": "codes.limits.diaphragm_stiffness_change_pct"
+    "description": "Diaphragm stiffness-change threshold"
+    "type": "number"
+    "unit": "%"
+    "format":
+      "decimals": 0
+    "source": "excel"
+    "required": true
+    "condition": "Owner/engineer must verify against the approved NBC 105:2025 edition before use."
+    "inventory_item_index": 632
+    "example": "50"
+    "sentence_template": "If the diaphragm of a building has a cutout or open area greater than {{ codes.limits.diaphragm_opening_area_pct }}% of the gross enclosed diaphragm area or if the effective diaphragm stiffness changes more than {{ codes.limits.diaphragm_stiffness_change_pct }}% from one story to the next, then as per the clause {{ code.clauses.diaphragm_discontinuity }} of {{ code.edition }}, the building is said to have diaphragm discontinuity irregularity. The Designer is required to check the existence of such irregularity in the building and provide the details in the structural design report."
+    "inventory_item_indices":
+      - 632
+  -
+    "key": "figure.irregularity.diaphragm_discontinuity"
+    "description": "Figure 30: Diaphragm Discontinuity"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 635
+    "example":
+      "alt_text": null
+      "width_inches": 3.9852
+      "height_inches": 1.2133
+    "inventory_item_indices":
+      - 635
+  -
+    "key": "figure.irregularity.out_of_plane_offset"
+    "description": "Figure 31: Out of plane offset"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 645
+    "example":
+      "alt_text": null
+      "width_inches": 3.5243
+      "height_inches": 1.295
+    "inventory_item_indices":
+      - 645
+  -
+    "key": "figure.summary.tdesign_summary"
+    "description": "\\tDesign Summary"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 651
+    "example":
+      "alt_text": null
+      "width_inches": 6.8819
+      "height_inches": 1.9896
+    "inventory_item_indices":
+      - 651
+  -
+    "key": "figure.project.t_panel_c"
+    "description": "\\t"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 654
+    "example":
+      "alt_text": null
+      "width_inches": 6.8812
+      "height_inches": 2.2641
+    "inventory_item_indices":
+      - 654
+  -
+    "key": "figure.project.t_panel_d"
+    "description": "\\t"
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 657
+    "example":
+      "alt_text": null
+      "width_inches": 6.8812
+      "height_inches": 1.442
+    "inventory_item_indices":
+      - 657
+  -
+    "key": "figure.elements.required_longitudinal_reinforcement_mm_in_beams_columns"
+    "description": "Figure 32: Required longitudinal reinforcement (mm²) in beams and columns along Grid A."
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 666
+    "example":
+      "alt_text": null
+      "width_inches": 6.9924
+      "height_inches": 5.9007
+    "inventory_item_indices":
+      - 666
+  -
+    "key": "figure.elements.required_longitudinal_reinforcement_mm_in_beams_columns_panel_b"
+    "description": "Figure 33: Required longitudinal reinforcement (mm²) in beams and columns along Grid B."
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 671
+    "example":
+      "alt_text": null
+      "width_inches": 6.9924
+      "height_inches": 6.2299
+    "inventory_item_indices":
+      - 671
+  -
+    "key": "figure.elements.required_longitudinal_reinforcement_mm_in_beams_at"
+    "description": "Figure 34: Required longitudinal reinforcement (mm²) in beams at Story 1."
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 676
+    "example":
+      "alt_text": null
+      "width_inches": 4.5006
+      "height_inches": 8.8241
+    "inventory_item_indices":
+      - 676
+  -
+    "key": "figure.elements.required_longitudinal_reinforcement_mm_in_beams_at_panel_b"
+    "description": "Figure 35: Required longitudinal reinforcement (mm²) in beams at Story 2."
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 683
+    "example":
+      "alt_text": null
+      "width_inches": 4.5319
+      "height_inches": 8.7825
+    "inventory_item_indices":
+      - 683
+  -
+    "key": "figure.elements.required_longitudinal_reinforcement_mm_in_beams_at_panel_c"
+    "description": "Figure 36: Required longitudinal reinforcement (mm²) in beams at Story 3."
+    "type": "image"
+    "unit": null
+    "format":
+      "decimals": null
+    "source": "excel"
+    "required": false
+    "condition": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    "inventory_item_index": 688
+    "example":
+      "alt_text": null
+      "width_inches": 4.6673
+      "height_inches": 8.8971
+    "inventory_item_indices":
+      - 688
+  -
+    "key": "code.clauses.in_plane_discontinuity"
+    "description": "NBC clause for the in-plane discontinuity check."
+    "type": "text"
+    "unit": null
+    "source": "excel"
+    "required": true
+    "example": "5.4.1.4"
+    "format":
+      "decimals": null
+    "condition": "Use the owner-approved NBC 105:2025 clause mapping."
+    "inventory_item_index": 610
+    "sentence_template": "{{ code.clauses.in_plane_discontinuity }}"
+    "inventory_item_indices":
+      - 610
+  -
+    "key": "code.clauses.out_of_plane_offset"
+    "description": "NBC clause for the out-of-plane-offset check."
+    "type": "text"
+    "unit": null
+    "source": "excel"
+    "required": true
+    "example": "5.4.2.5"
+    "format":
+      "decimals": null
+    "condition": "Use the owner-approved NBC 105:2025 clause mapping."
+    "inventory_item_index": 640
+    "sentence_template": "{{ code.clauses.out_of_plane_offset }}"
+    "inventory_item_indices":
+      - 640
+  -
+    "key": "building.has_staircase"
+    "description": "Whether the project includes a staircase section."
+    "type": "bool"
+    "unit": null
+    "source": "excel"
+    "required": true
+    "example": true
+    "format":
+      "decimals": null
+    "condition": "Controls inclusion/removal of the staircase block and TOC entry."
+    "inventory_item_index": 516
+    "sentence_template": "{{ building.has_staircase }}"
+    "inventory_item_indices":
+      - 516
+  -
+    "key": "foundation.type"
+    "description": "Foundation type chosen in Phase 2.5 from column loads, q_a, and the boundary answer."
+    "type": "text"
+    "unit": null
+    "source": "computed"
+    "required": true
+    "example": "Combined Footing"
+    "format":
+      "decimals": null
+    "condition": null
+    "inventory_item_index": 202
+    "sentence_template": "{{ foundation.type }}"
+    "inventory_item_indices":
+      - 202
+  -
+    "key": "foundation.soil_class"
+    "description": "Soil class/firmness used for the support-condition wording."
+    "type": "text"
+    "unit": null
+    "source": "excel"
+    "required": true
+    "example": "firm soil"
+    "format":
+      "decimals": null
+    "condition": null
+    "inventory_item_index": null
+    "sentence_template": "{{ foundation.soil_class }}"
+    "inventory_item_indices": []
+  -
+    "key": "foundation.support_condition"
+    "description": "Computed fixed or pinned support-condition wording."
+    "type": "text"
+    "unit": null
+    "source": "computed"
+    "required": true
+    "example": "fixed"
+    "format":
+      "decimals": null
+    "condition": "Computed from foundation.type and foundation.soil_class per owner decision."
+    "inventory_item_index": 256
+    "sentence_template": "{{ foundation.support_condition }}"
+    "inventory_item_indices":
+      - 256
+  -
+    "key": "structural.system_type"
+    "description": "Structural system type shown in Table 5; also drives Rμ/Ωu/Ωs."
+    "type": "text"
+    "unit": null
+    "source": "excel"
+    "required": true
+    "example": "Moment Resisting Frames"
+    "format":
+      "decimals": null
+    "condition": null
+    "inventory_item_index": 202
+    "sentence_template": "{{ structural.system_type }}"
+    "inventory_item_indices":
+      - 202
+  -
+    "key": "slab.type"
+    "description": "Slab type shown in Table 5; may be supplied by intake or identified from .e2k shell sections."
+    "type": "text"
+    "unit": null
+    "source": "excel"
+    "required": true
+    "example": "Conventional"
+    "format":
+      "decimals": null
+    "condition": null
+    "inventory_item_index": 202
+    "sentence_template": "{{ slab.type }}"
+    "inventory_item_indices":
+      - 202
+  -
+    "key": "analysis.foundation_reaction_combination"
+    "description": "Combination text shown in the retained foundation-reaction caption."
+    "type": "text"
+    "unit": null
+    "source": "etabs_api"
+    "required": false
+    "example": "1.5DL+1.5LL"
+    "format":
+      "decimals": null
+    "condition": "Caption text is variable; retain the existing foundation reaction image."
+    "inventory_item_index": 494
+    "sentence_template": "{{ analysis.foundation_reaction_combination }}"
+    "inventory_item_indices":
+      - 494
+  -
+    "key": "analysis.soft_storey_result"
+    "description": "Computed soft-storey conclusion variant."
+    "type": "text"
+    "unit": null
+    "source": "computed"
+    "required": true
+    "example": "not_present"
+    "format":
+      "decimals": null
+    "condition": "Select the result variant from computed project checks."
+    "inventory_item_index": 608
+    "sentence_template": "{{ analysis.soft_storey_result }}"
+    "inventory_item_indices":
+      - 608
+  -
+    "key": "analysis.in_plane_discontinuity_result"
+    "description": "Computed in-plane-discontinuity conclusion variant."
+    "type": "text"
+    "unit": null
+    "source": "computed"
+    "required": true
+    "example": "not_present"
+    "format":
+      "decimals": null
+    "condition": "Select the result variant from computed project checks."
+    "inventory_item_index": 611
+    "sentence_template": "{{ analysis.in_plane_discontinuity_result }}"
+    "inventory_item_indices":
+      - 611
+  -
+    "key": "analysis.mass_irregularity_result"
+    "description": "Computed mass-irregularity conclusion variant."
+    "type": "text"
+    "unit": null
+    "source": "computed"
+    "required": true
+    "example": "not_present"
+    "format":
+      "decimals": null
+    "condition": "Select the result variant from computed project checks."
+    "inventory_item_index": 621
+    "sentence_template": "{{ analysis.mass_irregularity_result }}"
+    "inventory_item_indices":
+      - 621
+  -
+    "key": "analysis.reentrant_corner_result"
+    "description": "Computed re-entrant-corner conclusion variant."
+    "type": "text"
+    "unit": null
+    "source": "computed"
+    "required": true
+    "example": "rectangular_no_reentrant_corners"
+    "format":
+      "decimals": null
+    "condition": "Select the result variant from computed project checks."
+    "inventory_item_index": 625
+    "sentence_template": "{{ analysis.reentrant_corner_result }}"
+    "inventory_item_indices":
+      - 625
