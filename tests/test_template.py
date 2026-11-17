@@ -162,6 +162,24 @@ class TemplatePlaceholderTests(unittest.TestCase):
                         f"({style_name}); should be Body Text"
                     )
 
+    def test_anchored_images_preserved_in_template(self) -> None:
+        """Anchored images must stay anchored in the template (not converted
+        to inline placeholders). The template should have the same number of
+        wp:anchor elements as the sample."""
+        from docx import Document
+        WP_NS = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+
+        sample_doc = Document(str(ROOT / "Chatra Bahadur Ramtel.docx"))
+        tmpl_doc = Document(str(TEMPLATE))
+
+        sample_anchors = list(sample_doc.element.body.iter(f"{{{WP_NS}}}anchor"))
+        tmpl_anchors = list(tmpl_doc.element.body.iter(f"{{{WP_NS}}}anchor"))
+        self.assertEqual(
+            len(tmpl_anchors), len(sample_anchors),
+            f"Anchored image count: sample={len(sample_anchors)}, "
+            f"template={len(tmpl_anchors)}. Anchored images must be preserved."
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

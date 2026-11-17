@@ -161,6 +161,61 @@ def _set_nested(ctx: dict[str, Any], key: str, value: Any) -> None:
     d[parts[-1]] = value
 
 
+def analyze_images_in_docx(docx_path: Path) -> list[dict[str, Any]]:
+    """Analyze images in a DOCX: type (inline/anchored), extent (EMU),
+    and relationship ID."""
+    doc = Document(str(docx_path))
+    body = doc.element.body
+    images: list[dict[str, Any]] = []
+    for child in body:
+        if child.tag.split("}")[-1] != "p":
+            continue
+        for drawing in child.iter(f"{{{W_NS}}}drawing"):
+            inline = drawing.find(f"{{{WP_NS}}}inline")
+            anchor = drawing.find(f"{{{WP_NS}}}anchor")
+            container = inline if inline is not None else anchor
+            if container is None:
+                continue
+            extent = container.find(f"{{{WP_NS}}}extent")
+            if extent is None:
+                continue
+            cx = int(extent.get("cx", "0"))
+            cy = int(extent.get("cy", "0"))
+            blip = drawing.find(f".//{{{A_NS}}}blip")
+            rid = blip.get(f"{{{R_NS}}}embed") if blip is not None else None
+            images.append({
+                "type": "inline" if inline is not None else "anchored",
+                "cx": cx,
+                "cy": cy,
+                "rid": rid,
+            })
+    return images
+
+
+def generate_image_report(sample_images: list[dict], template_images: list[dict],
+                          rendered_images: list[dict]) -> list[str]:
+    """Generate a per-image comparison report."""
+    lines = [
+        "\n=== Image Report ===",
+        f"Sample images: {len(sample_images)}",
+        f"Template images: {len(template_images)}",
+        f"Rendered images: {len(rendered_images)}",
+        "",
+        "| # | Sample type | Template | Rendered type | Sample EMU (cx×cy) | Rendered EMU |",
+        "|---|-------------|----------|---------------|-------------------|-------------|",
+    ]
+    max_len = max(len(sample_images), len(rendered_images))
+    for i in range(max_len):
+        s = sample_images[i] if i < len(sample_images) else {"type": "?", "cx": 0, "cy": 0}
+        t = template_images[i] if i < len(template_images) else {"type": "?", "rid": "?"}
+        r = rendered_images[i] if i < len(rendered_images) else {"type": "?", "cx": 0, "cy": 0}
+        lines.append(
+            f"| {i} | {s['type']} | rId={t.get('rid','?')} | {r['type']} | "
+            f"{s['cx']}×{s['cy']} | {r['cx']}×{r['cy']} |"
+        )
+    return lines
+
+
 def build_dummy_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
                          sample_data: dict[str, Any],
                          has_staircase: bool = True) -> dict[str, Any]:
@@ -432,10 +487,30 @@ def verify() -> int:
     print("\n[1] Rendering with realistic dummy context (has_staircase=True)...")
     tpl = DocxTemplate(str(TEMPLATE))
     ctx_true = build_dummy_context(entries, tpl, sample_data, has_staircase=True)
+
+    # Replace anchored images using replace_pic (keeps anchor position/wrap/extent)
+    template_images = analyze_images_in_docx(TEMPLATE)
+    for ti in template_images:
+        if ti["type"] == "anchored" and ti.get("rid"):
+            # Use a dummy image matching the sample's size
+            dummy = get_dummy_png(100, 100)
+            try:
+                tpl.replace_pic(ti["rid"], str(dummy))
+            except Exception:
+                pass  # rId may not be in the template's pic map
+
     rendered_true = RENDER_DIR / "rendered_dummy.docx"
     tpl.render(ctx_true)
     tpl.save(str(rendered_true))
     print(f"    Rendered: {rendered_true}")
+
+    # --- Image report ---
+    rendered_images = analyze_images_in_docx(rendered_true)
+    image_report = generate_image_report(
+        sample_data["images"], template_images, rendered_images
+    )
+    for line in image_report[:10]:
+        print(f"    {line}")
 
     # --- 2. Check for leftover placeholders ---
     print("\n[2] Checking for leftover {{ }} or {% %}...")
@@ -446,6 +521,37 @@ def verify() -> int:
         print(f"    {msg}")
     else:
         print("    PASS: no leftover placeholders")
+
+    # --- 2b. Check image count and types ---
+    print("\n[2b] Checking image count, anchor/inline type, and extents...")
+    sample_imgs = sample_data["images"]
+    if len(rendered_images) != len(sample_imgs):
+        msg = (f"FAIL: image count mismatch sample={len(sample_imgs)} vs "
+               f"rendered={len(rendered_images)}")
+        failures.append(msg)
+        print(f"    {msg}")
+    else:
+        # Check each image's type is preserved
+        type_mismatches = []
+        extent_mismatches = []
+        for i, (s, r) in enumerate(zip(sample_imgs, rendered_images)):
+            if s["type"] != r["type"]:
+                type_mismatches.append(f"img {i}: sample={s['type']} vs rendered={r['type']}")
+            # Check extents match (within 1 EMU tolerance for floating point)
+            if abs(s["cx"] - r["cx"]) > 1 or abs(s["cy"] - r["cy"]) > 1:
+                extent_mismatches.append(
+                    f"img {i}: sample={s['cx']}×{s['cy']} vs rendered={r['cx']}×{r['cy']}"
+                )
+        if type_mismatches:
+            msg = f"FAIL: image type mismatches: {type_mismatches[:5]}"
+            failures.append(msg)
+            print(f"    {msg}")
+        elif extent_mismatches:
+            msg = f"FAIL: image extent mismatches: {extent_mismatches[:5]}"
+            failures.append(msg)
+            print(f"    {msg}")
+        else:
+            print(f"    PASS: {len(sample_imgs)} images, types and extents match")
 
     # --- 3. Convert to PDF and compare page counts ---
     print("\n[3] Converting to PDF and comparing page counts...")

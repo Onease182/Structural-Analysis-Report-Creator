@@ -663,6 +663,12 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
                 logger.log(f"paragraph idx={idx}", old_text, "{{ codes.edition }}")
 
     # --- Process image entries ---
+    # Inline images are replaced with {{ figure.key }} text placeholders
+    # (rendered via InlineImage at render time).
+    # Anchored images are PRESERVED as-is (position, wrap, extent kept).
+    # They are NOT converted to inline. At render time, use
+    # DocxTemplate.replace_pic() to swap the image binary.
+    anchored_images: list[dict[str, Any]] = []
     for entry in entries:
         if entry["type"] != "image":
             continue
@@ -670,12 +676,8 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         if idx is None or idx not in idx_to_child:
             continue
         child_idx, item_type = idx_to_child[idx]
-        # Image items map to the same body child as their parent paragraph.
-        # The body child is always a paragraph element.
         p_element = body_children[child_idx]
         key = entry["key"]
-        # Count how many images this paragraph has in the inventory
-        # to determine which image to replace
         images_in_para = [
             m for m in mapping
             if m[1] == child_idx and m[2] == "image"
@@ -684,6 +686,32 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
             (i for i, m in enumerate(images_in_para) if m[0] == idx),
             0,
         )
+        # Check if this image is inline or anchored
+        drawings = list(p_element.iter(f"{{{W_NS}}}drawing"))
+        if image_seq < len(drawings):
+            drawing = drawings[image_seq]
+            inline_el = drawing.find(f"{{{WP_NS}}}inline")
+            anchor_el = drawing.find(f"{{{WP_NS}}}anchor")
+            if anchor_el is not None and inline_el is None:
+                # Anchored image — preserve it, don't replace with placeholder
+                extent = anchor_el.find(f"{{{WP_NS}}}extent")
+                cx = int(extent.get("cx", "0")) if extent is not None else 0
+                cy = int(extent.get("cy", "0")) if extent is not None else 0
+                # Get the relationship ID for replace_pic
+                blip = drawing.find(f".//{{{A_NS}}}blip")
+                rid = blip.get(f"{{{R_NS}}}embed") if blip is not None else None
+                anchored_images.append({
+                    "key": key,
+                    "idx": idx,
+                    "rid": rid,
+                    "cx": cx,
+                    "cy": cy,
+                })
+                logger.log(f"anchored image idx={idx} (preserved)",
+                           f"[anchored image, cx={cx} cy={cy}]",
+                           f"preserved (use replace_pic with rId={rid})")
+                continue
+        # Inline image — replace with placeholder
         old_text = f"[image #{idx}]"
         replaced = replace_image_with_placeholder(p_element, f"{{{{ {key} }}}}", image_seq)
         if replaced:
