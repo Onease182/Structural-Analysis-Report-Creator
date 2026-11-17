@@ -180,6 +180,60 @@ class TemplatePlaceholderTests(unittest.TestCase):
             f"template={len(tmpl_anchors)}. Anchored images must be preserved."
         )
 
+    def test_strict_mode_fails_on_missing_key(self) -> None:
+        """Deleting one key from the context should cause a failure."""
+        from tools.verify_template import validate_context_strict
+        with REGISTRY.open("r", encoding="utf-8") as f:
+            entries = yaml.safe_load(f)["items"]
+        # Build a valid context, then delete one key
+        ctx: dict[str, Any] = {}
+        for entry in entries:
+            if entry.get("required"):
+                parts = entry["key"].split(".")
+                d = ctx
+                for part in parts[:-1]:
+                    d = d.setdefault(part, {})
+                d[parts[-1]] = "dummy"
+        # Delete one required key
+        if "building" in ctx and "has_staircase" in ctx["building"]:
+            del ctx["building"]["has_staircase"]
+        with self.assertRaises(ValueError) as exc:
+            validate_context_strict(ctx, entries)
+        self.assertIn("has_staircase", str(exc.exception))
+
+    def test_strict_mode_fails_on_null_clause_value(self) -> None:
+        """A null codes.clauses.* value should cause a render-time failure."""
+        from tools.verify_template import validate_context_strict
+        with REGISTRY.open("r", encoding="utf-8") as f:
+            entries = yaml.safe_load(f)["items"]
+        ctx: dict[str, Any] = {}
+        for entry in entries:
+            parts = entry["key"].split(".")
+            d = ctx
+            for part in parts[:-1]:
+                d = d.setdefault(part, {})
+            d[parts[-1]] = "dummy"
+        # Set a clause value to null
+        ctx.setdefault("codes", {}).setdefault("clauses", {})["soft_storey"] = None
+        with self.assertRaises(ValueError) as exc:
+            validate_context_strict(ctx, entries)
+        self.assertIn("soft_storey", str(exc.exception))
+
+    def test_strict_mode_accepts_valid_context(self) -> None:
+        """A valid context with all keys present should pass validation."""
+        from tools.verify_template import validate_context_strict
+        with REGISTRY.open("r", encoding="utf-8") as f:
+            entries = yaml.safe_load(f)["items"]
+        ctx: dict[str, Any] = {}
+        for entry in entries:
+            parts = entry["key"].split(".")
+            d = ctx
+            for part in parts[:-1]:
+                d = d.setdefault(part, {})
+            d[parts[-1]] = "dummy"
+        # Should not raise
+        validate_context_strict(ctx, entries)
+
 
 if __name__ == "__main__":
     unittest.main()

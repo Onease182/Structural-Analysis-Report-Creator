@@ -33,6 +33,7 @@ import yaml
 from docx import Document
 from docx.oxml.ns import qn
 from docxtpl import DocxTemplate, InlineImage
+from jinja2 import Environment, StrictUndefined
 from lxml import etree
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -214,6 +215,57 @@ def generate_image_report(sample_images: list[dict], template_images: list[dict]
             f"{s['cx']}×{s['cy']} | {r['cx']}×{r['cy']} |"
         )
     return lines
+
+
+def validate_context_strict(ctx: dict[str, Any], entries: list[dict[str, Any]]) -> None:
+    """Strict-mode pre-render validation:
+    1. Every codes.clauses.* value must be non-null and non-empty.
+    2. Every required registry key must be present in the context.
+
+    Raises ValueError on any failure."""
+    failures: list[str] = []
+
+    # 1. Check codes.clauses.* values are non-null and non-empty
+    def _check_clauses(d: dict[str, Any], prefix: str = "") -> None:
+        for k, v in d.items():
+            full_key = f"{prefix}.{k}" if prefix else k
+            if isinstance(v, dict):
+                _check_clauses(v, full_key)
+            elif full_key.startswith("codes.clauses."):
+                if v is None or (isinstance(v, str) and not v.strip()):
+                    failures.append(f"Null/empty clause value: {full_key}")
+
+    _check_clauses(ctx)
+
+    # 2. Check every required registry key is in the context
+    def _has_key(d: dict[str, Any], key: str) -> bool:
+        parts = key.split(".")
+        cur = d
+        for part in parts[:-1]:
+            if not isinstance(cur, dict) or part not in cur:
+                return False
+            cur = cur[part]
+        return isinstance(cur, dict) and parts[-1] in cur
+
+    for entry in entries:
+        if entry.get("required"):
+            key = entry["key"]
+            if not _has_key(ctx, key):
+                failures.append(f"Missing required key in context: {key}")
+
+    if failures:
+        raise ValueError(
+            f"Strict mode validation failed ({len(failures)} issue(s)): "
+            + "; ".join(failures[:5])
+        )
+
+
+def create_strict_template(docx_path: Path) -> DocxTemplate:
+    """Create a DocxTemplate with jinja2 StrictUndefined so any missing
+    context key fails with the key name."""
+    tpl = DocxTemplate(str(docx_path))
+    tpl.jinja_env = Environment(undefined=StrictUndefined)
+    return tpl
 
 
 def build_dummy_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
@@ -485,8 +537,17 @@ def verify() -> int:
 
     # --- 1. Render with has_staircase=true ---
     print("\n[1] Rendering with realistic dummy context (has_staircase=True)...")
-    tpl = DocxTemplate(str(TEMPLATE))
+    tpl = create_strict_template(TEMPLATE)
     ctx_true = build_dummy_context(entries, tpl, sample_data, has_staircase=True)
+
+    # Strict-mode pre-render validation
+    try:
+        validate_context_strict(ctx_true, entries)
+        print("    PASS: strict-mode context validation")
+    except ValueError as exc:
+        msg = f"FAIL: strict-mode validation: {exc}"
+        failures.append(msg)
+        print(f"    {msg}")
 
     # Replace anchored images using replace_pic (keeps anchor position/wrap/extent)
     template_images = analyze_images_in_docx(TEMPLATE)
@@ -604,8 +665,9 @@ def verify() -> int:
 
     # --- 5. Render with has_staircase=false ---
     print("\n[5] Rendering with has_staircase=false...")
-    tpl2 = DocxTemplate(str(TEMPLATE))
+    tpl2 = create_strict_template(TEMPLATE)
     ctx_false = build_dummy_context(entries, tpl2, sample_data, has_staircase=False)
+    validate_context_strict(ctx_false, entries)
     tpl2.render(ctx_false)
     rendered_false = RENDER_DIR / "rendered_no_staircase.docx"
     tpl2.save(str(rendered_false))
