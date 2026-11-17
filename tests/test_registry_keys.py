@@ -347,18 +347,23 @@ class NeedsDecisionTests(unittest.TestCase):
             "The Phase-1 regression text should have been removed",
         )
 
-    def test_item_535_uses_0_025(self) -> None:
+    def test_item_535_not_present_with_wrong_value(self) -> None:
+        # Item 535 was resolved (serviceability_drift -> 5.5.3); the sample
+        # sentence is no longer quoted in the Unresolved section. The wrong
+        # value 0.010 must not appear anywhere in the decision log.
         content = (ROOT / "docs" / "needs_my_decision.md").read_text(encoding="utf-8")
-        self.assertIn("0.025 in Ultimate Limit State case", content,
-                      "Item 535 sentence must say '0.025 in Ultimate Limit State case'")
         self.assertNotIn("0.010 in Ultimate", content,
-                         "Item 535 sentence must not say '0.010 in Ultimate'")
+                         "Item 535 sentence must not contain '0.010 in Ultimate'")
 
-    def test_proposed_changes_section_exists(self) -> None:
+    def test_cross_check_promoted_to_applied(self) -> None:
         content = (ROOT / "docs" / "needs_my_decision.md").read_text(encoding="utf-8")
-        self.assertIn("## Proposed changes for owner review", content,
-                      "Proposed changes section must exist (Task 2: never edit Applied "
-                      "owner decisions silently)")
+        # The cross-check was promoted from "Proposed changes" to "Applied owner
+        # decisions". The "Proposed changes" section should no longer exist.
+        self.assertNotIn("## Proposed changes for owner review", content,
+                         "Proposed changes section should have been removed after "
+                         "the cross-check was promoted to Applied owner decisions")
+        self.assertIn("$POINTRESTRAINTS", content,
+                      "Cross-check input must be mentioned in the decision log")
 
 
 class Task4KeyReviewTests(unittest.TestCase):

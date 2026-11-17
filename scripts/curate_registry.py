@@ -719,41 +719,31 @@ def write_needs_decision() -> None:
         "- When `has_staircase` is false, remove the staircase heading and the sample "
         "content range through the empty Heading 5; do not alter the DOCX during inventory.",
         "- Foundation support wording is computed from `foundation.type` and `foundation.soil_class`.",
+        "- `foundation.support_condition` carries `.e2k` `$POINTRESTRAINTS` as an additional "
+        "cross-check input (`etabs_table_or_e2k_section: \"$POINTRESTRAINTS (cross-check input)\"`); "
+        "the computation from `foundation.type` and `foundation.soil_class` does not change.",
         "- Clause citations are variables: the sample 2020 clauses map to NBC 105:2025 "
-        "clauses recorded in the registry. Six mappings remain unresolved (see below).",
+        "clauses recorded in the registry. All clause mappings are now owner-approved:",
+        "  - `codes.clauses.material_properties` → \"Annex A, Cl. 2.1\" (item 208)",
+        "  - `codes.clauses.load_combinations` → \"3.6.1\" (item 418)",
+        "  - `codes.clauses.serviceability_drift` → \"5.5.3\" (items 533 and 535)",
+        "  - `codes.clauses.irregularity_general` → \"5.4\" (item 591)",
+        "  - `codes.clauses.torsional_irregularity` → \"5.4.2.1\" (item 593)",
+        "  - `codes.clauses.soft_storey` → \"5.4.1.2\" (item 603)",
+        "  - `codes.clauses.in_plane_discontinuity` → \"5.4.1.4\" (item 610)",
+        "  - `codes.clauses.mass_irregularity` → \"5.4.1.5\" (item 617)",
+        "  - `codes.clauses.reentrant_corner` → \"5.4.2.3\" (item 624)",
+        "  - `codes.clauses.diaphragm_discontinuity` → \"5.4.2.4\" (item 632)",
+        "  - `codes.clauses.out_of_plane_offset` → \"5.4.2.5\" (item 640)",
         "- In-plane and mass-irregularity conclusion paragraphs are computed variants "
         "and restyled to Body Text; the re-entrant conclusion has rectangular/no-re-entrant "
         "variants.",
         "- The foundation reaction image is retained; only its combination text is variable.",
         "",
-        "## Proposed changes for owner review",
-        "",
-        "These are proposed additions to the Applied owner decisions. They are NOT yet "
-        "applied; answer each question before they are promoted.",
-        "",
-        "- **Foundation support cross-check**: `foundation.support_condition` currently "
-        "has `source: computed` (the wording is computed from `foundation.type` and "
-        "`foundation.soil_class` per the existing decision). Should `.e2k` "
-        "`$POINTRESTRAINTS` be recorded as an additional cross-check input on the same "
-        "entry (the registry already carries `etabs_table_or_e2k_section: "
-        "$POINTRESTRAINTS (cross-check input)`)? This would not change the computation, "
-        "only document where the model's restraint assignment can be verified.",
-        "",
         "## Unresolved NBC 105:2025 clause mappings",
         "",
-        "Do not invent target clauses. Answer the question for each entry; the curated "
-        "registry will then be updated and the corresponding `codes.clauses.*` entry "
-        "will receive a `target_clause_2025` value.",
+        "None. All clause mappings are owner-approved and recorded above.",
         "",
-    ]
-    for entry in UNRESOLVED_CLAUSES:
-        lines += [
-            f"- **Item {entry['item_index']} — `{entry['key']}` (sample Cl. {entry['sample_clause']})**",
-            f"  - Sample sentence: \"{entry['sample_sentence']}\"",
-            f"  - Question for the owner: {entry['question']}",
-            "",
-        ]
-    lines += [
         "## Key classification review (Task 4)",
         "",
         "Six keys were reviewed for FIXED boilerplate / TABLE / real input. The three "
