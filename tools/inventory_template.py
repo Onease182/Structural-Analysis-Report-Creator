@@ -1526,7 +1526,7 @@ def enriched_owner_entries() -> list[dict[str, Any]]:
         if key == "building.has_staircase":
             entry["condition"] = "Controls inclusion/removal of the staircase block and TOC entry."
         elif key.startswith("codes.clauses."):
-            entry["condition"] = "Use the owner-approved NBC 105:2025 clause mapping."
+            entry["condition"] = "Owner-approved mapping."
             # Emit target_clause_2025, sample_clause, mapping_status for
             # owner-mapped clauses. example is null; the sample clause lives
             # in sample_clause.

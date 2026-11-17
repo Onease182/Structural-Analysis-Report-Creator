@@ -565,6 +565,11 @@ def curate_entries(items: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], l
             item["target_clause_2025"] = mapping["target_clause_2025"]
             item["mapping_status"] = mapping["mapping_status"]
             item["example"] = None
+            # Update condition text: owner-mapped clauses get a consistent
+            # "Owner-approved mapping." label. This overrides any stale text
+            # from the generator (e.g. "No owner-approved mapping supplied.").
+            if mapping["mapping_status"] == "owner_mapped":
+                item["condition"] = "Owner-approved mapping."
 
         # Task 2: foundation.support_condition — restore computed source,
         # keep $POINTRESTRAINTS as cross-check input.
