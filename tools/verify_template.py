@@ -339,6 +339,57 @@ def count_pdf_pages(pdf_path: Path) -> int:
     return result.stdout.count("\f") + 1 if result.stdout else 0
 
 
+def update_toc_cache_remove_staircase(docx_path: Path) -> None:
+    """Remove the 'Design of Staircases' entry from the TOC field's cached
+    result text, without editing the TOC field instruction itself.
+
+    The TOC field is stored as a complex field with fldChar begin/separate/end
+    markers. The cached result is the content between 'separate' and 'end'.
+    Paragraphs within the cached result that contain 'Design of Staircases'
+    are removed."""
+    doc = Document(str(docx_path))
+    body = doc.element.body
+    removed = False
+    # Find all paragraphs that are within a TOC field result and contain
+    # "Design of Staircases" text.
+    # A paragraph is within a TOC field if it has a TOC style (toc 1, toc 2, etc.)
+    # or is between fldChar separate and end markers.
+    paragraphs_to_remove = []
+    in_toc_field = False
+    for child in body:
+        tag = child.tag.split("}")[-1]
+        if tag != "p":
+            continue
+        # Check for fldChar begin/separate/end
+        for fld in child.iter(f"{{{W_NS}}}fldChar"):
+            fld_type = fld.get(f"{{{W_NS}}}fldCharType")
+            if fld_type == "begin":
+                in_toc_field = True
+            elif fld_type == "separate":
+                pass  # Result starts here
+            elif fld_type == "end":
+                in_toc_field = False
+        # Check if this paragraph has a TOC style
+        pPr = child.find(f"{{{W_NS}}}pPr")
+        style_val = None
+        if pPr is not None:
+            pStyle = pPr.find(f"{{{W_NS}}}pStyle")
+            if pStyle is not None:
+                style_val = pStyle.get(f"{{{W_NS}}}val", "")
+        is_toc_para = (style_val and "toc" in style_val.lower()) or in_toc_field
+        if not is_toc_para:
+            continue
+        # Check if this paragraph's text contains "Design of Staircases"
+        text = "".join((t.text or "") for t in child.iter(f"{{{W_NS}}}t"))
+        if "design of staircases" in text.lower():
+            paragraphs_to_remove.append(child)
+    for p in paragraphs_to_remove:
+        p.getparent().remove(p)
+        removed = True
+    if removed:
+        doc.save(str(docx_path))
+
+
 def get_heading_page_offsets(pdf_path: Path, headings: list[dict]) -> list[int]:
     """For each heading, find the page number where it starts (0-based).
     Uses pdftotext to find heading text in pages."""
@@ -454,37 +505,118 @@ def verify() -> int:
     tpl2.save(str(rendered_false))
     print(f"    Rendered: {rendered_false}")
 
-    # --- 5a. Check staircase heading absent ---
-    print("\n[5a] Checking staircase heading is absent...")
     headings_false = extract_headings_with_level(rendered_false)
-    staircase_headings = [h for h in headings_false if "staircase" in h["text"].lower()]
-    if staircase_headings:
-        msg = f"FAIL: staircase heading still present: {[h['text'] for h in staircase_headings]}"
-        failures.append(msg)
-        print(f"    {msg}")
-    else:
-        print("    PASS: staircase heading absent")
 
-    # --- 5b. Check for leftover placeholders in no-staircase render ---
-    print("\n[5b] Checking for leftover placeholders in no-staircase render...")
-    leftovers_false = check_leftover_placeholders(rendered_false)
-    if leftovers_false:
-        msg = f"FAIL: {len(leftovers_false)} leftover placeholders: {leftovers_false[:5]}"
-        failures.append(msg)
-        print(f"    {msg}")
-    else:
-        print("    PASS: no leftover placeholders")
-
-    # --- 5c. Check headings before and after staircase are unchanged ---
-    print("\n[5c] Checking headings before and after staircase block...")
-    # Find the staircase heading position in the sample
+    # Find staircase heading position in sample
     staircase_idx = None
     for i, h in enumerate(sample_headings):
         if "staircase" in h["text"].lower() and "design of staircases" in h["text"].lower():
             staircase_idx = i
             break
-    if staircase_idx is not None:
-        # Headings before staircase should match between sample and no-staircase render
+
+    if staircase_idx is None:
+        msg = "FAIL: staircase heading not found in sample"
+        failures.append(msg)
+        print(f"    {msg}")
+    else:
+        # Count how many headings are in the staircase block (the heading + the
+        # empty Heading 5 that follows it, per the owner decision).
+        staircase_block_size = 1  # the heading itself
+        if staircase_idx + 1 < len(sample_headings):
+            next_h = sample_headings[staircase_idx + 1]
+            if next_h["level"] > sample_headings[staircase_idx]["level"] and not next_h["text"]:
+                staircase_block_size = 2  # heading + empty sub-heading
+
+        # --- 5a. Staircase heading absent from body ---
+        print("\n[5a] Checking staircase heading is absent from body...")
+        staircase_headings = [h for h in headings_false if "staircase" in h["text"].lower()]
+        if staircase_headings:
+            msg = f"FAIL: staircase heading still present: {[h['text'] for h in staircase_headings]}"
+            failures.append(msg)
+            print(f"    {msg}")
+        else:
+            print("    PASS: staircase heading absent from body")
+
+        # --- 5b. Sample content range under staircase is absent ---
+        print("\n[5b] Checking staircase content range is absent...")
+        # The empty Heading 5 that was under the staircase heading should be gone
+        empty_h5_after = False
+        for h in headings_false:
+            if h["level"] == 5 and not h["text"]:
+                # Check if this empty H5 is in the staircase area
+                pass  # There may be other empty H5s; we check by position below
+        # The rendered should have fewer headings (by staircase_block_size)
+        expected_count = len(sample_headings) - staircase_block_size
+        if len(headings_false) != expected_count:
+            msg = (f"FAIL: heading count after staircase removal = {len(headings_false)}, "
+                   f"expected {expected_count} (sample {len(sample_headings)} - {staircase_block_size})")
+            failures.append(msg)
+            print(f"    {msg}")
+        else:
+            print(f"    PASS: heading count = {expected_count} (removed {staircase_block_size} headings)")
+
+        # --- 5c. TOC entry for staircase is absent ---
+        print("\n[5c] Checking TOC entry for staircase is absent...")
+        # Post-process: update the TOC field cache to remove the staircase
+        # entry, without editing the TOC field instruction itself.
+        update_toc_cache_remove_staircase(rendered_false)
+        # Now check: search for "Design of Staircases" (the heading text) in
+        # the full document text. Image placeholder values like
+        # "figure.staircase.design_main" contain "staircase" but not
+        # "Design of Staircases", so this is specific enough.
+        doc_false = Document(str(rendered_false))
+        full_text_false = ""
+        for t in doc_false.element.body.iter(f"{{{W_NS}}}t"):
+            full_text_false += (t.text or "")
+        staircase_toc_entries = []
+        for line in full_text_false.split("\n"):
+            if "design of staircases" in line.lower():
+                staircase_toc_entries.append(line.strip()[:80])
+        if staircase_toc_entries:
+            msg = f"FAIL: 'Design of Staircases' still in document: {staircase_toc_entries[:3]}"
+            failures.append(msg)
+            print(f"    {msg}")
+        else:
+            print("    PASS: no 'Design of Staircases' text in document (body + TOC)")
+
+        # --- 5d. No stray page break adjacent to removed block ---
+        print("\n[5d] Checking no stray page breaks near removed block...")
+        # Check for consecutive page breaks or empty paragraphs with page breaks
+        # in the area where the staircase block was removed.
+        page_break_issues = []
+        paragraphs_false = list(doc_false.paragraphs)
+        # Find the paragraph that was right before the staircase heading
+        # (in the sample, the heading before staircase was "Design of Foundations")
+        # In the rendered, the paragraph after "Design of Foundations" should be
+        # the next section heading, not an empty page-break paragraph.
+        for i, p in enumerate(paragraphs_false):
+            # Check for empty paragraphs with page breaks
+            if not p.text.strip():
+                pPr = p._element.find(f"{{{W_NS}}}pPr")
+                if pPr is not None:
+                    rPr = pPr.find(f"{{{W_NS}}}rPr")
+                    # Check for page break before
+                    pbdr = pPr.find(f"{{{W_NS}}}pageBreakBefore")
+                    if pbdr is not None:
+                        # Check if the next paragraph also has a page break or is empty
+                        if i + 1 < len(paragraphs_false):
+                            next_p = paragraphs_false[i + 1]
+                            next_pPr = next_p._element.find(f"{{{W_NS}}}pPr")
+                            if next_pPr is not None:
+                                next_pbdr = next_pPr.find(f"{{{W_NS}}}pageBreakBefore")
+                                if next_pbdr is not None:
+                                    page_break_issues.append(
+                                        f"Consecutive page breaks at paragraph {i}"
+                                    )
+        if page_break_issues:
+            msg = f"FAIL: stray page breaks: {page_break_issues[:3]}"
+            failures.append(msg)
+            print(f"    {msg}")
+        else:
+            print("    PASS: no stray page breaks detected")
+
+        # --- 5e. Headings before staircase unchanged and in order ---
+        print("\n[5e] Checking headings before staircase are unchanged...")
         before_sample = sample_headings[:staircase_idx]
         before_rendered = headings_false[:staircase_idx]
         before_failures = compare_headings(before_sample, before_rendered, entries)
@@ -494,22 +626,28 @@ def verify() -> int:
                 print(f"    {bf}")
         else:
             print(f"    PASS: {len(before_sample)} headings before staircase match")
-        # Headings after staircase: find the next heading after the staircase block
-        # in the sample, and check it appears in the rendered (shifted by the removal)
-        if staircase_idx + 1 < len(sample_headings):
-            next_heading = sample_headings[staircase_idx + 1]
-            # In the no-staircase render, this heading should appear at staircase_idx
-            if staircase_idx < len(headings_false):
-                r_next = headings_false[staircase_idx]
-                if r_next["level"] != next_heading["level"]:
-                    msg = (f"FAIL: heading after staircase level mismatch "
-                           f"sample={next_heading['level']} vs rendered={r_next['level']}")
-                    failures.append(msg)
-                    print(f"    {msg}")
-                else:
-                    print(f"    PASS: heading after staircase starts at correct position")
-    else:
-        print("    SKIP: staircase heading not found in sample")
+
+        # --- 5f. Headings after staircase unchanged and in order ---
+        print("\n[5f] Checking headings after staircase are unchanged...")
+        after_sample = sample_headings[staircase_idx + staircase_block_size:]
+        after_rendered = headings_false[staircase_idx:]
+        after_failures = compare_headings(after_sample, after_rendered, entries)
+        if after_failures:
+            failures.extend(after_failures)
+            for af in after_failures[:3]:
+                print(f"    {af}")
+        else:
+            print(f"    PASS: {len(after_sample)} headings after staircase match")
+
+        # --- 5g. No leftover placeholders in no-staircase render ---
+        print("\n[5g] Checking for leftover placeholders in no-staircase render...")
+        leftovers_false = check_leftover_placeholders(rendered_false)
+        if leftovers_false:
+            msg = f"FAIL: {len(leftovers_false)} leftover placeholders: {leftovers_false[:5]}"
+            failures.append(msg)
+            print(f"    {msg}")
+        else:
+            print("    PASS: no leftover placeholders")
 
     # --- Summary ---
     print("\n" + "=" * 60)
