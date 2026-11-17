@@ -494,6 +494,21 @@ def reassign_source(entry: dict[str, Any]) -> None:
     # non-excel keys (per the owner spec).
 
 
+# ----------------------------------------------------------------------------
+# 3. CAPTION-ONLY KEYS (Task 3: captions must not be replaced)
+# ----------------------------------------------------------------------------
+# These keys mapped to whole caption paragraphs. Per the owner's Task 3
+# requirement, caption paragraphs stay fixed (style, SEQ field, and "Table N:"
+# label intact). Only variable fragments within the caption are substituted.
+# These keys are dropped from the registry because their entire value was the
+# caption text. They are listed in docs/needs_my_decision.md for review.
+CAPTION_ONLY_KEYS: set[str] = {
+    "project.empirical_period_intro",   # Table 8: Fundamental Time Period
+    "modal.rayleigh_period_x_uls",      # Table 10: Rayleigh X-direction
+    "modal.rayleigh_period_y_uls",      # Table 11: Rayleigh Y-direction
+}
+
+
 def strip_leading_tab(value: Any) -> Any:
     """Strip a leading literal "\\t" tab marker from a string example value."""
     if isinstance(value, str):
@@ -520,6 +535,12 @@ def curate_entries(items: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], l
 
         # Task 4: drop FIXED-reverted boilerplate identified in the key review.
         if new_key in TASK4_FIXED_REVERTED:
+            dropped_fixed.append(new_key)
+            continue
+
+        # Task 3: drop caption-only keys (their value was the caption text;
+        # captions now stay fixed with partial fragment substitution only).
+        if new_key in CAPTION_ONLY_KEYS:
             dropped_fixed.append(new_key)
             continue
 
@@ -760,6 +781,27 @@ def write_needs_decision() -> None:
     lines += ["", "### Real input (kept as VARIABLE)", ""]
     for key, text in sorted(TASK4_REAL_INPUT.items()):
         lines.append(f"- `{key}` — {text}")
+    lines += [
+        "",
+        "## Caption-only keys removed from registry (Task 3)",
+        "",
+        "These keys mapped to whole caption paragraphs. Per the owner's Task 3 "
+        "requirement, caption paragraphs stay fixed (style, SEQ field, and "
+        "'Table N:' label intact). Only variable fragments within the caption "
+        "are substituted (e.g. 'NBC 105:2025' -> {{ codes.edition }}, 'Damak' "
+        "-> {{ building.location }}). These keys are dropped because their "
+        "entire value was the caption text. Confirm whether each key should be:",
+        "  (a) removed entirely, or",
+        "  (b) moved to the real variable content beside the caption.",
+        "",
+    ]
+    caption_descs = {
+        "project.empirical_period_intro": "Table 8: Fundamental Time Period Based on Empirical Formula",
+        "modal.rayleigh_period_x_uls": "Table 10: Rayleigh time period, X-direction (EQX-ULS)",
+        "modal.rayleigh_period_y_uls": "Table 11: Rayleigh time period, Y-direction (EQY-ULS)",
+    }
+    for key in sorted(CAPTION_ONLY_KEYS):
+        lines.append(f"- `{key}` — was: \"{caption_descs.get(key, '')}\"")
     lines += [
         "",
         "## Classification policy",

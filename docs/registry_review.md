@@ -2,9 +2,9 @@
 
 **Review gate:** this curated registry is owned by the structural engineer. Do not generate a production master template until the six unresolved NBC 105:2025 clause mappings in `docs/needs_my_decision.md` are answered.
 
-Curated entries: **166**.
-Types: bool: 1, image: 55, number: 40, table: 21, text: 49.
-Sources: computed: 44, e2k: 6, etabs_api: 47, excel: 69.
+Curated entries: **163**.
+Types: bool: 1, image: 55, number: 40, table: 21, text: 46.
+Sources: computed: 41, e2k: 6, etabs_api: 47, excel: 69.
 
 ## Counts per group
 
@@ -16,8 +16,8 @@ Sources: computed: 44, e2k: 6, etabs_api: 47, excel: 69.
 - `figure`: 55
 - `foundation`: 4
 - `materials`: 2
-- `modal`: 7
-- `project`: 3
+- `modal`: 5
+- `project`: 2
 - `seismic`: 7
 - `slab`: 1
 - `structural`: 1
@@ -25,7 +25,7 @@ Sources: computed: 44, e2k: 6, etabs_api: 47, excel: 69.
 
 ## Counts per source
 
-- `computed`: 44
+- `computed`: 41
 - `e2k`: 6
 - `etabs_api`: 47
 - `excel`: 69
@@ -48,6 +48,9 @@ Full map in `docs/key_rename_map.csv`. Highlights:
 - `materials.rebar_tmt_description` — High strength deformed steel bars produced by thermo-mechanical treatment process having elongation capacity of more tha…
 - `project.brick_tolerances` — 
 - `materials.wall_thickness_range` — The minimum thickness is half-brick, while the maximum thickness is one brick. Internal walls have a thickness of up to …
+- `project.empirical_period_intro` — 
+- `modal.rayleigh_period_x_uls` — 
+- `modal.rayleigh_period_y_uls` — 
 
 ## Clause mapping status
 

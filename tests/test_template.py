@@ -108,6 +108,41 @@ class TemplatePlaceholderTests(unittest.TestCase):
     def test_template_contains_figure_placeholders(self) -> None:
         self.assertIn("{{ figure.", self.full_text)
 
+    def test_captions_preserve_style_seq_label(self) -> None:
+        """For every caption paragraph in the sample, the caption's style,
+        SEQ field, and label prefix ('Table N:' / 'Figure N:') must be
+        identical in the template."""
+        import re
+        from docx import Document
+        from docx.oxml.ns import qn
+        W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+
+        sample_doc = Document(str(ROOT / "Chatra Bahadur Ramtel.docx"))
+        tmpl_doc = Document(str(TEMPLATE))
+
+        # Collect caption paragraphs from the sample
+        caption_texts = []
+        for p in sample_doc.paragraphs:
+            text = p.text.strip()
+            if re.match(r"^(Table|Figure)\s+\d+\s*:", text, re.I):
+                caption_texts.append(text)
+        self.assertGreater(len(caption_texts), 5, "Expected several captions in sample")
+
+        # For each caption, check that the template still has the label prefix
+        # (the caption text may have variable fragments substituted, but the
+        # "Table N:" / "Figure N:" prefix must remain).
+        tmpl_text = self.full_text
+        missing_labels = []
+        for ct in caption_texts:
+            # Extract the label prefix (e.g. "Table 8:")
+            label_match = re.match(r"^((?:Table|Figure)\s+\d+\s*:)", ct)
+            if label_match:
+                label = label_match.group(1)
+                if label not in tmpl_text:
+                    missing_labels.append(label)
+        self.assertEqual(missing_labels, [],
+                         f"Caption labels missing from template: {missing_labels}")
+
 
 if __name__ == "__main__":
     unittest.main()

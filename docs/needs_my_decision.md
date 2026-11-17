@@ -43,6 +43,16 @@ Six keys were reviewed for FIXED boilerplate / TABLE / real input. The three FIX
 - `materials.as_building_is_less_than_12_m` — Real input / computed narrative. Project facts: height <12 m (from e2k $STORYDATA), grade M20 (from ETABS Material Properties). The sentence is computed from those facts.
 - `project.brick_specs` — Real input. Material spec with project values: crushing strength 3.5 N/mm², brick size 250x100x75 mm, mortar 10 mm. Source: excel (engineer-supplied spec).
 
+## Caption-only keys removed from registry (Task 3)
+
+These keys mapped to whole caption paragraphs. Per the owner's Task 3 requirement, caption paragraphs stay fixed (style, SEQ field, and 'Table N:' label intact). Only variable fragments within the caption are substituted (e.g. 'NBC 105:2025' -> {{ codes.edition }}, 'Damak' -> {{ building.location }}). These keys are dropped because their entire value was the caption text. Confirm whether each key should be:
+  (a) removed entirely, or
+  (b) moved to the real variable content beside the caption.
+
+- `modal.rayleigh_period_x_uls` — was: "Table 10: Rayleigh time period, X-direction (EQX-ULS)"
+- `modal.rayleigh_period_y_uls` — was: "Table 11: Rayleigh time period, Y-direction (EQY-ULS)"
+- `project.empirical_period_intro` — was: "Table 8: Fundamental Time Period Based on Empirical Formula"
+
 ## Classification policy
 
 The tool classifies headings and general method/boilerplate as `FIXED`, project facts as `VARIABLE`, data-driven tables as `TABLE`, replacement figures as `IMAGE`, derived results as `COMPUTED`, and condition-specific content as `CONDITIONAL`. Review all non-FIXED items before using the registry to drive report generation.

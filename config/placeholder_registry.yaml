@@ -1006,20 +1006,6 @@ items:
   etabs_table_or_e2k_section: Mass Source
   figure_origin: etabs_screenshot
   generator: null
-- key: project.empirical_period_intro
-  description: 'Table 8: Fundamental Time Period Based on Empirical Formula'
-  type: text
-  unit: null
-  format:
-    decimals: null
-  source: computed
-  required: true
-  condition: null
-  inventory_item_index: 372
-  example: 'Table 8: Fundamental Time Period Based on Empirical Formula'
-  inventory_item_indices:
-  - 372
-  etabs_table_or_e2k_section: null
 - key: table.seismic.empirical_period
   description: 'Table 8: Fundamental Time Period Based on Empirical Formula'
   type: table
@@ -1330,20 +1316,6 @@ items:
     }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}.
   inventory_item_indices:
   - 384
-- key: modal.rayleigh_period_x_uls
-  description: 'Table 10: Rayleigh time period, X-direction (EQX-ULS)'
-  type: text
-  unit: null
-  format:
-    decimals: null
-  source: computed
-  required: true
-  condition: null
-  inventory_item_index: 388
-  example: 'Table 10: Rayleigh time period, X-direction (EQX-ULS)'
-  inventory_item_indices:
-  - 388
-  etabs_table_or_e2k_section: null
 - key: table.modal.rayleigh_x
   description: 'Table 10: Rayleigh time period, X-direction (EQX-ULS)'
   type: table
@@ -1411,20 +1383,6 @@ items:
   row_behavior: data-driven
   inventory_item_indices:
   - 390
-  etabs_table_or_e2k_section: null
-- key: modal.rayleigh_period_y_uls
-  description: 'Table 11: Rayleigh time period, Y-direction (EQY-ULS)'
-  type: text
-  unit: null
-  format:
-    decimals: null
-  source: computed
-  required: true
-  condition: null
-  inventory_item_index: 391
-  example: 'Table 11: Rayleigh time period, Y-direction (EQY-ULS)'
-  inventory_item_indices:
-  - 391
   etabs_table_or_e2k_section: null
 - key: table.modal.rayleigh_y
   description: 'Table 11: Rayleigh time period, Y-direction (EQY-ULS)'

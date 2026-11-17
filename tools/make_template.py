@@ -153,6 +153,77 @@ def build_item_mapping(body_element) -> list[tuple[int, int, str]]:
 
 
 # ---------------------------------------------------------------------------
+# Caption detection
+# ---------------------------------------------------------------------------
+
+CAPTION_PATTERN = re.compile(r"^(Table|Figure)\s+\d+\s*:", re.I)
+
+
+def is_caption(p_element) -> bool:
+    """Check if a paragraph is a caption (Table/Figure label with SEQ field,
+    or Caption style, or text starting with 'Table N:' / 'Figure N:')."""
+    text = get_paragraph_text(p_element)
+    if CAPTION_PATTERN.match(text.strip()):
+        return True
+    # Check for SEQ field
+    for instr in p_element.iter(f"{{{W_NS}}}instrText"):
+        if instr.text and "SEQ" in instr.text.upper():
+            return True
+    for fld in p_element.iter(f"{{{W_NS}}}fldSimple"):
+        instr = fld.get(f"{{{W_NS}}}instr", "")
+        if "SEQ" in instr.upper():
+            return True
+    # Check for Caption style
+    pPr = p_element.find(f"{{{W_NS}}}pPr")
+    if pPr is not None:
+        pStyle = pPr.find(f"{{{W_NS}}}pStyle")
+        if pStyle is not None:
+            style_val = pStyle.get(f"{{{W_NS}}}val", "")
+            if "caption" in style_val.lower():
+                return True
+    return False
+
+
+def substitute_caption_fragments(p_element, logger, idx: int) -> None:
+    """For a caption paragraph, only substitute genuinely variable fragments:
+    - NBC 105:YYYY -> {{ codes.edition }}
+    - Damak -> {{ building.location }}
+    - Clause numbers -> {{ codes.clauses.* }}
+    Keep the 'Table N:' label, SEQ field, and style intact."""
+    text = get_paragraph_text(p_element)
+    original_text = text
+    modified = False
+
+    # NBC edition
+    m = re.search(r"NBC\s*105\s*:\s*\d{4}", text)
+    if m:
+        text = text.replace(m.group(0), "{{ codes.edition }}")
+        modified = True
+
+    # Building location (Damak)
+    if "Damak" in text:
+        text = text.replace("Damak", "{{ building.location }}")
+        modified = True
+
+    # Clause numbers — replace sample clauses with {{ codes.clauses.* }}
+    # Only do this if the clause number appears in the caption.
+    # We check against the OWNER_CLAUSE_MAP and CURRENT_CLAUSE_KEYS from
+    # inventory_template. For simplicity, we check common patterns.
+    for clause_pattern in [
+        (r"Cl\.\s*6\.3", "codes.clauses.vertical_force_dist"),
+        (r"Cl\.\s*2\.1", "codes.clauses.material_properties"),
+    ]:
+        m = re.search(clause_pattern[0], text, re.I)
+        if m:
+            text = text.replace(m.group(0), f"{{{{ {clause_pattern[1]} }}}}")
+            modified = True
+
+    if modified:
+        replace_paragraph_text_with_placeholder(p_element, text)
+        logger.log(f"caption idx={idx} (partial)", original_text[:100], text[:100])
+
+
+# ---------------------------------------------------------------------------
 # Run helpers
 # ---------------------------------------------------------------------------
 
@@ -426,8 +497,22 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
     body_children = list(body)
 
     # --- Process text entries (paragraphs with placeholders) ---
+    # Keys that map to whole caption paragraphs and should NOT be replaced
+    # as whole text. The caption stays fixed; only variable fragments within
+    # the caption are substituted. These keys are removed from the registry
+    # and listed in docs/needs_my_decision.md.
+    CAPTION_ONLY_KEYS = {
+        "project.empirical_period_intro",   # Table 8 caption
+        "modal.rayleigh_period_x_uls",      # Table 10 caption
+        "modal.rayleigh_period_y_uls",      # Table 11 caption
+    }
+
     for entry in entries:
         if entry["type"] not in ("text", "number", "bool"):
+            continue
+        key = entry["key"]
+        # Skip caption-only keys — they are handled by the caption loop below.
+        if key in CAPTION_ONLY_KEYS:
             continue
         idx = entry.get("inventory_item_index")
         if idx is None or idx not in idx_to_child:
@@ -436,11 +521,15 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         if item_type != "paragraph":
             continue
         p_element = body_children[child_idx]
-        key = entry["key"]
         old_text = get_paragraph_text(p_element)
 
         # Skip if already processed (e.g., by clause citation logic)
         if "{{" in old_text:
+            continue
+
+        # Skip caption paragraphs — they are handled separately by
+        # substitute_caption_fragments() to preserve style/SEQ/label.
+        if is_caption(p_element):
             continue
 
         # Determine the replacement
@@ -484,6 +573,20 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
             if len(old_text.strip()) < 200:
                 replace_paragraph_text_with_placeholder(p_element, f"{{{{ {key} }}}}")
                 logger.log(f"paragraph idx={idx}", old_text, f"{{{{ {key} }}}}")
+
+    # --- Process caption paragraphs (partial substitution only) ---
+    # Captions keep their style, SEQ field, and "Table N:" label intact.
+    # Only genuinely variable fragments are substituted.
+    for child_idx, child in enumerate(body_children):
+        tag = child.tag.split("}")[-1]
+        if tag != "p":
+            continue
+        if is_caption(child):
+            # Find the inventory item index for this paragraph
+            for item_idx, c_idx, i_type in mapping:
+                if c_idx == child_idx and i_type == "paragraph":
+                    substitute_caption_fragments(child, logger, item_idx)
+                    break
 
     # --- Process clause citation paragraphs (NBC edition replacement) ---
     for entry in entries:
