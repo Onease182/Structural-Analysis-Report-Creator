@@ -167,9 +167,9 @@ class InventoryTemplateTests(unittest.TestCase):
         keys = [entry["key"] for entry in entries]
         self.assertEqual(len(keys), len(set(keys)))
         manual = {
-            "code.edition", "code.clauses.soft_storey", "code.clauses.in_plane_discontinuity",
-            "code.clauses.mass_irregularity", "code.clauses.reentrant_corner",
-            "code.clauses.diaphragm_discontinuity", "code.clauses.out_of_plane_offset",
+            "codes.edition", "codes.clauses.soft_storey", "codes.clauses.in_plane_discontinuity",
+            "codes.clauses.mass_irregularity", "codes.clauses.reentrant_corner",
+            "codes.clauses.diaphragm_discontinuity", "codes.clauses.out_of_plane_offset",
             "building.has_staircase", "foundation.type", "foundation.soil_class",
             "foundation.support_condition", "structural.system_type", "slab.type",
             "analysis.foundation_reaction_combination", "analysis.soft_storey_result",

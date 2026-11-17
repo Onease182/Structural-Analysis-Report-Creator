@@ -567,6 +567,7 @@
         "always_present": true,
         "target_heading_text": "Structural System and Foundation"
       },
+      "template_rule_id": "toc_b3_structural_system_foundation",
       "context": {
         "section_heading": "TABLE OF CONTENTS",
         "preceding_text": "\\t\\tB.2\\tElement sizes\\t3"
@@ -2007,6 +2008,7 @@
         "always_present": true,
         "target_heading_text": "Design of Foundations"
       },
+      "template_rule_id": "toc_f7_design_of_foundations",
       "context": {
         "section_heading": "TABLE OF CONTENTS",
         "preceding_text": "\\t\\tF.6.2\\tAnchorage of Beam Longitudinal Reinforcement\\t33"
@@ -2045,23 +2047,10 @@
       "template_rule": {
         "action": "conditional_section",
         "condition": "building.has_staircase",
-        "when_false": "remove_heading_and_content_until_empty_heading_5",
-        "source_body_indices": [
-          370,
-          371,
-          372,
-          373,
-          374
-        ],
-        "inventory_items_to_remove_in_sample": [
-          516,
-          518,
-          520,
-          522,
-          523
-        ],
-        "next_section_inventory_item": 530
+        "when_false": "remove_heading_and_content_until_next_empty_heading_5",
+        "note": "Anchored on the 'Design of Staircases' text; matches both the TOC entry and the heading. The body range and next-section anchor are resolved at apply time, not hardcoded."
       },
+      "template_rule_id": "staircase_section_conditional",
       "context": {
         "section_heading": "TABLE OF CONTENTS",
         "preceding_text": "\\t\\tF.7\\tDesign of Foundations\\t34"
@@ -2277,6 +2266,7 @@
         "always_present": true,
         "generated_heading": true
       },
+      "template_rule_id": "toc_irregularity_checks",
       "context": {
         "section_heading": "TABLE OF CONTENTS",
         "preceding_text": "\\t\\tG.1.3\\tTorsional Irregularity\\t46"
@@ -2317,6 +2307,7 @@
         "always_present": true,
         "generated_heading": true
       },
+      "template_rule_id": "toc_irregularity_checks",
       "context": {
         "section_heading": "TABLE OF CONTENTS",
         "preceding_text": "\\t\\tG.1.4\\tSoft Storey\\t47"
@@ -2361,6 +2352,7 @@
           "not_present"
         ]
       },
+      "template_rule_id": "toc_irregularity_checks",
       "context": {
         "section_heading": "TABLE OF CONTENTS",
         "preceding_text": "\\t\\tG.1.5\\tIn-plane Discontinuity\\t47"
@@ -2401,6 +2393,7 @@
         "always_present": true,
         "generated_heading": true
       },
+      "template_rule_id": "toc_irregularity_checks",
       "context": {
         "section_heading": "TABLE OF CONTENTS",
         "preceding_text": "\\tNo in-plane discontinuity is present in the structure.\\t47"
@@ -2445,6 +2438,7 @@
           "not_present"
         ]
       },
+      "template_rule_id": "toc_irregularity_checks",
       "context": {
         "section_heading": "TABLE OF CONTENTS",
         "preceding_text": "\\t\\tG.1.6\\tMass Irregularity\\t47"
@@ -2485,6 +2479,7 @@
         "always_present": true,
         "generated_heading": true
       },
+      "template_rule_id": "toc_irregularity_checks",
       "context": {
         "section_heading": "TABLE OF CONTENTS",
         "preceding_text": "\\tNo mass irregularity is seen as the stories are nearly identical.\\t48"
@@ -2525,6 +2520,7 @@
         "always_present": true,
         "generated_heading": true
       },
+      "template_rule_id": "toc_irregularity_checks",
       "context": {
         "section_heading": "TABLE OF CONTENTS",
         "preceding_text": "\\t\\tG.1.7\\tRe-entrant Corner\\t48"
@@ -2565,6 +2561,7 @@
         "always_present": true,
         "generated_heading": true
       },
+      "template_rule_id": "toc_irregularity_checks",
       "context": {
         "section_heading": "TABLE OF CONTENTS",
         "preceding_text": "\\t\\tG.1.8\\tDiaphragm Discontinuity\\t48"
@@ -3280,6 +3277,10 @@
         "number": 3
       },
       "classification": "TABLE",
+      "context": {
+        "section_heading": "\\tGeneral Information of the Building",
+        "caption": "Table 1: General Information of the Building"
+      },
       "template_rule": {
         "action": "fill_rows",
         "source": [
@@ -3289,10 +3290,7 @@
         "note": "Fill rows from intake and the Phase 2.5 foundation choice; preserve the SEQ field.",
         "seq_field": "preserve"
       },
-      "context": {
-        "section_heading": "\\tGeneral Information of the Building",
-        "caption": "Table 1: General Information of the Building"
-      }
+      "template_rule_id": "table_building_general_info"
     },
     {
       "index": 182,
@@ -3662,6 +3660,10 @@
         "number": 5
       },
       "classification": "TABLE",
+      "context": {
+        "section_heading": "\\tStructural System and Foundation:",
+        "caption": "Table 3: Structural System & Foundation"
+      },
       "template_rule": {
         "action": "fill_value_column",
         "classification": "TABLE",
@@ -3679,8 +3681,8 @@
             "code": "A.3-01",
             "parameter": "Type of Structural System",
             "value_key": "structural.system_type",
-            "source": "excel",
-            "note": "Also drives Rμ/Ωu/Ωs."
+            "source": "etabs_api",
+            "note": "Frame sections + connectivity; also drives Rmu/Omega_u/Omega_s."
           },
           {
             "code": "A.3-02",
@@ -3693,18 +3695,12 @@
             "code": "A.3-03",
             "parameter": "Type of Slab used",
             "value_key": "slab.type",
-            "source": [
-              "excel",
-              "e2k"
-            ],
-            "note": "A flat slab or waffle slab may be identified from .e2k shell sections."
+            "source": "e2k",
+            "note": "Identified from .e2k shell sections when intake is silent."
           }
         ]
       },
-      "context": {
-        "section_heading": "\\tStructural System and Foundation:",
-        "caption": "Table 3: Structural System & Foundation"
-      }
+      "template_rule_id": "table_structural_system_foundation"
     },
     {
       "index": 203,
@@ -3810,7 +3806,7 @@
         "target_clause_2025": null,
         "mapping_status": "needs_owner_decision",
         "decision": "No owner-approved NBC 105:2025 mapping supplied.",
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
       "context": {
         "section_heading": "CONCRETE:",
@@ -4388,7 +4384,7 @@
         "target_clause_2025": "5.6",
         "mapping_status": "sample_reference",
         "decision": null,
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
       "context": {
         "section_heading": "\\tAccidental Eccentricity",
@@ -4684,6 +4680,7 @@
         "remove_designer_instruction_sentence": true,
         "preserve_support_condition_rule": true
       },
+      "template_rule_id": "support_condition_body",
       "context": {
         "section_heading": "\\tSupport Condition",
         "preceding_text": "\\tSupport Condition"
@@ -4712,6 +4709,7 @@
           "pinned": "the foundation is assumed to be pinned."
         }
       },
+      "template_rule_id": "foundation_support_wording",
       "context": {
         "section_heading": "\\tSupport Condition",
         "preceding_text": "If the building is supported by a pile or mat foundation, or an isolated footing on firm soil, the support condition is considered to be fixed. However, if the soil is less firm and the foundation type is isolated, the support condition will be closer to a hinge support. Therefore, it is necessary for the designer to specify the appropriate type of support used in the building model in this section of the checklist. For this design,"
@@ -6971,7 +6969,7 @@
         "target_clause_2025": "6.3",
         "mapping_status": "sample_reference",
         "decision": null,
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
       "context": {
         "section_heading": "Rayleigh method",
@@ -7306,7 +7304,7 @@
             "decision": null
           }
         ],
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
       "context": {
         "section_heading": "Rayleigh method",
@@ -7600,7 +7598,7 @@
         "target_clause_2025": "3.2.1",
         "mapping_status": "sample_reference",
         "decision": null,
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
       "context": {
         "section_heading": "\\t",
@@ -7695,7 +7693,7 @@
         "target_clause_2025": null,
         "mapping_status": "needs_owner_decision",
         "decision": "No owner-approved NBC 105:2025 mapping supplied.",
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
       "context": {
         "section_heading": "Load Combination",
@@ -7722,7 +7720,7 @@
         "target_clause_2025": "3.6.1",
         "mapping_status": "sample_reference",
         "decision": null,
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
       "context": {
         "section_heading": "Load Combination",
@@ -7919,7 +7917,7 @@
         "target_clause_2025": "7.3",
         "mapping_status": "sample_reference",
         "decision": null,
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
       "context": {
         "section_heading": "\\tModal Analysis Results",
@@ -9094,6 +9092,7 @@
         "action": "retain_image_or_caption",
         "caption_combination_variable": "analysis.foundation_reaction_combination"
       },
+      "template_rule_id": "foundation_reaction_caption",
       "context": {
         "section_heading": "\\tDesign of Foundations",
         "preceding_text": "\\tDesign of Foundations"
@@ -9495,6 +9494,13 @@
         "heading_level": 4
       },
       "classification": "FIXED",
+      "template_rule": {
+        "action": "conditional_section",
+        "condition": "building.has_staircase",
+        "when_false": "remove_heading_and_content_until_next_empty_heading_5",
+        "note": "Anchored on the 'Design of Staircases' text; matches both the TOC entry and the heading. The body range and next-section anchor are resolved at apply time, not hardcoded."
+      },
+      "template_rule_id": "staircase_section_conditional",
       "context": {
         "section_heading": "\\tDesign of Staircases",
         "preceding_text": "Figure 17: Foundation reaction(1.5DL+1.5LL)"
@@ -9810,7 +9816,7 @@
         "target_clause_2025": null,
         "mapping_status": "needs_owner_decision",
         "decision": "The sample cites NBC 105:2077; no owner-approved 2025 mapping supplied.",
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
       "context": {
         "section_heading": "\\tStory Drift Ratio, Story Displacement and Separation between blocks:",
@@ -9854,7 +9860,7 @@
         "target_clause_2025": null,
         "mapping_status": "needs_owner_decision",
         "decision": "The sample cites NBC 105:2077; no owner-approved 2025 mapping supplied.",
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
       "context": {
         "section_heading": "\\tStory Drift Ratio, Story Displacement and Separation between blocks:",
@@ -10838,7 +10844,7 @@
         "target_clause_2025": null,
         "mapping_status": "needs_owner_decision",
         "decision": "No owner-approved NBC 105:2025 mapping supplied.",
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
       "context": {
         "section_heading": "\\tCheck for Structural Irregularity",
@@ -10882,7 +10888,7 @@
         "target_clause_2025": null,
         "mapping_status": "needs_owner_decision",
         "decision": "No owner-approved NBC 105:2025 mapping supplied.",
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
       "context": {
         "section_heading": "\\tTorsional Irregularity",
@@ -11072,12 +11078,13 @@
       "classification": "VARIABLE",
       "template_rule": {
         "action": "clause_variable",
-        "clause_key": "code.clauses.soft_storey",
+        "clause_key": "codes.clauses.soft_storey",
         "sample_clause": "5.5.1.2",
         "target_clause_2025": "5.4.1.2",
-        "edition_key": "code.edition",
+        "edition_key": "codes.edition",
         "insert_code_name_if_missing": true
       },
+      "template_rule_id": "clause_soft_storey",
       "context": {
         "section_heading": "\\tSoft Storey",
         "preceding_text": "\\tSoft Storey"
@@ -11138,10 +11145,6 @@
         "heading_level": null
       },
       "classification": "FIXED",
-      "template_rule": {
-        "action": "retain_image_or_caption",
-        "caption_combination_variable": "analysis.foundation_reaction_combination"
-      },
       "context": {
         "section_heading": "\\tSoft Storey",
         "preceding_text": "As per the clause 5.5.1.2, a soft story is the one whose stiffness of the lateral force resisting system is less than 70% of the lateral force resisting system stiffness in an adjacent story above or below, or less than 80% of the average lateral force resisting system stiffness of the three storys above or below."
@@ -11179,12 +11182,13 @@
       "classification": "COMPUTED",
       "template_rule": {
         "action": "computed_variant",
-        "variant_key": "soft_storey_result",
+        "variant_key": "analysis.soft_storey_result",
         "variants": [
           "present",
           "not_present"
         ]
       },
+      "template_rule_id": "soft_storey_conclusion",
       "context": {
         "section_heading": "\\tSoft Storey",
         "preceding_text": "Figure 27: Soft story check"
@@ -11221,11 +11225,12 @@
       "classification": "VARIABLE",
       "template_rule": {
         "action": "clause_variable",
-        "clause_key": "code.clauses.in_plane_discontinuity",
+        "clause_key": "codes.clauses.in_plane_discontinuity",
         "sample_clause": "5.5.1.4",
         "target_clause_2025": "5.4.1.4",
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
+      "template_rule_id": "clause_in_plane_discontinuity",
       "context": {
         "section_heading": "\\t In-plane Discontinuity",
         "preceding_text": "\\t In-plane Discontinuity"
@@ -11253,6 +11258,7 @@
           "not_present"
         ]
       },
+      "template_rule_id": "in_plane_discontinuity_conclusion",
       "context": {
         "section_heading": "No in-plane discontinuity is present in the structure.",
         "preceding_text": "As per the clause 5.5.1.4 of NBC 105:2020, if there is an in-plane offset of a vertical seismic force-resisting element resulting in overturning demands on supporting structural elements, then there will be in-plane discontinuity in vertical lateral force resisting element type of irregularity."
@@ -11312,10 +11318,6 @@
         "heading_level": null
       },
       "classification": "FIXED",
-      "template_rule": {
-        "action": "retain_image_or_caption",
-        "caption_combination_variable": "analysis.foundation_reaction_combination"
-      },
       "context": {
         "section_heading": "No in-plane discontinuity is present in the structure.",
         "preceding_text": "No in-plane discontinuity is present in the structure."
@@ -11370,11 +11372,12 @@
       "classification": "VARIABLE",
       "template_rule": {
         "action": "clause_variable",
-        "clause_key": "code.clauses.mass_irregularity",
+        "clause_key": "codes.clauses.mass_irregularity",
         "sample_clause": "5.5.1.5",
         "target_clause_2025": "5.4.1.5",
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
+      "template_rule_id": "clause_mass_irregularity",
       "context": {
         "section_heading": "\\tMass Irregularity",
         "preceding_text": "\\tMass Irregularity"
@@ -11429,6 +11432,7 @@
         "action": "drop_sentence",
         "note": "Drop the designer instruction sentence; merge the preceding mass-irregularity definition."
       },
+      "template_rule_id": "drop_mass_irregularity_designer_instruction",
       "context": {
         "section_heading": "\\tMass Irregularity",
         "preceding_text": "If there is a difference of more than 50% between the effective masses of two consecutive storeys, then there will be the existence of mass irregularity in the structural system of the building as per the clause 5.5.1.5 of NBC 105:2020. However, for such checks, light roofs, penthouse and mezzanine floors are not to be considered. The Designer is required to carry out the check for mass irregularity in the structural"
@@ -11455,6 +11459,7 @@
           "not_present"
         ]
       },
+      "template_rule_id": "mass_irregularity_conclusion",
       "context": {
         "section_heading": "No mass irregularity is seen as the stories are nearly identical.",
         "preceding_text": "system and present the same in tabular form in the structural design report."
@@ -11508,11 +11513,12 @@
       "classification": "VARIABLE",
       "template_rule": {
         "action": "clause_variable",
-        "clause_key": "code.clauses.reentrant_corner",
+        "clause_key": "codes.clauses.reentrant_corner",
         "sample_clause": "5.5.2.2",
         "target_clause_2025": "5.4.2.3",
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
+      "template_rule_id": "clause_reentrant_corner",
       "context": {
         "section_heading": "\\tRe-entrant Corner",
         "preceding_text": "\\tRe-entrant Corner"
@@ -11533,12 +11539,13 @@
       "classification": "COMPUTED",
       "template_rule": {
         "action": "computed_variant",
-        "variant_key": "reentrant_corner_result",
+        "variant_key": "analysis.reentrant_corner_result",
         "variants": [
           "reentrant_present",
           "rectangular_no_reentrant_corners"
         ]
       },
+      "template_rule_id": "reentrant_corner_conclusion",
       "context": {
         "section_heading": "\\tRe-entrant Corner",
         "preceding_text": "As per the clause 5.5.2.2 of NBC 105:2020, a structure is said to have re-entrant corner irregularity in a direction if its structural configuration has a projection of greater than 15% of its overall dimensions in that direction."
@@ -11598,10 +11605,6 @@
         "heading_level": null
       },
       "classification": "FIXED",
-      "template_rule": {
-        "action": "retain_image_or_caption",
-        "caption_combination_variable": "analysis.foundation_reaction_combination"
-      },
       "context": {
         "section_heading": "\\tRe-entrant Corner",
         "preceding_text": "The building is rectangular in shape with no re-entrant corners."
@@ -11673,11 +11676,12 @@
       "classification": "VARIABLE",
       "template_rule": {
         "action": "clause_variable",
-        "clause_key": "code.clauses.diaphragm_discontinuity",
+        "clause_key": "codes.clauses.diaphragm_discontinuity",
         "sample_clause": "5.5.2.3",
         "target_clause_2025": "5.4.2.4",
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
+      "template_rule_id": "clause_diaphragm_discontinuity",
       "context": {
         "section_heading": "\\tDiaphragm Discontinuity",
         "preceding_text": "\\tDiaphragm Discontinuity"
@@ -11826,11 +11830,12 @@
       "classification": "VARIABLE",
       "template_rule": {
         "action": "clause_variable",
-        "clause_key": "code.clauses.out_of_plane_offset",
+        "clause_key": "codes.clauses.out_of_plane_offset",
         "sample_clause": "5.5.2.4",
         "target_clause_2025": "5.4.2.5",
-        "edition_key": "code.edition"
+        "edition_key": "codes.edition"
       },
+      "template_rule_id": "clause_out_of_plane_offset",
       "context": {
         "section_heading": "\\t Out-of-plane Offset",
         "preceding_text": "\\t Out-of-plane Offset"

@@ -47,7 +47,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--curated-registry", type=Path, default=Path("config/placeholder_registry.yaml"),
                    help="curated registry used only for a concise generated-vs-curated diff")
     p.add_argument("--decisions", type=Path, default=Path("docs/needs_my_decision.generated.md"))
-    p.add_argument("--review", type=Path, default=Path("docs/registry_review.md"))
+    p.add_argument("--review", type=Path, default=Path("docs/registry_review_full.md"),
+                   help="full before/after listing; the short curated summary lives at docs/registry_review.md and is not overwritten by this tool")
     p.add_argument("--force", action="store_true", help="replace existing output artifacts")
     return p.parse_args()
 
@@ -260,80 +261,142 @@ def classify(item: dict[str, Any]) -> tuple[str, str | None]:
 
 
 def apply_template_rule(item: dict[str, Any]) -> None:
-    """Attach deterministic rules supplied by the template owner."""
-    text = item.get("text", item.get("text_preview", ""))
+    """Attach deterministic rules supplied by the template owner.
+
+    Rules are loaded from ``config/template_rules.yaml`` (see
+    :func:`load_template_rules`). Matching is text/heading-anchored so
+    editing the sample DOCX cannot silently break a rule; if any rule
+    matches zero items, :func:`verify_template_rules` raises a loud error
+    after the inventory pass.
+    """
+    text = item.get("text", item.get("text_preview", "")) or ""
     low = text.lower()
-    p_no = item.get("paragraph", {}).get("number")
-    if item["type"] == "table" and item.get("table", {}).get("number") == 3:
-        item["template_rule"] = {
-            "action": "fill_rows",
-            "source": ["excel", "computed"],
-            "note": "Fill rows from intake and the Phase 2.5 foundation choice; preserve the SEQ field.",
-            "seq_field": "preserve",
-        }
-    elif item["type"] == "table" and item.get("table", {}).get("number") == 5:
-        item["template_rule"] = {
-            "action": "fill_value_column",
-            "classification": "TABLE",
-            "shape": {"rows": 3, "columns": 3},
-            "columns": {
-                "code": "fixed",
-                "parameter": "fixed",
-                "value": "project_data",
-            },
-            "rows": [
-                {"code": "A.3-01", "parameter": "Type of Structural System", "value_key": "structural.system_type", "source": "excel", "note": "Also drives Rμ/Ωu/Ωs."},
-                {"code": "A.3-02", "parameter": "Type of Foundation", "value_key": "foundation.type", "source": "computed", "note": "Phase 2.5 choice from column loads, q_a, and boundary answer."},
-                {"code": "A.3-03", "parameter": "Type of Slab used", "value_key": "slab.type", "source": ["excel", "e2k"], "note": "A flat slab or waffle slab may be identified from .e2k shell sections."},
-            ],
-        }
-    elif item["type"] == "paragraph" and "f.8" in low and "design of staircases" in low:
-        item["template_rule"] = {
-            "action": "conditional_section",
-            "condition": "building.has_staircase",
-            "when_false": "remove_heading_and_content_until_empty_heading_5",
-            "source_body_indices": [370, 371, 372, 373, 374],
-            "inventory_items_to_remove_in_sample": [516, 518, 520, 522, 523],
-            "next_section_inventory_item": 530,
-        }
-    elif item["type"] == "paragraph" and "b.3" in low and "structural system and foundation" in low:
-        item["template_rule"] = {"action": "toc_entry", "always_present": True, "target_heading_text": "Structural System and Foundation"}
-    elif item["type"] == "paragraph" and "f.7" in low and "design of foundations" in low:
-        item["template_rule"] = {"action": "toc_entry", "always_present": True, "target_heading_text": "Design of Foundations"}
-    elif item["type"] == "paragraph" and (item.get("style_name") or "").lower().startswith("toc") and any(x in low for x in ("soft storey", "in-plane discontinuity", "mass irregularity", "re-entrant corner", "diaphragm discontinuity", "out-of-plane offset")):
-        item["template_rule"] = {"action": "toc_entry", "always_present": True, "generated_heading": True}
-    elif item["type"] == "paragraph" and p_no == 161:
-        item["template_rule"] = {"action": "replace_text", "remove_designer_instruction_sentence": True, "preserve_support_condition_rule": True}
-    elif item["type"] == "paragraph" and p_no == 162:
-        item["template_rule"] = {
-            "action": "computed_variant",
-            "inputs": ["foundation.type", "foundation.soil_class"],
-            "variants": {"fixed": "the foundation is assumed to be fixed.", "pinned": "the foundation is assumed to be pinned."},
-        }
-    elif item["type"] == "paragraph" and ("foundation reaction" in low or low.startswith("figure 27:") or low.startswith("figure 28:") or low.startswith("figure 29:")):
-        item["template_rule"] = {"action": "retain_image_or_caption", "caption_combination_variable": "analysis.foundation_reaction_combination"}
-    elif item["type"] == "paragraph" and "no soft stoy" in low:
-        item["template_rule"] = {"action": "computed_variant", "variant_key": "soft_storey_result", "variants": ["present", "not_present"]}
-    elif item["type"] == "paragraph" and "no in-plane discontinuity" in low:
-        item["template_rule"] = {"action": "computed_variant", "style_override": "Body Text", "variant_key": "in_plane_discontinuity_result", "variants": ["present", "not_present"]}
-    elif item["type"] == "paragraph" and "no mass irregularity" in low:
-        item["template_rule"] = {"action": "computed_variant", "style_override": "Body Text", "variant_key": "mass_irregularity_result", "variants": ["present", "not_present"]}
-    elif item["type"] == "paragraph" and low.startswith("the building is rectangular"):
-        item["template_rule"] = {"action": "computed_variant", "variant_key": "reentrant_corner_result", "variants": ["reentrant_present", "rectangular_no_reentrant_corners"]}
-    elif item["type"] == "paragraph" and "clause 5.5.1.2" in low:
-        item["template_rule"] = {"action": "clause_variable", "clause_key": "code.clauses.soft_storey", "sample_clause": "5.5.1.2", "target_clause_2025": "5.4.1.2", "edition_key": "code.edition", "insert_code_name_if_missing": True}
-    elif item["type"] == "paragraph" and "clause 5.5.1.4" in low:
-        item["template_rule"] = {"action": "clause_variable", "clause_key": "code.clauses.in_plane_discontinuity", "sample_clause": "5.5.1.4", "target_clause_2025": "5.4.1.4", "edition_key": "code.edition"}
-    elif item["type"] == "paragraph" and "clause 5.5.1.5" in low:
-        item["template_rule"] = {"action": "clause_variable", "clause_key": "code.clauses.mass_irregularity", "sample_clause": "5.5.1.5", "target_clause_2025": "5.4.1.5", "edition_key": "code.edition"}
-    elif item["type"] == "paragraph" and "clause 5.5.2.2" in low:
-        item["template_rule"] = {"action": "clause_variable", "clause_key": "code.clauses.reentrant_corner", "sample_clause": "5.5.2.2", "target_clause_2025": "5.4.2.3", "edition_key": "code.edition"}
-    elif item["type"] == "paragraph" and "clause 5.5.2.3" in low:
-        item["template_rule"] = {"action": "clause_variable", "clause_key": "code.clauses.diaphragm_discontinuity", "sample_clause": "5.5.2.3", "target_clause_2025": "5.4.2.4", "edition_key": "code.edition"}
-    elif item["type"] == "paragraph" and "clause 5.5.2.4" in low:
-        item["template_rule"] = {"action": "clause_variable", "clause_key": "code.clauses.out_of_plane_offset", "sample_clause": "5.5.2.4", "target_clause_2025": "5.4.2.5", "edition_key": "code.edition"}
-    elif item["type"] == "paragraph" and "system and present the same in tabular form" in low:
-        item["template_rule"] = {"action": "drop_sentence", "note": "Drop the designer instruction sentence; merge the preceding mass-irregularity definition."}
+    style = (item.get("style_name") or "").lower()
+    context = item.get("context") or {}
+    heading = (context.get("section_heading") or "").lower()
+    caption = (context.get("caption") or "").lower()
+    table = item.get("table") or {}
+    table_headers = [str(h or "").lower() for h in table.get("header_row", [])]
+    for rule in _TEMPLATE_RULES:
+        match = rule.get("match") or {}
+        if not _rule_matches(item, match, low, style, heading, caption, table, table_headers):
+            continue
+        action = rule.get("action") or {}
+        # Replace any prior template_rule so the most specific match wins
+        # (rules are ordered most-specific first in the YAML).
+        item["template_rule"] = dict(action)
+        item["template_rule_id"] = rule.get("id")
+        # Count distinct (rule_id, item_index) pairs so the same item being
+        # processed twice (inventory_docx + prepare_inventory) does not
+        # inflate the match count.
+        pair = (rule.get("id"), item.get("index"))
+        if pair not in _RULE_MATCHED_ITEMS:
+            _RULE_MATCHED_ITEMS.add(pair)
+            _RULE_MATCH_COUNTS[rule.get("id")] += 1
+        return
+
+
+_TEMPLATE_RULES: list[dict[str, Any]] = []
+_RULE_MATCH_COUNTS: dict[str | None, int] = defaultdict(int)
+_RULE_MATCHED_ITEMS: set[tuple[str | None, int | None]] = set()
+_TEMPLATE_RULES_LOADED = False
+
+
+def load_template_rules(path: Path | None = None) -> list[dict[str, Any]]:
+    """Load and cache the heading/text-anchored rules from config/template_rules.yaml."""
+    global _TEMPLATE_RULES, _TEMPLATE_RULES_LOADED
+    if _TEMPLATE_RULES_LOADED:
+        return _TEMPLATE_RULES
+    if path is None:
+        path = Path(__file__).resolve().parent.parent / "config" / "template_rules.yaml"
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Template rules file not found: {path}. The inventory tool refuses to run "
+            "without the anchored rules; create the file or restore it from git."
+        )
+    try:
+        import yaml as _yaml  # local import so module import stays light
+    except ImportError as exc:
+        raise RuntimeError("PyYAML is required to load config/template_rules.yaml") from exc
+    data = _yaml.safe_load(path.read_text(encoding="utf-8"))
+    rules = data.get("rules") if isinstance(data, dict) else None
+    if not isinstance(rules, list) or not rules:
+        raise ValueError(f"{path} must contain a non-empty 'rules' list.")
+    for rule in rules:
+        if not rule.get("id"):
+            raise ValueError(f"Every rule in {path} must have an 'id'.")
+        if not isinstance(rule.get("match"), dict):
+            raise ValueError(f"Rule {rule.get('id')} must have a 'match' mapping.")
+        if not isinstance(rule.get("action"), dict):
+            raise ValueError(f"Rule {rule.get('id')} must have an 'action' mapping.")
+    _TEMPLATE_RULES = rules
+    _TEMPLATE_RULES_LOADED = True
+    return rules
+
+
+def reset_template_rule_state() -> None:
+    """Reset the loaded rules and match counters (used by tests)."""
+    global _TEMPLATE_RULES, _TEMPLATE_RULES_LOADED
+    _TEMPLATE_RULES = []
+    _TEMPLATE_RULES_LOADED = False
+    _RULE_MATCH_COUNTS.clear()
+    _RULE_MATCHED_ITEMS.clear()
+
+
+def _rule_matches(item: dict[str, Any], match: dict[str, Any], low: str, style: str,
+                  heading: str, caption: str, table: dict[str, Any],
+                  table_headers: list[str]) -> bool:
+    typ = item.get("type")
+    if "item_type" in match and typ != match["item_type"]:
+        return False
+    if "style_prefix" in match and not style.startswith(match["style_prefix"].lower()):
+        return False
+    # Strip leading literal "\t" tab markers (added by paragraph_text) and
+    # whitespace so a heading that begins with a tab still matches a
+    # paragraph_starts_with rule. The literal "\t" is two characters
+    # (backslash + t); match it as a sequence, not as a character class.
+    low_stripped = re.sub(r"^(?:\\t|\s)+", "", low)
+    if "paragraph_starts_with" in match and not low_stripped.startswith(match["paragraph_starts_with"].lower()):
+        return False
+    if "paragraph_starts_with_any" in match:
+        opts = [opt.lower() for opt in match["paragraph_starts_with_any"]]
+        if not any(low_stripped.startswith(opt) for opt in opts):
+            return False
+    if "paragraph_contains" in match and match["paragraph_contains"].lower() not in low:
+        return False
+    if "paragraph_contains_any" in match:
+        opts = [opt.lower() for opt in match["paragraph_contains_any"]]
+        if not any(opt in low for opt in opts):
+            return False
+    if "heading_contains" in match and match["heading_contains"].lower() not in heading:
+        return False
+    if "table_caption_contains" in match:
+        if match["table_caption_contains"].lower() not in caption:
+            return False
+    if "table_header_contains" in match:
+        needle = match["table_header_contains"].lower()
+        if not any(needle in h for h in table_headers):
+            return False
+    if "table_number" in match and table.get("number") != match["table_number"]:
+        return False
+    return True
+
+
+def verify_template_rules() -> None:
+    """Fail loudly if any anchored rule matched zero items in the last pass."""
+    missing = [rid for rid, count in _RULE_MATCH_COUNTS.items() if count == 0]
+    # Also include rules that never had a counter entry (loaded but unmatched).
+    for rule in _TEMPLATE_RULES:
+        rid = rule.get("id")
+        if rid not in _RULE_MATCH_COUNTS:
+            missing.append(rid)
+    if missing:
+        raise RuntimeError(
+            "Template rules matched no inventory items: "
+            + ", ".join(sorted(r for r in missing if r))
+            + ". The sample DOCX has changed in a way that breaks anchored matching; "
+            "update config/template_rules.yaml or restore the sample."
+        )
 
 
 def slug(text: str) -> str:
@@ -578,15 +641,19 @@ def write_decisions(path: Path, notes: list[str], items: list[dict[str, Any]]) -
 
 
 def owner_registry_entries() -> list[dict[str, Any]]:
-    """Stable variables explicitly requested by the template owner."""
+    """Stable variables explicitly requested by the template owner.
+
+    All clause keys live under the `codes.*` group; the singular `code.*`
+    prefix has been merged into `codes.*` per the registry review gate.
+    """
     specs = [
-        ("code.edition", "Code edition used in clause citations.", "text", None, "excel", True, "NBC 105:2025"),
-        ("code.clauses.soft_storey", "NBC clause for the soft-storey check.", "text", None, "excel", True, "5.4.1.2"),
-        ("code.clauses.in_plane_discontinuity", "NBC clause for the in-plane discontinuity check.", "text", None, "excel", True, "5.4.1.4"),
-        ("code.clauses.mass_irregularity", "NBC clause for the mass-irregularity check.", "text", None, "excel", True, "5.4.1.5"),
-        ("code.clauses.reentrant_corner", "NBC clause for the re-entrant-corner check.", "text", None, "excel", True, "5.4.2.3"),
-        ("code.clauses.diaphragm_discontinuity", "NBC clause for the diaphragm-discontinuity check.", "text", None, "excel", True, "5.4.2.4"),
-        ("code.clauses.out_of_plane_offset", "NBC clause for the out-of-plane-offset check.", "text", None, "excel", True, "5.4.2.5"),
+        ("codes.edition", "Code edition used in clause citations.", "text", None, "excel", True, "NBC 105:2025"),
+        ("codes.clauses.soft_storey", "NBC clause for the soft-storey check.", "text", None, "excel", True, "5.4.1.2"),
+        ("codes.clauses.in_plane_discontinuity", "NBC clause for the in-plane discontinuity check.", "text", None, "excel", True, "5.4.1.4"),
+        ("codes.clauses.mass_irregularity", "NBC clause for the mass-irregularity check.", "text", None, "excel", True, "5.4.1.5"),
+        ("codes.clauses.reentrant_corner", "NBC clause for the re-entrant-corner check.", "text", None, "excel", True, "5.4.2.3"),
+        ("codes.clauses.diaphragm_discontinuity", "NBC clause for the diaphragm-discontinuity check.", "text", None, "excel", True, "5.4.2.4"),
+        ("codes.clauses.out_of_plane_offset", "NBC clause for the out-of-plane-offset check.", "text", None, "excel", True, "5.4.2.5"),
         ("building.has_staircase", "Whether the project includes a staircase section.", "bool", None, "excel", True, True),
         ("foundation.type", "Foundation type chosen in Phase 2.5 from column loads, q_a, and the boundary answer.", "text", None, "computed", True, "Combined Footing"),
         ("foundation.soil_class", "Soil class/firmness used for the support-condition wording.", "text", None, "excel", True, "firm soil"),
@@ -605,13 +672,16 @@ def owner_registry_entries() -> list[dict[str, Any]]:
 
 
 WORD_REGENERATED_FIELDS = {"TOC", "PAGEREF", "PAGE", "NUMPAGES", "HYPERLINK", "SEQ", "REF", "STYLEREF"}
+# Owner clause map: sample 2020 clause -> (codes.clauses.* registry key, 2025 target).
+# All clause keys live under the `codes.*` group; the singular `code.*` prefix
+# has been merged into `codes.*` per the registry review gate.
 OWNER_CLAUSE_MAP = {
-    "5.5.1.2": ("code.clauses.soft_storey", "5.4.1.2"),
-    "5.5.1.4": ("code.clauses.in_plane_discontinuity", "5.4.1.4"),
-    "5.5.1.5": ("code.clauses.mass_irregularity", "5.4.1.5"),
-    "5.5.2.2": ("code.clauses.reentrant_corner", "5.4.2.3"),
-    "5.5.2.3": ("code.clauses.diaphragm_discontinuity", "5.4.2.4"),
-    "5.5.2.4": ("code.clauses.out_of_plane_offset", "5.4.2.5"),
+    "5.5.1.2": ("codes.clauses.soft_storey", "5.4.1.2"),
+    "5.5.1.4": ("codes.clauses.in_plane_discontinuity", "5.4.1.4"),
+    "5.5.1.5": ("codes.clauses.mass_irregularity", "5.4.1.5"),
+    "5.5.2.2": ("codes.clauses.reentrant_corner", "5.4.2.3"),
+    "5.5.2.3": ("codes.clauses.diaphragm_discontinuity", "5.4.2.4"),
+    "5.5.2.4": ("codes.clauses.out_of_plane_offset", "5.4.2.5"),
 }
 UNRESOLVED_CLAUSE_KEYS = {
     "2.1": ("codes.clauses.material_properties", "No owner-approved NBC 105:2025 mapping supplied."),
@@ -801,10 +871,10 @@ def apply_template_rule(item: dict[str, Any]) -> None:
                                    "decision": decision})
             if len(references) == 1:
                 ref = references[0]
-                item["template_rule"] = {"action": "clause_variable", **ref, "edition_key": "code.edition"}
+                item["template_rule"] = {"action": "clause_variable", **ref, "edition_key": "codes.edition"}
             else:
                 item["template_rule"] = {"action": "clause_variable", "clause_variables": references,
-                                         "edition_key": "code.edition"}
+                                         "edition_key": "codes.edition"}
     if item.get("type") == "paragraph" and low.startswith("no soft story"):
         item["template_rule"] = {"action": "computed_variant", "variant_key": "soft_storey_result", "variants": ["present", "not_present"]}
     if item.get("type") == "paragraph" and "no in-plane discontinuity" in low:
@@ -852,6 +922,14 @@ def prepare_inventory(items: list[dict[str, Any]]) -> None:
                 if neighbor.get("type") == "paragraph" and re.match(r"\s*table\s+\d+\s*:", neighbor.get("text", ""), re.I):
                     item["context"]["caption"] = clean_text(neighbor.get("text", ""))
                     break
+    # Final pass: re-apply anchored template rules now that every item's
+    # context (section_heading + caption) is populated. Tables and images
+    # first received apply_template_rule during inventory_docx when context
+    # was empty; this re-run lets table_caption_contains / heading_contains
+    # matchers fire correctly.
+    for item in items:
+        if item.get("type") in {"table", "image"}:
+            apply_template_rule(item)
 
 
 def report_group(item: dict[str, Any]) -> str:
@@ -1270,13 +1348,13 @@ def clause_template(text: str, rule: dict[str, Any]) -> str:
         key = ref.get("clause_key")
         if clause and key:
             template = re.sub(r"\b" + re.escape(clause) + r"\b", "{{ " + key + " }}", template, count=1)
-    template = re.sub(r"NBC\s*105\s*:\s*(?:2020|2077|2025)", "{{ code.edition }}", template, flags=re.I)
-    if references and "{{ code.edition }}" not in template:
+    template = re.sub(r"NBC\s*105\s*:\s*(?:2020|2077|2025)", "{{ codes.edition }}", template, flags=re.I)
+    if references and "{{ codes.edition }}" not in template:
         for ref in references:
             key = ref.get("clause_key")
             if key:
                 template = re.sub(r"(\{\{\s*" + re.escape(key) + r"\s*\}\})",
-                                  r"\1 of {{ code.edition }}", template, count=1)
+                                  r"\1 of {{ codes.edition }}", template, count=1)
     return template
 
 
@@ -1342,10 +1420,10 @@ def entry_for_item(item: dict[str, Any], key: str, used: set[str]) -> dict[str, 
             template = text
             year = re.search(r"NBC\s*105\s*:\s*(\d{4})", text, re.I)
             if year:
-                entry = entry_base("code.edition", "Code edition printed in this caption", "text", None,
+                entry = entry_base("codes.edition", "Code edition printed in this caption", "text", None,
                                    "excel", True, None, item.get("index"), f"NBC 105:{year.group(1)}")
                 caption_entries.append(entry)
-                template = re.sub(r"NBC\s*105\s*:\s*\d{4}", "{{ code.edition }}", template, flags=re.I)
+                template = re.sub(r"NBC\s*105\s*:\s*\d{4}", "{{ codes.edition }}", template, flags=re.I)
             city = re.search(r"\bDamak\b", text, re.I)
             if city:
                 entry = entry_base("building.location", "Project location used in the report caption", "text", None,
@@ -1395,18 +1473,33 @@ def entry_for_item(item: dict[str, Any], key: str, used: set[str]) -> dict[str, 
                       item.get("index"), text)
 
 
+# Inventory indices are intentionally NOT used to bind owner entries to
+# items. The anchored rules in config/template_rules.yaml find the items by
+# text/heading/caption content; this map only carries the rule_id that
+# covers each manual entry, so build_registry can skip items whose
+# template_rule_id appears here without relying on positional indices.
+MANUAL_COVERED_RULE_IDS: dict[str, str] = {
+    "codes.edition": "clause_soft_storey",  # edition is global; any clause rule attaches it
+    "codes.clauses.soft_storey": "clause_soft_storey",
+    "codes.clauses.in_plane_discontinuity": "clause_in_plane_discontinuity",
+    "codes.clauses.mass_irregularity": "clause_mass_irregularity",
+    "codes.clauses.reentrant_corner": "clause_reentrant_corner",
+    "codes.clauses.diaphragm_discontinuity": "clause_diaphragm_discontinuity",
+    "codes.clauses.out_of_plane_offset": "clause_out_of_plane_offset",
+    "foundation.support_condition": "foundation_support_wording",
+    "analysis.foundation_reaction_combination": "foundation_reaction_caption",
+    "analysis.soft_storey_result": "soft_storey_conclusion",
+    "analysis.in_plane_discontinuity_result": "in_plane_discontinuity_conclusion",
+    "analysis.mass_irregularity_result": "mass_irregularity_conclusion",
+    "analysis.reentrant_corner_result": "reentrant_corner_conclusion",
+}
+
+
 def enriched_owner_entries() -> list[dict[str, Any]]:
-    item_for_key = {
-        "code.edition": 405,
-        "code.clauses.soft_storey": 603, "code.clauses.in_plane_discontinuity": 610,
-        "code.clauses.mass_irregularity": 617, "code.clauses.reentrant_corner": 624,
-        "code.clauses.diaphragm_discontinuity": 632, "code.clauses.out_of_plane_offset": 640,
-        "building.has_staircase": 516, "foundation.type": 202, "foundation.soil_class": None,
-        "foundation.support_condition": 256, "structural.system_type": 202, "slab.type": 202,
-        "analysis.foundation_reaction_combination": 494, "analysis.soft_storey_result": 608,
-        "analysis.in_plane_discontinuity_result": 611, "analysis.mass_irregularity_result": 621,
-        "analysis.reentrant_corner_result": 625,
-    }
+    # No inventory_item_index is hardcoded. Items are found by anchored
+    # rules; the registry entry's inventory_item_index is filled in by
+    # build_registry when a matching rule_id is found on an item.
+    item_for_key: dict[str, None] = {key: None for key in MANUAL_COVERED_RULE_IDS}
     entries = []
     for original in owner_registry_entries():
         entry = dict(original)
@@ -1417,7 +1510,7 @@ def enriched_owner_entries() -> list[dict[str, Any]]:
         entry["inventory_item_indices"] = [entry["inventory_item_index"]] if entry["inventory_item_index"] is not None else []
         if key == "building.has_staircase":
             entry["condition"] = "Controls inclusion/removal of the staircase block and TOC entry."
-        elif key.startswith("code.clauses."):
+        elif key.startswith("codes.clauses."):
             entry["condition"] = "Use the owner-approved NBC 105:2025 clause mapping."
         elif key == "foundation.support_condition":
             entry["condition"] = "Computed from foundation.type and foundation.soil_class per owner decision."
@@ -1431,10 +1524,11 @@ def enriched_owner_entries() -> list[dict[str, Any]]:
 
 def build_registry(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
     manual = enriched_owner_entries()
-    manual_by_index: dict[int, list[str]] = defaultdict(list)
-    for entry in manual:
-        if entry.get("inventory_item_index") is not None:
-            manual_by_index[entry["inventory_item_index"]].append(entry["key"])
+    # Build a rule_id -> manual_key index so items whose template_rule was
+    # set by a covered rule can be skipped without using inventory indices.
+    covered_rule_ids: dict[str, list[str]] = defaultdict(list)
+    for key, rule_id in MANUAL_COVERED_RULE_IDS.items():
+        covered_rule_ids[rule_id].append(key)
     manual_keys = {entry["key"] for entry in manual}
     used: set[str] = set(manual_keys)
     output: list[dict[str, Any]] = []
@@ -1451,16 +1545,28 @@ def build_registry(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
         by_key[entry["key"]] = entry
         output.append(entry)
 
-    manual_indexes = {256, 494, 608, 611, 621, 625}
     for item in items:
         if item.get("type") == "field" or item.get("classification") == "FIXED":
             continue
         if item.get("type") == "paragraph":
             rule = item.get("template_rule") or {}
             multi_keys = {ref.get("clause_key") for ref in rule.get("clause_variables", [])}
-            if (item.get("index") in manual_indexes
+            rule_id = item.get("template_rule_id")
+            covered_keys = covered_rule_ids.get(rule_id, [])
+            if ((covered_keys and not split_code_limits(item))
                     or (rule.get("clause_key") in manual_keys and not split_code_limits(item))
                     or rule.get("variant_key") in manual_keys):
+                # Carry the item's inventory index onto the manual entries
+                # whose rule_id matched this item.
+                for key in covered_keys:
+                    for entry in manual:
+                        if entry["key"] == key:
+                            idx = item.get("index")
+                            if idx is not None:
+                                entry["inventory_item_index"] = idx
+                                entry.setdefault("inventory_item_indices", [])
+                                if idx not in entry["inventory_item_indices"]:
+                                    entry["inventory_item_indices"].append(idx)
                 continue
             if multi_keys and multi_keys.issubset(manual_keys):
                 continue
@@ -1554,6 +1660,12 @@ def write_registry_review(path: Path, items: list[dict[str, Any]], previous: lis
         source_counts[entry.get("source", "unknown")] += 1
         type_counts[entry.get("type", "unknown")] += 1
     lines = [
+        "# Placeholder Registry Review — Full Before/After Listing", "",
+        "> **Full listing.** This is the complete per-item before/after output from "
+        "`tools/inventory_template.py`. The short curated summary lives in "
+        "`docs/registry_review.md`; the live registry is "
+        "`config/placeholder_registry.yaml`. This file is regenerated whenever the "
+        "inventory tool runs.", "",
         "# Placeholder Registry Review (Phase 1)", "",
         "**Review gate:** this is a proposed registry. Do not generate a production master template until the owner approves it.", "",
         f"Registry entries: **{len(entries)}**. Entry types: " + ", ".join(f"{k}: {v}" for k, v in sorted(type_counts.items())) + ".",
@@ -1667,12 +1779,24 @@ def main() -> int:
             previous_items = json.loads(args.json.read_text(encoding="utf-8")).get("items", [])
         except (OSError, ValueError, AttributeError):
             previous_items = []
+    # Load the anchored template rules BEFORE inventory_docx so every call
+    # to apply_template_rule (during both inventory_docx and
+    # prepare_inventory) sees the loaded rules. verify_template_rules
+    # after the pass fails loudly if any rule matched zero items, which is
+    # the portability guarantee: editing the sample DOCX cannot silently
+    # drop a rule.
+    load_template_rules()
     try:
         items, decisions, stats = inventory_docx(args.input)
     except (OSError, ValueError, etree.XMLSyntaxError) as exc:
         print(f"[ERROR] {exc}", file=sys.stderr)
         return 2
     prepare_inventory(items)
+    try:
+        verify_template_rules()
+    except RuntimeError as exc:
+        print(f"[ERROR] {exc}", file=sys.stderr)
+        return 2
     registry = build_registry(items)
     decisions = [
         f"- **Item {item['index']} ({item['classification']})**: {item.get('text_preview', '')}\n  - Suggestion: {item['classification_note']}"

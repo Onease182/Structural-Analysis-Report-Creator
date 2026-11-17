@@ -1,0 +1,255 @@
+# Heading/text-anchored template rules.
+#
+# Each rule matches an inventory item by content (style, paragraph text,
+# heading text, table caption, or table header) — never by inventory index
+# or paragraph number. Editing the sample DOCX can shift indices; anchored
+# matching survives that. tools/inventory_template.py loads this file and
+# raises a loud error if any rule matches zero items in the inventory.
+#
+# Matcher fields (all optional; an absent matcher is treated as "always
+# true" — combine matchers to narrow a rule):
+#   item_type:        "paragraph" | "table" | "image" | "field"
+#   style_prefix:     e.g. "TOC" matches any TOC* style name (case-insensitive)
+#   paragraph_starts_with:  substring at start of paragraph text (case-insensitive)
+#   paragraph_starts_with_any: list; matches if any element starts the text
+#   paragraph_contains:     substring anywhere in paragraph text (case-insensitive)
+#   paragraph_contains_any: list; matches if any element is in the text
+#   heading_contains:       substring in the active section heading
+#   table_caption_contains: substring in the table caption (e.g. "Table 3:")
+#   table_header_contains:  substring in any header cell
+#   table_number:           1-based table position in document order (use only
+#                           when the table caption is blank — positional match
+#                           is fragile and must be paired with a header match)
+#
+# Leading "\t" (the literal two-char tab marker produced by paragraph_text)
+# and whitespace are stripped before paragraph_starts_with checks, so a
+# heading that begins with a tab still matches.
+#
+# Each rule carries an `action` block identical to the previous in-code
+# shape (action name + parameters), so the inventory tool can apply it
+# verbatim. Hardcoded inventory indices have been removed; the downstream
+# report builder resolves body ranges from the anchored heading at apply
+# time.
+
+rules:
+  - id: table_building_general_info
+    match:
+      item_type: table
+      table_caption_contains: "General Information of the Building"
+    action:
+      action: fill_rows
+      source: ["excel", "computed"]
+      note: "Fill rows from intake and the Phase 2.5 foundation choice; preserve the SEQ field."
+      seq_field: preserve
+
+  - id: table_structural_system_foundation
+    match:
+      item_type: table
+      table_caption_contains: "Structural System & Foundation"
+    action:
+      action: fill_value_column
+      classification: TABLE
+      shape: {rows: 3, columns: 3}
+      columns: {code: fixed, parameter: fixed, value: project_data}
+      rows:
+        - {code: "A.3-01", parameter: "Type of Structural System", value_key: "structural.system_type", source: "etabs_api", note: "Frame sections + connectivity; also drives Rmu/Omega_u/Omega_s."}
+        - {code: "A.3-02", parameter: "Type of Foundation", value_key: "foundation.type", source: "computed", note: "Phase 2.5 choice from column loads, q_a, and boundary answer."}
+        - {code: "A.3-03", parameter: "Type of Slab used", value_key: "slab.type", source: "e2k", note: "Identified from .e2k shell sections when intake is silent."}
+
+  - id: staircase_section_conditional
+    match:
+      item_type: paragraph
+      paragraph_contains: "Design of Staircases"
+    action:
+      action: conditional_section
+      condition: building.has_staircase
+      when_false: remove_heading_and_content_until_next_empty_heading_5
+      note: "Anchored on the 'Design of Staircases' text; matches both the TOC entry and the heading. The body range and next-section anchor are resolved at apply time, not hardcoded."
+
+  - id: toc_b3_structural_system_foundation
+    match:
+      item_type: paragraph
+      style_prefix: "TOC"
+      paragraph_contains: "Structural System and Foundation"
+    action:
+      action: toc_entry
+      always_present: true
+      target_heading_text: "Structural System and Foundation"
+
+  - id: toc_f7_design_of_foundations
+    match:
+      item_type: paragraph
+      style_prefix: "TOC"
+      paragraph_contains: "Design of Foundations"
+    action:
+      action: toc_entry
+      always_present: true
+      target_heading_text: "Design of Foundations"
+
+  - id: toc_irregularity_checks
+    match:
+      item_type: paragraph
+      style_prefix: "TOC"
+      paragraph_contains_any:
+        - "Soft Storey"
+        - "In-Plane Discontinuity"
+        - "Mass Irregularity"
+        - "Re-entrant Corner"
+        - "Re-entrant corner"
+        - "Diaphragm Discontinuity"
+        - "Out-of-plane Offset"
+    action:
+      action: toc_entry
+      always_present: true
+      generated_heading: true
+
+  - id: support_condition_body
+    match:
+      item_type: paragraph
+      paragraph_contains: "support condition is considered to be fixed"
+    action:
+      action: replace_text
+      remove_designer_instruction_sentence: true
+      preserve_support_condition_rule: true
+
+  - id: foundation_support_wording
+    match:
+      item_type: paragraph
+      paragraph_starts_with_any:
+        - "the foundation is assumed to be fixed"
+        - "the foundation is assumed to be pinned"
+        - "foundation is assumed to be fixed"
+        - "foundation is assumed to be pinned"
+    action:
+      action: computed_variant
+      inputs: ["foundation.type", "foundation.soil_class"]
+      variants:
+        fixed: "the foundation is assumed to be fixed."
+        pinned: "the foundation is assumed to be pinned."
+
+  - id: foundation_reaction_caption
+    match:
+      item_type: paragraph
+      paragraph_contains_any:
+        - "Foundation Reaction"
+        - "Foundation reaction"
+    action:
+      action: retain_image_or_caption
+      caption_combination_variable: analysis.foundation_reaction_combination
+
+  - id: soft_storey_conclusion
+    match:
+      item_type: paragraph
+      paragraph_contains_any:
+        - "No soft stoy"
+        - "No soft story"
+    action:
+      action: computed_variant
+      variant_key: analysis.soft_storey_result
+      variants: [present, not_present]
+
+  - id: in_plane_discontinuity_conclusion
+    match:
+      item_type: paragraph
+      paragraph_contains: "No in-plane discontinuity"
+    action:
+      action: computed_variant
+      style_override: "Body Text"
+      variant_key: analysis.in_plane_discontinuity_result
+      variants: [present, not_present]
+
+  - id: mass_irregularity_conclusion
+    match:
+      item_type: paragraph
+      paragraph_contains: "No mass irregularity"
+    action:
+      action: computed_variant
+      style_override: "Body Text"
+      variant_key: analysis.mass_irregularity_result
+      variants: [present, not_present]
+
+  - id: reentrant_corner_conclusion
+    match:
+      item_type: paragraph
+      paragraph_contains: "The building is rectangular"
+    action:
+      action: computed_variant
+      variant_key: analysis.reentrant_corner_result
+      variants: [reentrant_present, rectangular_no_reentrant_corners]
+
+  # NBC clause citation rules — anchored on the cited clause text in the
+  # paragraph, never on the inventory index.
+  - id: clause_soft_storey
+    match:
+      item_type: paragraph
+      paragraph_contains: "5.5.1.2"
+    action:
+      action: clause_variable
+      clause_key: codes.clauses.soft_storey
+      sample_clause: "5.5.1.2"
+      target_clause_2025: "5.4.1.2"
+      edition_key: codes.edition
+      insert_code_name_if_missing: true
+
+  - id: clause_in_plane_discontinuity
+    match:
+      item_type: paragraph
+      paragraph_contains: "5.5.1.4"
+    action:
+      action: clause_variable
+      clause_key: codes.clauses.in_plane_discontinuity
+      sample_clause: "5.5.1.4"
+      target_clause_2025: "5.4.1.4"
+      edition_key: codes.edition
+
+  - id: clause_mass_irregularity
+    match:
+      item_type: paragraph
+      paragraph_contains: "5.5.1.5"
+    action:
+      action: clause_variable
+      clause_key: codes.clauses.mass_irregularity
+      sample_clause: "5.5.1.5"
+      target_clause_2025: "5.4.1.5"
+      edition_key: codes.edition
+
+  - id: clause_reentrant_corner
+    match:
+      item_type: paragraph
+      paragraph_contains: "5.5.2.2"
+    action:
+      action: clause_variable
+      clause_key: codes.clauses.reentrant_corner
+      sample_clause: "5.5.2.2"
+      target_clause_2025: "5.4.2.3"
+      edition_key: codes.edition
+
+  - id: clause_diaphragm_discontinuity
+    match:
+      item_type: paragraph
+      paragraph_contains: "5.5.2.3"
+    action:
+      action: clause_variable
+      clause_key: codes.clauses.diaphragm_discontinuity
+      sample_clause: "5.5.2.3"
+      target_clause_2025: "5.4.2.4"
+      edition_key: codes.edition
+
+  - id: clause_out_of_plane_offset
+    match:
+      item_type: paragraph
+      paragraph_contains: "5.5.2.4"
+    action:
+      action: clause_variable
+      clause_key: codes.clauses.out_of_plane_offset
+      sample_clause: "5.5.2.4"
+      target_clause_2025: "5.4.2.5"
+      edition_key: codes.edition
+
+  - id: drop_mass_irregularity_designer_instruction
+    match:
+      item_type: paragraph
+      paragraph_contains: "system and present the same in tabular form"
+    action:
+      action: drop_sentence
+      note: "Drop the designer instruction sentence; merge the preceding mass-irregularity definition."
