@@ -248,5 +248,212 @@ class AnchoredRuleMatchingTests(unittest.TestCase):
         self.assertEqual(item.get("template_rule_id"), "foundation_support_wording")
 
 
+# ============================================================================
+# Phase 1 continuation tests (Tasks 1-5 regression fixes)
+# ============================================================================
+
+class ClauseFieldTests(unittest.TestCase):
+    """Task 1: every codes.clauses.* entry must carry target_clause_2025,
+    sample_clause, and mapping_status. example must be null."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        with CURATED_REGISTRY.open("r", encoding="utf-8") as f:
+            cls.entries = yaml.safe_load(f)["items"]
+        cls.clauses = [e for e in cls.entries if e["key"].startswith("codes.clauses.")]
+
+    def test_every_clause_has_required_fields(self) -> None:
+        missing = []
+        for e in self.clauses:
+            for field in ("target_clause_2025", "sample_clause", "mapping_status"):
+                if field not in e:
+                    missing.append((e["key"], field))
+        self.assertEqual(missing, [], f"Clause entries missing fields: {missing}")
+
+    def test_clause_example_is_null(self) -> None:
+        bad = [(e["key"], e.get("example")) for e in self.clauses
+               if e.get("example") is not None]
+        self.assertEqual(bad, [], f"Clause entries with non-null example: {bad}")
+
+    def test_owner_mapped_clauses_have_target(self) -> None:
+        owner_mapped = [e for e in self.clauses if e.get("mapping_status") == "owner_mapped"]
+        self.assertEqual(len(owner_mapped), 6,
+                         f"Expected 6 owner-mapped clauses, got {len(owner_mapped)}")
+        bad = [(e["key"], e.get("target_clause_2025")) for e in owner_mapped
+               if not e.get("target_clause_2025")]
+        self.assertEqual(bad, [], f"Owner-mapped clauses with null target: {bad}")
+
+    def test_unresolved_clauses_have_null_target(self) -> None:
+        unresolved = [e for e in self.clauses
+                      if e.get("mapping_status") == "needs_owner_decision"]
+        bad = [(e["key"], e.get("target_clause_2025")) for e in unresolved
+               if e.get("target_clause_2025") is not None]
+        self.assertEqual(bad, [], f"Unresolved clauses with non-null target: {bad}")
+
+    def test_specific_owner_mapped_targets(self) -> None:
+        expected = {
+            "codes.clauses.soft_storey": "5.4.1.2",
+            "codes.clauses.in_plane_discontinuity": "5.4.1.4",
+            "codes.clauses.mass_irregularity": "5.4.1.5",
+            "codes.clauses.reentrant_corner": "5.4.2.3",
+            "codes.clauses.diaphragm_discontinuity": "5.4.2.4",
+            "codes.clauses.out_of_plane_offset": "5.4.2.5",
+        }
+        by_key = {e["key"]: e for e in self.clauses}
+        for key, target in expected.items():
+            self.assertIn(key, by_key, f"Missing clause key: {key}")
+            self.assertEqual(by_key[key].get("target_clause_2025"), target,
+                             f"{key} target mismatch")
+            self.assertEqual(by_key[key].get("mapping_status"), "owner_mapped",
+                             f"{key} mapping_status mismatch")
+
+
+class FoundationSupportConditionTests(unittest.TestCase):
+    """Task 2: foundation.support_condition source is computed; .e2k
+    $POINTRESTRAINTS is a cross-check input, not a replacement."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        with CURATED_REGISTRY.open("r", encoding="utf-8") as f:
+            cls.entries = yaml.safe_load(f)["items"]
+
+    def test_foundation_support_condition_source_is_computed(self) -> None:
+        entry = next(e for e in self.entries if e["key"] == "foundation.support_condition")
+        self.assertEqual(entry.get("source"), "computed",
+                         f"source is {entry.get('source')}; expected 'computed'")
+
+    def test_foundation_support_condition_has_cross_check(self) -> None:
+        entry = next(e for e in self.entries if e["key"] == "foundation.support_condition")
+        self.assertIn("$POINTRESTRAINTS", entry.get("etabs_table_or_e2k_section", ""),
+                      "Cross-check input $POINTRESTRAINTS not recorded")
+        self.assertIn("cross-check", entry.get("etabs_table_or_e2k_section", ""),
+                      "Cross-check label not present")
+
+
+class NeedsDecisionTests(unittest.TestCase):
+    """Task 2 + Task 3: the Applied owner decisions text is restored, and
+    the item 535 sentence uses 0.025 in Ultimate Limit State."""
+
+    def test_applied_owner_decisions_restored(self) -> None:
+        content = (ROOT / "docs" / "needs_my_decision.md").read_text(encoding="utf-8")
+        self.assertIn(
+            "Foundation support wording is computed from `foundation.type` and `foundation.soil_class`.",
+            content,
+            "Original owner decision text for foundation support not restored",
+        )
+        self.assertNotIn(
+            "Foundation support wording is sourced from .e2k point restraints",
+            content,
+            "The Phase-1 regression text should have been removed",
+        )
+
+    def test_item_535_uses_0_025(self) -> None:
+        content = (ROOT / "docs" / "needs_my_decision.md").read_text(encoding="utf-8")
+        self.assertIn("0.025 in Ultimate Limit State case", content,
+                      "Item 535 sentence must say '0.025 in Ultimate Limit State case'")
+        self.assertNotIn("0.010 in Ultimate", content,
+                         "Item 535 sentence must not say '0.010 in Ultimate'")
+
+    def test_proposed_changes_section_exists(self) -> None:
+        content = (ROOT / "docs" / "needs_my_decision.md").read_text(encoding="utf-8")
+        self.assertIn("## Proposed changes for owner review", content,
+                      "Proposed changes section must exist (Task 2: never edit Applied "
+                      "owner decisions silently)")
+
+
+class Task4KeyReviewTests(unittest.TestCase):
+    """Task 4: FIXED-reverted keys are dropped; real-input keys are kept."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        with CURATED_REGISTRY.open("r", encoding="utf-8") as f:
+            cls.entries = yaml.safe_load(f)["items"]
+        cls.keys = {e["key"] for e in cls.entries}
+
+    def test_fixed_reverted_keys_dropped(self) -> None:
+        dropped = {
+            "foundation.structural_system_foundation",
+            "project.brick_tolerances",
+            "seismic.intro_statement",
+        }
+        present = dropped & self.keys
+        self.assertEqual(present, set(), f"FIXED-reverted keys still in registry: {present}")
+
+    def test_real_input_keys_kept(self) -> None:
+        kept = {
+            "materials.as_building_is_less_than_12_m",
+            "project.brick_specs",
+            "building.occupancy",
+        }
+        missing = kept - self.keys
+        self.assertEqual(missing, set(), f"Real-input keys missing from registry: {missing}")
+
+    def test_no_example_has_leading_tab(self) -> None:
+        bad = []
+        for e in self.entries:
+            ex = e.get("example")
+            if isinstance(ex, str) and ex.startswith("\\t"):
+                bad.append(e["key"])
+        self.assertEqual(bad, [], f"Examples with leading \\t: {bad}")
+
+    def test_task4_review_listed_in_needs_decision(self) -> None:
+        content = (ROOT / "docs" / "needs_my_decision.md").read_text(encoding="utf-8")
+        self.assertIn("## Key classification review (Task 4)", content)
+        self.assertIn("foundation.structural_system_foundation", content)
+        self.assertIn("project.brick_tolerances", content)
+        self.assertIn("seismic.intro_statement", content)
+        self.assertIn("materials.as_building_is_less_than_12_m", content)
+        self.assertIn("project.brick_specs", content)
+        self.assertIn("building.occupancy", content)
+
+
+class FigureOriginTests(unittest.TestCase):
+    """Task 5: every image entry has figure_origin; generated figures have
+    a generator; no placeholder_a..d keys remain."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        with CURATED_REGISTRY.open("r", encoding="utf-8") as f:
+            cls.entries = yaml.safe_load(f)["items"]
+        cls.images = [e for e in cls.entries if e["type"] == "image"]
+
+    def test_every_image_has_figure_origin(self) -> None:
+        missing = [e["key"] for e in self.images if "figure_origin" not in e]
+        self.assertEqual(missing, [], f"Images missing figure_origin: {missing}")
+
+    def test_figure_origin_values_are_valid(self) -> None:
+        valid = {"generated", "etabs_screenshot", "user_supplied"}
+        bad = [(e["key"], e.get("figure_origin")) for e in self.images
+               if e.get("figure_origin") not in valid]
+        self.assertEqual(bad, [], f"Invalid figure_origin values: {bad}")
+
+    def test_generated_figures_have_generator(self) -> None:
+        generated = [e for e in self.images if e.get("figure_origin") == "generated"]
+        self.assertGreater(len(generated), 0, "No generated figures found")
+        bad = [e["key"] for e in generated if not e.get("generator")]
+        self.assertEqual(bad, [], f"Generated figures missing generator: {bad}")
+
+    def test_non_generated_figures_have_null_generator(self) -> None:
+        non_gen = [e for e in self.images if e.get("figure_origin") != "generated"]
+        bad = [(e["key"], e.get("generator")) for e in non_gen
+               if e.get("generator") is not None]
+        self.assertEqual(bad, [], f"Non-generated figures with non-null generator: {bad}")
+
+    def test_no_placeholder_keys_remain(self) -> None:
+        placeholders = [e["key"] for e in self.images if "placeholder" in e["key"]]
+        self.assertEqual(placeholders, [], f"Placeholder keys still in registry: {placeholders}")
+
+    def test_placeholder_renames_present(self) -> None:
+        keys = {e["key"] for e in self.images}
+        expected = {
+            "figure.elements.columns_design",
+            "figure.elements.columns_design_b",
+            "figure.summary.panel_a",
+            "figure.summary.panel_b",
+        }
+        missing = expected - keys
+        self.assertEqual(missing, set(), f"Renamed placeholder keys missing: {missing}")
+
+
 if __name__ == "__main__":
     unittest.main()

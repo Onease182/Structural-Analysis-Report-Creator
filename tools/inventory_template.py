@@ -1495,6 +1495,20 @@ MANUAL_COVERED_RULE_IDS: dict[str, str] = {
 }
 
 
+# Owner-approved NBC 105:2025 clause mappings. These are emitted on the
+# corresponding codes.clauses.* entries as target_clause_2025,
+# sample_clause, and mapping_status="owner_mapped" so the inventory tool's
+# output matches the curated registry.
+OWNER_CLAUSE_TARGETS: dict[str, tuple[str, str]] = {
+    "codes.clauses.soft_storey":             ("5.5.1.2", "5.4.1.2"),
+    "codes.clauses.in_plane_discontinuity":  ("5.5.1.4", "5.4.1.4"),
+    "codes.clauses.mass_irregularity":       ("5.5.1.5", "5.4.1.5"),
+    "codes.clauses.reentrant_corner":        ("5.5.2.2", "5.4.2.3"),
+    "codes.clauses.diaphragm_discontinuity": ("5.5.2.3", "5.4.2.4"),
+    "codes.clauses.out_of_plane_offset":     ("5.5.2.4", "5.4.2.5"),
+}
+
+
 def enriched_owner_entries() -> list[dict[str, Any]]:
     # No inventory_item_index is hardcoded. Items are found by anchored
     # rules; the registry entry's inventory_item_index is filled in by
@@ -1512,6 +1526,15 @@ def enriched_owner_entries() -> list[dict[str, Any]]:
             entry["condition"] = "Controls inclusion/removal of the staircase block and TOC entry."
         elif key.startswith("codes.clauses."):
             entry["condition"] = "Use the owner-approved NBC 105:2025 clause mapping."
+            # Emit target_clause_2025, sample_clause, mapping_status for
+            # owner-mapped clauses. example is null; the sample clause lives
+            # in sample_clause.
+            if key in OWNER_CLAUSE_TARGETS:
+                sample, target = OWNER_CLAUSE_TARGETS[key]
+                entry["sample_clause"] = sample
+                entry["target_clause_2025"] = target
+                entry["mapping_status"] = "owner_mapped"
+                entry["example"] = None
         elif key == "foundation.support_condition":
             entry["condition"] = "Computed from foundation.type and foundation.soil_class per owner decision."
         elif key.startswith("analysis.") and key.endswith("result"):

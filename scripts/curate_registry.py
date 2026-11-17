@@ -125,10 +125,10 @@ RENAME_MAP: dict[str, str] = {
     "figure.summary.tdesign_summary": "figure.summary.design",
     "figure.elements.tdesign_of_beams": "figure.elements.beams_design",
     "figure.elements.tdesign_of_beams_panel_b": "figure.elements.beams_design_b",
-    "figure.project.t": "figure.project.placeholder_a",
-    "figure.project.t_panel_b": "figure.project.placeholder_b",
-    "figure.project.t_panel_c": "figure.project.placeholder_c",
-    "figure.project.t_panel_d": "figure.project.placeholder_d",
+    "figure.project.t": "figure.elements.columns_design",
+    "figure.project.t_panel_b": "figure.elements.columns_design_b",
+    "figure.project.t_panel_c": "figure.summary.panel_a",
+    "figure.project.t_panel_d": "figure.summary.panel_b",
     "figure.elements.required_longitudinal_reinforcement_mm_in_beams_columns": "figure.elements.rebar_grid_a",
     "figure.elements.required_longitudinal_reinforcement_mm_in_beams_columns_panel_b": "figure.elements.rebar_grid_b",
     "figure.elements.required_longitudinal_reinforcement_mm_in_beams_at": "figure.elements.rebar_story1",
@@ -269,7 +269,7 @@ UNRESOLVED_CLAUSES: list[dict[str, Any]] = [
         "key": "codes.clauses.serviceability_drift",
         "sample_clause": "5.6.3",
         "sample_sentence":
-            "5.6.3 of NBC 105:2077 is applied. The maximum deflection in any story due to the minimum specified design lateral force, with partial load factor of 1.0 shall not exceed 0.006 times the story height. Furthermore, the drift shall not exceed 0.006 in Serviceability and 0.010 in Ultimate limit states.",
+            "5.6.3 of NBC 105:2077 is applied. The maximum deflection in any story due to the minimum specified design lateral force, with partial load factor of 1.0 shall not exceed 0.006 times the story height. Furthermore, the drift shall not exceed 0.006 in Serviceability Limit State and 0.025 in Ultimate Limit State case.",
         "question": "Which NBC 105:2025 clause replaces the sample's NBC 105:2077 Cl. 5.6.3 (applied drift limit)?",
     },
     {
@@ -289,6 +289,157 @@ UNRESOLVED_CLAUSES: list[dict[str, Any]] = [
         "question": "Which NBC 105:2025 clause replaces the sample's Cl. 5.5.2.1 (torsional irregularity)?",
     },
 ]
+
+
+# ============================================================================
+# Phase 1 continuation — regression fixes (Tasks 1-5)
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# 1b. CLAUSE FIELD METADATA (Task 1)
+# ----------------------------------------------------------------------------
+# Every codes.clauses.* entry gets:
+#   target_clause_2025 : str | None  (null where unresolved)
+#   sample_clause      : str         (just the sample clause number)
+#   mapping_status     : str         (owner_mapped | sample_reference | needs_owner_decision)
+# The example field is set to null; the sample clause lives in sample_clause.
+CLAUSE_MAPPINGS: dict[str, dict[str, Any]] = {
+    # Owner-approved mappings (6 clauses from the original Phase 1 OWNER_CLAUSE_MAP).
+    "codes.clauses.soft_storey":             {"sample_clause": "5.5.1.2", "target_clause_2025": "5.4.1.2", "mapping_status": "owner_mapped"},
+    "codes.clauses.in_plane_discontinuity":  {"sample_clause": "5.5.1.4", "target_clause_2025": "5.4.1.4", "mapping_status": "owner_mapped"},
+    "codes.clauses.mass_irregularity":       {"sample_clause": "5.5.1.5", "target_clause_2025": "5.4.1.5", "mapping_status": "owner_mapped"},
+    "codes.clauses.reentrant_corner":        {"sample_clause": "5.5.2.2", "target_clause_2025": "5.4.2.3", "mapping_status": "owner_mapped"},
+    "codes.clauses.diaphragm_discontinuity": {"sample_clause": "5.5.2.3", "target_clause_2025": "5.4.2.4", "mapping_status": "owner_mapped"},
+    "codes.clauses.out_of_plane_offset":     {"sample_clause": "5.5.2.4", "target_clause_2025": "5.4.2.5", "mapping_status": "owner_mapped"},
+    # Sample-reference mappings (the sample cites a clause that is the same in 2025).
+    "codes.clauses.eccentricity_intro":       {"sample_clause": "5.6",   "target_clause_2025": "5.6",   "mapping_status": "sample_reference"},
+    "codes.clauses.vertical_force_dist":      {"sample_clause": "6.3",   "target_clause_2025": "6.3",   "mapping_status": "sample_reference"},
+    "codes.clauses.spectral_shape_factor":    {"sample_clause": "4.1.2", "target_clause_2025": "4.1.2", "mapping_status": "sample_reference"},
+    "codes.clauses.seismic_zoning_factor":    {"sample_clause": "4.1.4", "target_clause_2025": "4.1.4", "mapping_status": "sample_reference"},
+    "codes.clauses.importance_factor":        {"sample_clause": "4.1.5", "target_clause_2025": "4.1.5", "mapping_status": "sample_reference"},
+    "codes.clauses.equivalent_static_method": {"sample_clause": "3.2.1", "target_clause_2025": "3.2.1", "mapping_status": "sample_reference"},
+    "codes.clauses.modal_mass_participation": {"sample_clause": "7.3",   "target_clause_2025": "7.3",   "mapping_status": "sample_reference"},
+    # Genuinely unresolved (6 clause questions; 5 distinct keys).
+    "codes.clauses.material_properties":      {"sample_clause": "2.1",     "target_clause_2025": None, "mapping_status": "needs_owner_decision"},
+    "codes.clauses.load_combinations":        {"sample_clause": "3.6.1",   "target_clause_2025": None, "mapping_status": "needs_owner_decision"},
+    "codes.clauses.serviceability_drift":     {"sample_clause": "5.6.3",   "target_clause_2025": None, "mapping_status": "needs_owner_decision"},
+    "codes.clauses.irregularity_general":     {"sample_clause": "5.5",     "target_clause_2025": None, "mapping_status": "needs_owner_decision"},
+    "codes.clauses.torsional_irregularity":   {"sample_clause": "5.5.2.1", "target_clause_2025": None, "mapping_status": "needs_owner_decision"},
+}
+
+# ----------------------------------------------------------------------------
+# 2. FOUNDATION SUPPORT CONDITION (Task 2)
+# ----------------------------------------------------------------------------
+# The owner decision says the wording is computed from foundation.type and
+# foundation.soil_class. .e2k $POINTRESTRAINTS is an ADDITIONAL cross-check
+# input, not a replacement. Source is therefore `computed`; the
+# etabs_table_or_e2k_section field names the cross-check input.
+FOUNDATION_SUPPORT_OVERRIDE: dict[str, Any] = {
+    "source": "computed",
+    "etabs_table_or_e2k_section": "$POINTRESTRAINTS (cross-check input)",
+    "condition": "Computed from foundation.type and foundation.soil_class per owner decision. .e2k $POINTRESTRAINTS provides a cross-check input.",
+}
+
+# ----------------------------------------------------------------------------
+# 4. TASK-4 KEY CLASSIFICATIONS
+# ----------------------------------------------------------------------------
+# FIXED-reverted keys are dropped from the registry and listed in the review.
+# Real-input keys keep VARIABLE.
+TASK4_FIXED_REVERTED: dict[str, str] = {
+    "foundation.structural_system_foundation":
+        "Table 3: Structural System & Foundation (table caption heading; the table itself is table.design.system_foundation)",
+    "project.brick_tolerances":
+        "For thick walls, acceptable tolerances are -10 mm on length, -5 mm on width, and ±3 mm on thickness. (standard spec boilerplate; no project value)",
+    "seismic.intro_statement":
+        "The analysis and design in this report follow the codes and references listed below. Seismic loading, analysis and ductile detailing follow NBC 105:2025. (intro boilerplate; no project value)",
+}
+TASK4_REAL_INPUT: dict[str, str] = {
+    "materials.as_building_is_less_than_12_m":
+        "Real input / computed narrative. Project facts: height <12 m (from e2k $STORYDATA), grade M20 (from ETABS Material Properties). The sentence is computed from those facts.",
+    "project.brick_specs":
+        "Real input. Material spec with project values: crushing strength 3.5 N/mm², brick size 250x100x75 mm, mortar 10 mm. Source: excel (engineer-supplied spec).",
+    "building.occupancy":
+        "Real input. Project fact: residential occupancy. The IS 875 reference is boilerplate but the occupancy choice is a project decision. Source: excel.",
+}
+
+# ----------------------------------------------------------------------------
+# 5. FIGURE ORIGIN (Task 5)
+# ----------------------------------------------------------------------------
+# figure_origin values:
+#   generated        : produced by a script function (named in `generator`)
+#   etabs_screenshot : user captures an ETABS view
+#   user_supplied    : engineer provides an image file (e.g. cover, scanned drawing)
+FIGURE_ORIGIN: dict[str, dict[str, Any]] = {
+    # user_supplied
+    "figure.project.cover":                     {"figure_origin": "user_supplied",    "generator": None},
+    "figure.project.report_figure":             {"figure_origin": "user_supplied",    "generator": None},
+    "figure.materials.concrete":                {"figure_origin": "user_supplied",    "generator": None},
+    "figure.materials.material_property_rebar": {"figure_origin": "user_supplied",    "generator": None},
+    "figure.staircase.design_main":             {"figure_origin": "user_supplied",    "generator": None},
+    "figure.staircase.design_b":                {"figure_origin": "user_supplied",    "generator": None},
+    "figure.staircase.design_c":                {"figure_origin": "user_supplied",    "generator": None},
+    "figure.summary.design":                    {"figure_origin": "user_supplied",    "generator": None},
+    "figure.summary.panel_a":                   {"figure_origin": "user_supplied",    "generator": None},
+    "figure.summary.panel_b":                   {"figure_origin": "user_supplied",    "generator": None},
+    # etabs_screenshot (user captures from ETABS)
+    "figure.loads.wall_first":                  {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.loads.wall_second":                 {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.loads.wall_third":                  {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.building.finish_first":             {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.building.finish_second":            {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.loads.live_first":                  {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.loads.live_second":                 {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.loads.roof_live_second":            {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.loads.roof_live_top":               {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.loads.cases":                       {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.project.mass_sources_considered":   {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.project.mass_sources_b":            {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.irregularity.eqx_eccentricity":     {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.irregularity.eqx_eccentricity_b":   {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.irregularity.acc_eccentricity":     {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.irregularity.acc_eccentricity_b":   {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.elements.beams_design":             {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.elements.beams_design_b":           {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.elements.columns_design":           {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.elements.columns_design_b":         {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.foundation.design_main":            {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.foundation.design_b":               {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.foundation.design_c":               {"figure_origin": "etabs_screenshot", "generator": None},
+    "figure.foundation.design_d":               {"figure_origin": "etabs_screenshot", "generator": None},
+    # generated by generate_etabs_figures.py
+    "figure.building.plan_of_building":         {"figure_origin": "generated", "generator": "generate_etabs_figures.py:geometry_figures (02_grid_plan.png)"},
+    "figure.building.section_of_building":      {"figure_origin": "generated", "generator": "generate_etabs_figures.py:geometry_figures (03_sectional_view.png)"},
+    "figure.modal.uls_force_distribution":      {"figure_origin": "generated", "generator": "generate_etabs_figures.py:drift_figures (06_drift_x/y.png)"},
+    "figure.elements.design_for_frames":        {"figure_origin": "generated", "generator": "generate_etabs_figures.py:member_figures (10_beam_design.png, 11_column_design.png)"},
+    "figure.foundation.reaction_uls":           {"figure_origin": "generated", "generator": "generate_etabs_figures.py:reaction_figures (07_joint_reaction.png)"},
+    "figure.foundation.reaction_uls_b":         {"figure_origin": "generated", "generator": "generate_etabs_figures.py:reaction_figures (07_joint_reaction.png)"},
+    "figure.foundation.reaction_uls_c":         {"figure_origin": "generated", "generator": "generate_etabs_figures.py:reaction_figures (07_joint_reaction.png)"},
+    "figure.drift.displacement":                {"figure_origin": "generated", "generator": "generate_etabs_figures.py:drift_figures (06_drift_x/y.png)"},
+    "figure.drift.displacement_b":              {"figure_origin": "generated", "generator": "generate_etabs_figures.py:drift_figures (06_drift_x/y.png)"},
+    "figure.irregularity.soft_story":           {"figure_origin": "generated", "generator": "generate_etabs_figures.py:drift_figures (story stiffness check)"},
+    "figure.irregularity.soft_story_panel_b":   {"figure_origin": "generated", "generator": "generate_etabs_figures.py:drift_figures (story stiffness check)"},
+    "figure.irregularity.in_plane":             {"figure_origin": "generated", "generator": "generate_etabs_figures.py:member_figures (frame connectivity check)"},
+    "figure.irregularity.re_entrant_corners":   {"figure_origin": "generated", "generator": "generate_etabs_figures.py:geometry_figures (plan projection check)"},
+    "figure.irregularity.diaphragm":            {"figure_origin": "generated", "generator": "generate_etabs_figures.py:modal_figures (diaphragm CM / story mass)"},
+    "figure.irregularity.out_of_plane_offset":  {"figure_origin": "generated", "generator": "generate_etabs_figures.py:member_figures (frame connectivity check)"},
+    "figure.elements.rebar_grid_a":             {"figure_origin": "generated", "generator": "generate_etabs_figures.py:member_figures (12_reinforcement.png)"},
+    "figure.elements.rebar_grid_b":             {"figure_origin": "generated", "generator": "generate_etabs_figures.py:member_figures (12_reinforcement.png)"},
+    "figure.elements.rebar_story1":             {"figure_origin": "generated", "generator": "generate_etabs_figures.py:member_figures (12_reinforcement.png)"},
+    "figure.elements.rebar_story2":             {"figure_origin": "generated", "generator": "generate_etabs_figures.py:member_figures (12_reinforcement.png)"},
+    "figure.elements.rebar_story3":             {"figure_origin": "generated", "generator": "generate_etabs_figures.py:member_figures (12_reinforcement.png)"},
+    # generated by generate_sls_drift_report.py
+    "figure.irregularity.torsional":            {"figure_origin": "generated", "generator": "generate_sls_drift_report.py:torsion_summary (Torsional_Irregularity_Check.jpg)"},
+}
+
+# Placeholder figures renamed based on surrounding headings.
+# placeholder_a/b (idx 475, 478) sit inside the "Design of Columns" heading.
+# placeholder_c/d (idx 654, 657) sit inside the "Design Summary" heading.
+PLACEHOLDER_RENAMES: dict[str, str] = {
+    "figure.project.placeholder_a": "figure.elements.columns_design",
+    "figure.project.placeholder_b": "figure.elements.columns_design_b",
+    "figure.project.placeholder_c": "figure.summary.panel_a",
+    "figure.project.placeholder_d": "figure.summary.panel_b",
+}
 
 
 def validate_key(key: str) -> list[str]:
@@ -339,6 +490,13 @@ def reassign_source(entry: dict[str, Any]) -> None:
     # non-excel keys (per the owner spec).
 
 
+def strip_leading_tab(value: Any) -> Any:
+    """Strip a leading literal "\\t" tab marker from a string example value."""
+    if isinstance(value, str):
+        return re.sub(r"^(?:\\t|\s)+", "", value)
+    return value
+
+
 def curate_entries(items: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[str]]:
     curated: list[dict[str, Any]] = []
     dropped_fixed: list[str] = []
@@ -356,6 +514,11 @@ def curate_entries(items: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], l
             dropped_fixed.append(new_key)
             continue
 
+        # Task 4: drop FIXED-reverted boilerplate identified in the key review.
+        if new_key in TASK4_FIXED_REVERTED:
+            dropped_fixed.append(new_key)
+            continue
+
         item = dict(item)
         item["key"] = new_key
         for col in item.get("columns", []) or []:
@@ -363,6 +526,33 @@ def curate_entries(items: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], l
                 col["key"] = new_key + col["key"][len(old_key):]
 
         reassign_source(item)
+
+        # Task 4: strip leading \t tab markers from every example value.
+        if "example" in item:
+            item["example"] = strip_leading_tab(item["example"])
+
+        # Task 1: codes.clauses.* get target_clause_2025, sample_clause,
+        # mapping_status. example is set to null (sample clause lives in
+        # sample_clause).
+        if new_key in CLAUSE_MAPPINGS:
+            mapping = CLAUSE_MAPPINGS[new_key]
+            item["sample_clause"] = mapping["sample_clause"]
+            item["target_clause_2025"] = mapping["target_clause_2025"]
+            item["mapping_status"] = mapping["mapping_status"]
+            item["example"] = None
+
+        # Task 2: foundation.support_condition — restore computed source,
+        # keep $POINTRESTRAINTS as cross-check input.
+        if new_key == "foundation.support_condition":
+            item.update(FOUNDATION_SUPPORT_OVERRIDE)
+
+        # Task 5: figures — add figure_origin and generator.
+        if item.get("type") == "image":
+            origin = FIGURE_ORIGIN.get(new_key)
+            if origin is None:
+                raise ValueError(f"Image key {new_key} has no figure_origin mapping")
+            item["figure_origin"] = origin["figure_origin"]
+            item["generator"] = origin["generator"]
 
         if new_key in seen_new_keys:
             raise ValueError(f"Duplicate new key after rename: {new_key}")
@@ -458,6 +648,42 @@ def write_review_short(entries: list[dict[str, Any]], dropped_fixed: list[str]) 
         lines.append(f"- item {entry['item_index']} — `{entry['key']}` (sample Cl. {entry['sample_clause']})")
     lines += [
         "",
+        "## FIXED-reverted boilerplate (Task 4 key review)",
+        "",
+        "Three additional keys reverted to FIXED and dropped from the registry:",
+        "",
+    ]
+    for key, text in sorted(TASK4_FIXED_REVERTED.items()):
+        preview = text[:120] + ("…" if len(text) > 120 else "")
+        lines.append(f"- `{key}` — {preview}")
+    lines += [
+        "",
+        "Three keys kept as real-input VARIABLE:",
+        "",
+    ]
+    for key, text in sorted(TASK4_REAL_INPUT.items()):
+        preview = text[:120] + ("…" if len(text) > 120 else "")
+        lines.append(f"- `{key}` — {preview}")
+    lines += [
+        "",
+        "## Figure origin (Task 5)",
+        "",
+    ]
+    origin_counts: Counter[str] = Counter()
+    for e in entries:
+        if e.get("type") == "image":
+            origin_counts[e.get("figure_origin", "unknown")] += 1
+    for origin, count in sorted(origin_counts.items()):
+        lines.append(f"- `{origin}`: {count}")
+    lines += [
+        "",
+        "Placeholder figures `figure.project.placeholder_a..d` renamed based on their "
+        "surrounding headings:",
+        "- placeholder_a/b (in \"Design of Columns\" section) → `figure.elements.columns_design`, "
+        "`figure.elements.columns_design_b`",
+        "- placeholder_c/d (in \"Design Summary\" section) → `figure.summary.panel_a`, "
+        "`figure.summary.panel_b`",
+        "",
         "## Files",
         "",
         "- `config/placeholder_registry.yaml` — the curated registry.",
@@ -491,14 +717,26 @@ def write_needs_decision() -> None:
         "F.8 is fixed but controlled by `building.has_staircase`.",
         "- When `has_staircase` is false, remove the staircase heading and the sample "
         "content range through the empty Heading 5; do not alter the DOCX during inventory.",
-        "- Foundation support wording is sourced from .e2k point restraints "
-        "(`foundation.support_condition`, `etabs_table_or_e2k_section=$POINTRESTRAINTS`).",
+        "- Foundation support wording is computed from `foundation.type` and `foundation.soil_class`.",
         "- Clause citations are variables: the sample 2020 clauses map to NBC 105:2025 "
         "clauses recorded in the registry. Six mappings remain unresolved (see below).",
         "- In-plane and mass-irregularity conclusion paragraphs are computed variants "
         "and restyled to Body Text; the re-entrant conclusion has rectangular/no-re-entrant "
         "variants.",
         "- The foundation reaction image is retained; only its combination text is variable.",
+        "",
+        "## Proposed changes for owner review",
+        "",
+        "These are proposed additions to the Applied owner decisions. They are NOT yet "
+        "applied; answer each question before they are promoted.",
+        "",
+        "- **Foundation support cross-check**: `foundation.support_condition` currently "
+        "has `source: computed` (the wording is computed from `foundation.type` and "
+        "`foundation.soil_class` per the existing decision). Should `.e2k` "
+        "`$POINTRESTRAINTS` be recorded as an additional cross-check input on the same "
+        "entry (the registry already carries `etabs_table_or_e2k_section: "
+        "$POINTRESTRAINTS (cross-check input)`)? This would not change the computation, "
+        "only document where the model's restraint assignment can be verified.",
         "",
         "## Unresolved NBC 105:2025 clause mappings",
         "",
@@ -515,6 +753,23 @@ def write_needs_decision() -> None:
             "",
         ]
     lines += [
+        "## Key classification review (Task 4)",
+        "",
+        "Six keys were reviewed for FIXED boilerplate / TABLE / real input. The three "
+        "FIXED-reverted keys below are dropped from the registry; the three real-input "
+        "keys remain as VARIABLE.",
+        "",
+        "### FIXED-reverted (dropped from registry)",
+        "",
+    ]
+    for key, text in sorted(TASK4_FIXED_REVERTED.items()):
+        preview = text[:140] + ("…" if len(text) > 140 else "")
+        lines.append(f"- `{key}` — {preview}")
+    lines += ["", "### Real input (kept as VARIABLE)", ""]
+    for key, text in sorted(TASK4_REAL_INPUT.items()):
+        lines.append(f"- `{key}` — {text}")
+    lines += [
+        "",
         "## Classification policy",
         "",
         "The tool classifies headings and general method/boilerplate as `FIXED`, "

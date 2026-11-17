@@ -34,6 +34,8 @@ items:
     height_inches: 0.0069
   inventory_item_indices:
   - 2
+  figure_origin: user_supplied
+  generator: null
 - key: figure.project.report_figure
   description: Report figure slot; generated or supplied by the engineer.
   type: image
@@ -50,6 +52,8 @@ items:
     height_inches: 6.5938
   inventory_item_indices:
   - 5
+  figure_origin: user_supplied
+  generator: null
 - key: client.consultant_name
   description: Civira X
   type: text
@@ -113,21 +117,6 @@ items:
   row_behavior: fixed
   inventory_item_indices:
   - 153
-- key: seismic.intro_statement
-  description: The analysis and design in this report follow the codes and references listed below. Seismic
-    loading, analysis and ductile detailing follow NBC 105:2025.
-  type: text
-  unit: null
-  format:
-    decimals: null
-  source: excel
-  required: true
-  condition: null
-  inventory_item_index: 156
-  example: The analysis and design in this report follow the codes and references listed below. Seismic
-    loading, analysis and ductile detailing follow NBC 105:2025.
-  inventory_item_indices:
-  - 156
 - key: table.codes.references
   description: 'Table 2: S.N. | Code / Reference | Title | Used for'
   type: table
@@ -292,6 +281,8 @@ items:
     height_inches: 6.0489
   inventory_item_indices:
   - 168
+  figure_origin: generated
+  generator: generate_etabs_figures.py:geometry_figures (02_grid_plan.png)
 - key: figure.building.section_of_building
   description: 'Figure 2: Section of Building'
   type: image
@@ -308,6 +299,8 @@ items:
     height_inches: 5.3438
   inventory_item_indices:
   - 175
+  figure_origin: generated
+  generator: generate_etabs_figures.py:geometry_figures (03_sectional_view.png)
 - key: table.building.general_information
   description: 'Table 1: General Information of the Building'
   type: table
@@ -389,19 +382,6 @@ items:
   inventory_item_indices:
   - 185
   etabs_table_or_e2k_section: Frame Section Assignments + Material Properties
-- key: foundation.structural_system_foundation
-  description: 'Table 3: Structural System & Foundation'
-  type: text
-  unit: null
-  format:
-    decimals: null
-  source: excel
-  required: false
-  condition: Include this section/table only when its configured content applies.
-  inventory_item_index: 199
-  example: 'Table 3: Structural System & Foundation'
-  inventory_item_indices:
-  - 199
 - key: table.design.system_foundation
   description: 'Table 3: Structural System & Foundation'
   type: table
@@ -449,11 +429,12 @@ items:
   required: true
   condition: No owner-approved NBC 105:2025 mapping supplied.
   inventory_item_index: 208
-  example: 2.1 (sample citation)
+  example: null
   target_clause_2025: null
   mapping_status: needs_owner_decision
   inventory_item_indices:
   - 208
+  sample_clause: '2.1'
 - key: materials.as_building_is_less_than_12_m
   description: As the building is less than 12 m in height, M20 concrete has been taken for all the structural
     components.
@@ -486,6 +467,8 @@ items:
   inventory_item_indices:
   - 212
   etabs_table_or_e2k_section: Material Properties (concrete)
+  figure_origin: user_supplied
+  generator: null
 - key: figure.materials.material_property_rebar
   description: 'Figure 4: Material Property (Rebar)'
   type: image
@@ -502,6 +485,8 @@ items:
     height_inches: 4.7241
   inventory_item_indices:
   - 221
+  figure_origin: user_supplied
+  generator: null
 - key: materials.rebar_grade_used
   description: Steel Grade of Fe500 has been used in the longitudinal and transverse reinforcement.
   type: text
@@ -569,11 +554,12 @@ items:
   required: true
   condition: null
   inventory_item_index: 240
-  example: 5.6 (sample citation)
+  example: null
   target_clause_2025: '5.6'
   mapping_status: sample_reference
   inventory_item_indices:
   - 240
+  sample_clause: '5.6'
 - key: figure.irregularity.eqx_eccentricity
   description: EQxEQxDesign eccentricity edi,y = esi,y+0.05*byDesign eccentricity edi,y = esi,y+0.05*by
   type: image
@@ -591,6 +577,8 @@ items:
   inventory_item_indices:
   - 244
   etabs_table_or_e2k_section: Load Case Eccentricity (EQX)
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.irregularity.eqx_eccentricity_b
   description: EQxEQxDesign eccentricity edi,y = esi,y+0.05*byDesign eccentricity edi,y = esi,y+0.05*by
   type: image
@@ -608,6 +596,8 @@ items:
   inventory_item_indices:
   - 245
   etabs_table_or_e2k_section: Load Case Eccentricity (EQX)
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.irregularity.acc_eccentricity
   description: 'CResi,yCMedi,yCM’CResi,yCMedi,yCM’Figure 5: Accidental Eccentricity'
   type: image
@@ -625,6 +615,8 @@ items:
   inventory_item_indices:
   - 251
   etabs_table_or_e2k_section: Accidental Eccentricity
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.irregularity.acc_eccentricity_b
   description: 'CResi,yCMedi,yCM’CResi,yCMedi,yCM’Figure 5: Accidental Eccentricity'
   type: image
@@ -642,6 +634,8 @@ items:
   inventory_item_indices:
   - 252
   etabs_table_or_e2k_section: Accidental Eccentricity
+  figure_origin: etabs_screenshot
+  generator: null
 - key: foundation.modeling_software
   description: The building was modeled using the ETABS 19.0.0 software. ETABS 19.0.0 is a specialized
     program designed specifically for the analysis and design of building systems. It offers a user-friendly
@@ -685,20 +679,6 @@ items:
     with 10 mm thick horizontal and vertical mortar joints.
   inventory_item_indices:
   - 268
-- key: project.brick_tolerances
-  description: For thick walls, acceptable tolerances are -10 mm on length, -5 mm on width, and ±3 mm
-    on thickness.
-  type: text
-  unit: mm
-  format:
-    decimals: null
-  source: excel
-  required: true
-  condition: null
-  inventory_item_index: 270
-  example: For thick walls, acceptable tolerances are -10 mm on length, -5 mm on width, and ±3 mm on thickness.
-  inventory_item_indices:
-  - 270
 - key: table.loads.load_assessment
   description: 'Table 5: Load Assessment for Structural Analysis'
   type: table
@@ -766,6 +746,8 @@ items:
     height_inches: 9.3747
   inventory_item_indices:
   - 293
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.loads.wall_second
   description: 'Figure 7: Wall Load (Second Floor in kN/m)'
   type: image
@@ -782,6 +764,8 @@ items:
     height_inches: 8.72
   inventory_item_indices:
   - 298
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.loads.wall_third
   description: 'Figure 8: Wall Load(Third Floor in kN/m)'
   type: image
@@ -798,6 +782,8 @@ items:
     height_inches: 8.6667
   inventory_item_indices:
   - 302
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.building.finish_first
   description: 'Figure 9: Floor Finish (First Floor in kN/m2)'
   type: image
@@ -814,6 +800,8 @@ items:
     height_inches: 8.7929
   inventory_item_indices:
   - 310
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.building.finish_second
   description: 'Figure 10: Floor Finish (Second Floor in kN/m2)'
   type: image
@@ -830,6 +818,8 @@ items:
     height_inches: 8.7408
   inventory_item_indices:
   - 317
+  figure_origin: etabs_screenshot
+  generator: null
 - key: building.occupancy
   description: The live loads for the floor and roof are determined using IS 875 part 2, as referenced
     by the National Building Code. For residential buildings, the appropriate live load values specified
@@ -902,6 +892,8 @@ items:
     height_inches: 8.3333
   inventory_item_indices:
   - 332
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.loads.live_second
   description: 'Figure 12: Live Load (Second Floor in kN/m2)'
   type: image
@@ -918,6 +910,8 @@ items:
     height_inches: 8.7825
   inventory_item_indices:
   - 337
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.loads.roof_live_second
   description: 'Figure 13: Roof Live (Second Floor in kN/m2)'
   type: image
@@ -934,6 +928,8 @@ items:
     height_inches: 8.5637
   inventory_item_indices:
   - 344
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.loads.roof_live_top
   description: 'Figure 14: Roof live (Top Floor in kN/m2)'
   type: image
@@ -950,6 +946,8 @@ items:
     height_inches: 8.6991
   inventory_item_indices:
   - 348
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.loads.cases
   description: 'Figure 15: Load Cases considered in the software'
   type: image
@@ -967,6 +965,8 @@ items:
   inventory_item_indices:
   - 355
   etabs_table_or_e2k_section: Load Patterns / Load Cases
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.project.mass_sources_considered
   description: 'Figure 15: Mass sources considered'
   type: image
@@ -984,6 +984,8 @@ items:
   inventory_item_indices:
   - 360
   etabs_table_or_e2k_section: Mass Source
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.project.mass_sources_b
   description: 'Figure 15: Mass sources considered'
   type: image
@@ -1001,6 +1003,8 @@ items:
   inventory_item_indices:
   - 362
   etabs_table_or_e2k_section: Mass Source
+  figure_origin: etabs_screenshot
+  generator: null
 - key: project.empirical_period_intro
   description: 'Table 8: Fundamental Time Period Based on Empirical Formula'
   type: text
@@ -1090,6 +1094,8 @@ items:
   inventory_item_indices:
   - 379
   etabs_table_or_e2k_section: Vertical distribution from ETABS story forces
+  figure_origin: generated
+  generator: generate_etabs_figures.py:drift_figures (06_drift_x/y.png)
 - key: modal.base_shear_etabs
   description: \tBase shear from ETABS 240.02 kN.
   type: text
@@ -1100,7 +1106,7 @@ items:
   required: true
   condition: null
   inventory_item_index: 380
-  example: \tBase shear from ETABS 240.02 kN.
+  example: Base shear from ETABS 240.02 kN.
   inventory_item_indices:
   - 380
   etabs_table_or_e2k_section: Base Reactions / Story Forces
@@ -1114,11 +1120,12 @@ items:
   required: true
   condition: null
   inventory_item_index: 381
-  example: 6.3 (sample citation)
+  example: null
   target_clause_2025: '6.3'
   mapping_status: sample_reference
   inventory_item_indices:
   - 381
+  sample_clause: '6.3'
 - key: table.seismic.vertical_force_dist
   description: 'Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025 Cl. 6.3)'
   type: table
@@ -1547,11 +1554,12 @@ items:
   required: true
   condition: null
   inventory_item_index: 397
-  example: 4.1.2 (sample citation)
+  example: null
   target_clause_2025: 4.1.2
   mapping_status: sample_reference
   inventory_item_indices:
   - 397
+  sample_clause: 4.1.2
 - key: codes.clauses.seismic_zoning_factor
   description: Clause citation value for 4.1.4
   type: text
@@ -1562,11 +1570,12 @@ items:
   required: true
   condition: null
   inventory_item_index: 397
-  example: 4.1.4 (sample citation)
+  example: null
   target_clause_2025: 4.1.4
   mapping_status: sample_reference
   inventory_item_indices:
   - 397
+  sample_clause: 4.1.4
 - key: codes.clauses.importance_factor
   description: Clause citation value for 4.1.5
   type: text
@@ -1577,11 +1586,12 @@ items:
   required: true
   condition: null
   inventory_item_index: 397
-  example: 4.1.5 (sample citation)
+  example: null
   target_clause_2025: 4.1.5
   mapping_status: sample_reference
   inventory_item_indices:
   - 397
+  sample_clause: 4.1.5
 - key: codes.edition
   description: Code edition printed in this caption
   type: text
@@ -1682,11 +1692,12 @@ items:
   required: true
   condition: null
   inventory_item_index: 413
-  example: 3.2.1 (sample citation)
+  example: null
   target_clause_2025: 3.2.1
   mapping_status: sample_reference
   inventory_item_indices:
   - 413
+  sample_clause: 3.2.1
 - key: building.total_height_m
   description: Total building height
   type: number
@@ -1719,12 +1730,13 @@ items:
   required: true
   condition: No owner-approved NBC 105:2025 mapping supplied.
   inventory_item_index: 418
-  example: 3.6.1 (sample citation)
+  example: null
   target_clause_2025: null
   mapping_status: needs_owner_decision
   inventory_item_indices:
   - 418
   - 419
+  sample_clause: 3.6.1
 - key: codes.clauses.modal_mass_participation
   description: Clause citation value for 7.3
   type: text
@@ -1735,11 +1747,12 @@ items:
   required: true
   condition: null
   inventory_item_index: 430
-  example: 7.3 (sample citation)
+  example: null
   target_clause_2025: '7.3'
   mapping_status: sample_reference
   inventory_item_indices:
   - 430
+  sample_clause: '7.3'
 - key: codes.limits.modal_mass_part_pct
   description: Minimum modal mass participation threshold
   type: number
@@ -1858,6 +1871,8 @@ items:
   inventory_item_indices:
   - 443
   etabs_table_or_e2k_section: Concrete Frame Design Output
+  figure_origin: generated
+  generator: generate_etabs_figures.py:member_figures (10_beam_design.png, 11_column_design.png)
 - key: design.column.max_rebar_area_mm2
   description: Column maximum reinforcement provided reinforcement area mm2
   type: number
@@ -2288,6 +2303,8 @@ items:
   inventory_item_indices:
   - 469
   etabs_table_or_e2k_section: Beam Design Output
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.elements.beams_design_b
   description: \tDesign of Beams
   type: image
@@ -2305,7 +2322,9 @@ items:
   inventory_item_indices:
   - 471
   etabs_table_or_e2k_section: Beam Design Output
-- key: figure.project.placeholder_a
+  figure_origin: etabs_screenshot
+  generator: null
+- key: figure.elements.columns_design
   description: \t
   type: image
   unit: null
@@ -2321,7 +2340,9 @@ items:
     height_inches: 7.4479
   inventory_item_indices:
   - 475
-- key: figure.project.placeholder_b
+  figure_origin: etabs_screenshot
+  generator: null
+- key: figure.elements.columns_design_b
   description: \t
   type: image
   unit: null
@@ -2337,6 +2358,8 @@ items:
     height_inches: 4.5175
   inventory_item_indices:
   - 478
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.foundation.reaction_uls
   description: 'Figure 17: Foundation reaction(1.5DL+1.5LL)'
   type: image
@@ -2354,6 +2377,8 @@ items:
   inventory_item_indices:
   - 486
   etabs_table_or_e2k_section: Foundation Reactions (combo 1.5DL+1.5LL)
+  figure_origin: generated
+  generator: generate_etabs_figures.py:reaction_figures (07_joint_reaction.png)
 - key: figure.foundation.reaction_uls_b
   description: 'Figure 17: Foundation reaction(1.5DL+1.5LL)'
   type: image
@@ -2371,6 +2396,8 @@ items:
   inventory_item_indices:
   - 487
   etabs_table_or_e2k_section: Foundation Reactions (combo 1.5DL+1.5LL)
+  figure_origin: generated
+  generator: generate_etabs_figures.py:reaction_figures (07_joint_reaction.png)
 - key: figure.foundation.reaction_uls_c
   description: 'Figure 17: Foundation reaction(1.5DL+1.5LL)'
   type: image
@@ -2388,6 +2415,8 @@ items:
   inventory_item_indices:
   - 493
   etabs_table_or_e2k_section: Foundation Reactions (combo 1.5DL+1.5LL)
+  figure_origin: generated
+  generator: generate_etabs_figures.py:reaction_figures (07_joint_reaction.png)
 - key: figure.foundation.design_main
   description: \tDesign of Foundations
   type: image
@@ -2405,6 +2434,8 @@ items:
   inventory_item_indices:
   - 500
   etabs_table_or_e2k_section: Foundation Design Output
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.foundation.design_b
   description: \tDesign of Foundations
   type: image
@@ -2422,6 +2453,8 @@ items:
   inventory_item_indices:
   - 506
   etabs_table_or_e2k_section: Foundation Design Output
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.foundation.design_c
   description: \tDesign of Foundations
   type: image
@@ -2439,6 +2472,8 @@ items:
   inventory_item_indices:
   - 508
   etabs_table_or_e2k_section: Foundation Design Output
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.foundation.design_d
   description: \tDesign of Foundations
   type: image
@@ -2456,6 +2491,8 @@ items:
   inventory_item_indices:
   - 512
   etabs_table_or_e2k_section: Foundation Design Output
+  figure_origin: etabs_screenshot
+  generator: null
 - key: figure.staircase.design_main
   description: \tDesign of Staircases
   type: image
@@ -2472,6 +2509,8 @@ items:
     height_inches: 6.1764
   inventory_item_indices:
   - 518
+  figure_origin: user_supplied
+  generator: null
 - key: figure.staircase.design_b
   description: \tDesign of Staircases
   type: image
@@ -2488,6 +2527,8 @@ items:
     height_inches: 3.1194
   inventory_item_indices:
   - 520
+  figure_origin: user_supplied
+  generator: null
 - key: figure.staircase.design_c
   description: \tDesign of Staircases
   type: image
@@ -2504,6 +2545,8 @@ items:
     height_inches: 2.85
   inventory_item_indices:
   - 522
+  figure_origin: user_supplied
+  generator: null
 - key: codes.clauses.serviceability_drift
   description: Clause citation value for 5.6.3
   type: text
@@ -2514,12 +2557,13 @@ items:
   required: true
   condition: The sample cites NBC 105:2077; no owner-approved 2025 mapping supplied.
   inventory_item_index: 533
-  example: 5.6.3 (sample citation)
+  example: null
   target_clause_2025: null
   mapping_status: needs_owner_decision
   inventory_item_indices:
   - 533
   - 535
+  sample_clause: 5.6.3
 - key: codes.limits.max_deflection_ratio
   description: Maximum story deflection-to-height ratio
   type: number
@@ -2591,6 +2635,8 @@ items:
   inventory_item_indices:
   - 542
   etabs_table_or_e2k_section: Story Displacements
+  figure_origin: generated
+  generator: generate_etabs_figures.py:drift_figures (06_drift_x/y.png)
 - key: table.drift.uls_displacement_figures_x_y
   description: 'Table 18: |'
   type: table
@@ -2736,6 +2782,8 @@ items:
   inventory_item_indices:
   - 584
   etabs_table_or_e2k_section: Story Displacements
+  figure_origin: generated
+  generator: generate_etabs_figures.py:drift_figures (06_drift_x/y.png)
 - key: codes.clauses.irregularity_general
   description: Clause citation value for 5.5
   type: text
@@ -2746,11 +2794,12 @@ items:
   required: true
   condition: No owner-approved NBC 105:2025 mapping supplied.
   inventory_item_index: 591
-  example: 5.5 (sample citation)
+  example: null
   target_clause_2025: null
   mapping_status: needs_owner_decision
   inventory_item_indices:
   - 591
+  sample_clause: '5.5'
 - key: codes.clauses.torsional_irregularity
   description: Clause citation value for 5.5.2.1
   type: text
@@ -2761,11 +2810,12 @@ items:
   required: true
   condition: No owner-approved NBC 105:2025 mapping supplied.
   inventory_item_index: 593
-  example: 5.5.2.1 (sample citation)
+  example: null
   target_clause_2025: null
   mapping_status: needs_owner_decision
   inventory_item_indices:
   - 593
+  sample_clause: 5.5.2.1
 - key: codes.limits.torsional_disp_ratio
   description: Torsional irregularity displacement ratio threshold
   type: number
@@ -2801,6 +2851,8 @@ items:
   inventory_item_indices:
   - 595
   etabs_table_or_e2k_section: Story Displacements (max/avg corner)
+  figure_origin: generated
+  generator: generate_sls_drift_report.py:torsion_summary (Torsional_Irregularity_Check.jpg)
 - key: figure.irregularity.soft_story
   description: 'Figure 27: Soft story check'
   type: image
@@ -2818,6 +2870,8 @@ items:
   inventory_item_indices:
   - 600
   etabs_table_or_e2k_section: Story Stiffness
+  figure_origin: generated
+  generator: generate_etabs_figures.py:drift_figures (story stiffness check)
 - key: codes.clauses.soft_storey
   description: Clause citation value for 5.5.1.2
   type: text
@@ -2828,11 +2882,12 @@ items:
   required: true
   condition: null
   inventory_item_index: 603
-  example: 5.5.1.2 (sample citation)
+  example: null
   target_clause_2025: 5.4.1.2
-  mapping_status: null
+  mapping_status: owner_mapped
   inventory_item_indices:
   - 603
+  sample_clause: 5.5.1.2
 - key: codes.limits.soft_storey_adj_pct
   description: Soft-storey adjacent-storey stiffness threshold
   type: number
@@ -2886,6 +2941,8 @@ items:
   inventory_item_indices:
   - 605
   etabs_table_or_e2k_section: Story Stiffness
+  figure_origin: generated
+  generator: generate_etabs_figures.py:drift_figures (story stiffness check)
 - key: figure.irregularity.in_plane
   description: 'Figure 28: In-Plane Discontinuity'
   type: image
@@ -2903,6 +2960,8 @@ items:
   inventory_item_indices:
   - 613
   etabs_table_or_e2k_section: Frame Connectivity
+  figure_origin: generated
+  generator: generate_etabs_figures.py:member_figures (frame connectivity check)
 - key: codes.clauses.mass_irregularity
   description: Clause citation value for 5.5.1.5
   type: text
@@ -2913,11 +2972,12 @@ items:
   required: true
   condition: null
   inventory_item_index: 617
-  example: 5.5.1.5 (sample citation)
+  example: null
   target_clause_2025: 5.4.1.5
-  mapping_status: null
+  mapping_status: owner_mapped
   inventory_item_indices:
   - 617
+  sample_clause: 5.5.1.5
 - key: codes.limits.mass_irregularity_diff_pct
   description: Mass-irregularity effective-mass difference threshold
   type: number
@@ -2947,11 +3007,12 @@ items:
   required: true
   condition: null
   inventory_item_index: 624
-  example: 5.5.2.2 (sample citation)
+  example: null
   target_clause_2025: 5.4.2.3
-  mapping_status: null
+  mapping_status: owner_mapped
   inventory_item_indices:
   - 624
+  sample_clause: 5.5.2.2
 - key: codes.limits.reentrant_proj_pct
   description: Re-entrant-corner projection threshold
   type: number
@@ -2986,6 +3047,8 @@ items:
   inventory_item_indices:
   - 627
   etabs_table_or_e2k_section: Plan Geometry
+  figure_origin: generated
+  generator: generate_etabs_figures.py:geometry_figures (plan projection check)
 - key: codes.clauses.diaphragm_discontinuity
   description: Clause citation value for 5.5.2.3
   type: text
@@ -2996,11 +3059,12 @@ items:
   required: true
   condition: null
   inventory_item_index: 632
-  example: 5.5.2.3 (sample citation)
+  example: null
   target_clause_2025: 5.4.2.4
-  mapping_status: null
+  mapping_status: owner_mapped
   inventory_item_indices:
   - 632
+  sample_clause: 5.5.2.3
 - key: codes.limits.diaphragm_opening_area_pct
   description: Diaphragm opening-area threshold
   type: number
@@ -3056,6 +3120,8 @@ items:
   inventory_item_indices:
   - 635
   etabs_table_or_e2k_section: Diaphragm CMs / Story Mass
+  figure_origin: generated
+  generator: generate_etabs_figures.py:modal_figures (diaphragm CM / story mass)
 - key: figure.irregularity.out_of_plane_offset
   description: 'Figure 31: Out of plane offset'
   type: image
@@ -3073,6 +3139,8 @@ items:
   inventory_item_indices:
   - 645
   etabs_table_or_e2k_section: Frame Connectivity
+  figure_origin: generated
+  generator: generate_etabs_figures.py:member_figures (frame connectivity check)
 - key: figure.summary.design
   description: \tDesign Summary
   type: image
@@ -3089,7 +3157,9 @@ items:
     height_inches: 1.9896
   inventory_item_indices:
   - 651
-- key: figure.project.placeholder_c
+  figure_origin: user_supplied
+  generator: null
+- key: figure.summary.panel_a
   description: \t
   type: image
   unit: null
@@ -3105,7 +3175,9 @@ items:
     height_inches: 2.2641
   inventory_item_indices:
   - 654
-- key: figure.project.placeholder_d
+  figure_origin: user_supplied
+  generator: null
+- key: figure.summary.panel_b
   description: \t
   type: image
   unit: null
@@ -3121,6 +3193,8 @@ items:
     height_inches: 1.442
   inventory_item_indices:
   - 657
+  figure_origin: user_supplied
+  generator: null
 - key: figure.elements.rebar_grid_a
   description: 'Figure 32: Required longitudinal reinforcement (mm²) in beams and columns along Grid A.'
   type: image
@@ -3138,6 +3212,8 @@ items:
   inventory_item_indices:
   - 666
   etabs_table_or_e2k_section: Beam/Column Reinforcing Output
+  figure_origin: generated
+  generator: generate_etabs_figures.py:member_figures (12_reinforcement.png)
 - key: figure.elements.rebar_grid_b
   description: 'Figure 33: Required longitudinal reinforcement (mm²) in beams and columns along Grid B.'
   type: image
@@ -3155,6 +3231,8 @@ items:
   inventory_item_indices:
   - 671
   etabs_table_or_e2k_section: Beam/Column Reinforcing Output
+  figure_origin: generated
+  generator: generate_etabs_figures.py:member_figures (12_reinforcement.png)
 - key: figure.elements.rebar_story1
   description: 'Figure 34: Required longitudinal reinforcement (mm²) in beams at Story 1.'
   type: image
@@ -3172,6 +3250,8 @@ items:
   inventory_item_indices:
   - 676
   etabs_table_or_e2k_section: Beam Reinforcing Output (Story 1)
+  figure_origin: generated
+  generator: generate_etabs_figures.py:member_figures (12_reinforcement.png)
 - key: figure.elements.rebar_story2
   description: 'Figure 35: Required longitudinal reinforcement (mm²) in beams at Story 2.'
   type: image
@@ -3189,6 +3269,8 @@ items:
   inventory_item_indices:
   - 683
   etabs_table_or_e2k_section: Beam Reinforcing Output (Story 2)
+  figure_origin: generated
+  generator: generate_etabs_figures.py:member_figures (12_reinforcement.png)
 - key: figure.elements.rebar_story3
   description: 'Figure 36: Required longitudinal reinforcement (mm²) in beams at Story 3.'
   type: image
@@ -3206,13 +3288,15 @@ items:
   inventory_item_indices:
   - 688
   etabs_table_or_e2k_section: Beam Reinforcing Output (Story 3)
+  figure_origin: generated
+  generator: generate_etabs_figures.py:member_figures (12_reinforcement.png)
 - key: codes.clauses.in_plane_discontinuity
   description: NBC clause for the in-plane discontinuity check.
   type: text
   unit: null
   source: excel
   required: true
-  example: 5.4.1.4
+  example: null
   format:
     decimals: null
   condition: Use the owner-approved NBC 105:2025 clause mapping.
@@ -3220,13 +3304,16 @@ items:
   sentence_template: '{{ codes.clauses.in_plane_discontinuity }}'
   inventory_item_indices:
   - 610
+  sample_clause: 5.5.1.4
+  target_clause_2025: 5.4.1.4
+  mapping_status: owner_mapped
 - key: codes.clauses.out_of_plane_offset
   description: NBC clause for the out-of-plane-offset check.
   type: text
   unit: null
   source: excel
   required: true
-  example: 5.4.2.5
+  example: null
   format:
     decimals: null
   condition: Use the owner-approved NBC 105:2025 clause mapping.
@@ -3234,6 +3321,9 @@ items:
   sentence_template: '{{ codes.clauses.out_of_plane_offset }}'
   inventory_item_indices:
   - 640
+  sample_clause: 5.5.2.4
+  target_clause_2025: 5.4.2.5
+  mapping_status: owner_mapped
 - key: building.has_staircase
   description: Whether the project includes a staircase section.
   type: bool
@@ -3278,17 +3368,18 @@ items:
   description: Computed fixed or pinned support-condition wording.
   type: text
   unit: null
-  source: e2k
+  source: computed
   required: true
   example: fixed
   format:
     decimals: null
-  condition: Computed from foundation.type and foundation.soil_class per owner decision.
+  condition: Computed from foundation.type and foundation.soil_class per owner decision. .e2k $POINTRESTRAINTS
+    provides a cross-check input.
   inventory_item_index: 256
   sentence_template: '{{ foundation.support_condition }}'
   inventory_item_indices:
   - 256
-  etabs_table_or_e2k_section: $POINTRESTRAINTS
+  etabs_table_or_e2k_section: $POINTRESTRAINTS (cross-check input)
 - key: structural.system_type
   description: Structural system type shown in Table 5; also drives Rμ/Ωu/Ωs.
   type: text

@@ -72,10 +72,10 @@ figure.materials.material_property_concrete,figure.materials.concrete
 figure.modal.vertical_distribution_of_uls_seismic_forces_nbc,figure.modal.uls_force_distribution
 figure.project.mass_sources_considered_panel_b,figure.project.mass_sources_b
 figure.project.structural_analysis_design_report,figure.project.cover
-figure.project.t,figure.project.placeholder_a
-figure.project.t_panel_b,figure.project.placeholder_b
-figure.project.t_panel_c,figure.project.placeholder_c
-figure.project.t_panel_d,figure.project.placeholder_d
+figure.project.t,figure.elements.columns_design
+figure.project.t_panel_b,figure.elements.columns_design_b
+figure.project.t_panel_c,figure.summary.panel_a
+figure.project.t_panel_d,figure.summary.panel_b
 figure.staircase.tdesign_of_staircases,figure.staircase.design_main
 figure.staircase.tdesign_of_staircases_panel_b,figure.staircase.design_b
 figure.staircase.tdesign_of_staircases_panel_c,figure.staircase.design_c
