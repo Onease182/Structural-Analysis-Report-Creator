@@ -284,11 +284,29 @@ class ClauseFieldTests(unittest.TestCase):
         self.assertEqual(bad, [], f"Owner-mapped clauses with null target: {bad}")
 
     def test_unresolved_clauses_have_null_target(self) -> None:
+        # After the final Phase 1 edits, there are no unresolved clauses.
         unresolved = [e for e in self.clauses
                       if e.get("mapping_status") == "needs_owner_decision"]
-        bad = [(e["key"], e.get("target_clause_2025")) for e in unresolved
-               if e.get("target_clause_2025") is not None]
-        self.assertEqual(bad, [], f"Unresolved clauses with non-null target: {bad}")
+        self.assertEqual(unresolved, [], f"Unresolved clauses still present: {[e['key'] for e in unresolved]}")
+
+    def test_no_clause_has_null_target(self) -> None:
+        # Step 4 requirement: no codes.clauses.* entry may have a null
+        # target_clause_2025.
+        null_targets = [(e["key"], e.get("target_clause_2025")) for e in self.clauses
+                        if e.get("target_clause_2025") is None]
+        self.assertEqual(null_targets, [], f"Clauses with null target_clause_2025: {null_targets}")
+
+    def test_every_owner_mapped_has_sample_and_target(self) -> None:
+        # Step 4 requirement: every owner_mapped entry has both sample_clause
+        # and target_clause_2025.
+        owner_mapped = [e for e in self.clauses if e.get("mapping_status") == "owner_mapped"]
+        bad = []
+        for e in owner_mapped:
+            if not e.get("sample_clause"):
+                bad.append((e["key"], "missing sample_clause"))
+            if not e.get("target_clause_2025"):
+                bad.append((e["key"], "missing target_clause_2025"))
+        self.assertEqual(bad, [], f"Owner-mapped clauses missing fields: {bad}")
 
     def test_specific_owner_mapped_targets(self) -> None:
         expected = {
@@ -400,6 +418,16 @@ class Task4KeyReviewTests(unittest.TestCase):
             if isinstance(ex, str) and ex.startswith("\\t"):
                 bad.append(e["key"])
         self.assertEqual(bad, [], f"Examples with leading \\t: {bad}")
+
+    def test_materials_as_building_is_computed(self) -> None:
+        # Step 3 requirement: materials.as_building_is_less_than_12_m is
+        # computed with a non-empty etabs_table_or_e2k_section.
+        entry = next(e for e in self.entries
+                     if e["key"] == "materials.as_building_is_less_than_12_m")
+        self.assertEqual(entry.get("source"), "computed",
+                         f"source is {entry.get('source')}; expected 'computed'")
+        self.assertTrue(entry.get("etabs_table_or_e2k_section"),
+                        "etabs_table_or_e2k_section must be non-empty")
 
     def test_task4_review_listed_in_needs_decision(self) -> None:
         content = (ROOT / "docs" / "needs_my_decision.md").read_text(encoding="utf-8")

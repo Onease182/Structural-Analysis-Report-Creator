@@ -641,16 +641,14 @@ def write_review_short(entries: list[dict[str, Any]], dropped_fixed: list[str]) 
         lines.append(f"- `{key}` — {preview}")
     lines += [
         "",
-        "## Unresolved NBC 105:2025 clause mappings",
+        "## Clause mapping status",
         "",
-        "These six clause variables remain in the registry as `codes.clauses.*` text "
-        "entries. The owner must answer the questions in `docs/needs_my_decision.md` "
-        "before the template is built.",
-        "",
-    ]
-    for entry in UNRESOLVED_CLAUSES:
-        lines.append(f"- item {entry['item_index']} — `{entry['key']}` (sample Cl. {entry['sample_clause']})")
-    lines += [
+        f"All {len([e for e in entries if e.get('key', '').startswith('codes.clauses.')])} "
+        "codes.clauses.* entries have non-null target_clause_2025. "
+        f"Owner-mapped: {sum(1 for e in entries if e.get('mapping_status') == 'owner_mapped')}, "
+        f"sample-reference: {sum(1 for e in entries if e.get('mapping_status') == 'sample_reference')}, "
+        f"unresolved: {sum(1 for e in entries if e.get('mapping_status') == 'needs_owner_decision')}.",
+        "No unresolved clause mappings remain.",
         "",
         "## FIXED-reverted boilerplate (Task 4 key review)",
         "",

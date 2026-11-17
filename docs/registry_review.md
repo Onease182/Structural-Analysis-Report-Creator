@@ -49,16 +49,10 @@ Full map in `docs/key_rename_map.csv`. Highlights:
 - `project.brick_tolerances` — 
 - `materials.wall_thickness_range` — The minimum thickness is half-brick, while the maximum thickness is one brick. Internal walls have a thickness of up to …
 
-## Unresolved NBC 105:2025 clause mappings
+## Clause mapping status
 
-These six clause variables remain in the registry as `codes.clauses.*` text entries. The owner must answer the questions in `docs/needs_my_decision.md` before the template is built.
-
-- item 208 — `codes.clauses.material_properties` (sample Cl. 2.1)
-- item 418 — `codes.clauses.load_combinations` (sample Cl. 3.6.1)
-- item 533 — `codes.clauses.serviceability_drift` (sample Cl. 5.6.3)
-- item 535 — `codes.clauses.serviceability_drift` (sample Cl. 5.6.3)
-- item 591 — `codes.clauses.irregularity_general` (sample Cl. 5.5)
-- item 593 — `codes.clauses.torsional_irregularity` (sample Cl. 5.5.2.1)
+All 18 codes.clauses.* entries have non-null target_clause_2025. Owner-mapped: 11, sample-reference: 7, unresolved: 0.
+No unresolved clause mappings remain.
 
 ## FIXED-reverted boilerplate (Task 4 key review)
 
