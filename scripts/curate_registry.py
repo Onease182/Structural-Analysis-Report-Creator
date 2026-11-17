@@ -187,6 +187,9 @@ SOURCE_REASSIGN: dict[str, tuple[str, str]] = {
     "building.total_height_m": ("e2k", "$STORYDATA"),
     "building.primary_frame_material": ("etabs_api", "Material Properties + Frame Section Assignments"),
     "materials.rebar_grade_used": ("etabs_api", "Material Properties (rebar)"),
+    # Task 3: computed narrative from building.total_height_m (e2k $STORYDATA)
+    # and the concrete grade from ETABS Material Properties.
+    "materials.as_building_is_less_than_12_m": ("computed", "$STORYDATA (height) + Material Properties (concrete grade)"),
     "modal.modes_included_count": ("etabs_api", "Modal Load Case"),
     "modal.base_shear_etabs": ("etabs_api", "Base Reactions / Story Forces"),
     "foundation.support_condition": ("e2k", "$POINTRESTRAINTS"),

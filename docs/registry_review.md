@@ -4,7 +4,7 @@
 
 Curated entries: **166**.
 Types: bool: 1, image: 55, number: 40, table: 21, text: 49.
-Sources: computed: 43, e2k: 6, etabs_api: 47, excel: 70.
+Sources: computed: 44, e2k: 6, etabs_api: 47, excel: 69.
 
 ## Counts per group
 
@@ -25,10 +25,10 @@ Sources: computed: 43, e2k: 6, etabs_api: 47, excel: 70.
 
 ## Counts per source
 
-- `computed`: 43
+- `computed`: 44
 - `e2k`: 6
 - `etabs_api`: 47
-- `excel`: 70
+- `excel`: 69
 
 ## Key rename map
 

@@ -442,7 +442,7 @@ items:
   unit: m
   format:
     decimals: null
-  source: excel
+  source: computed
   required: true
   condition: null
   inventory_item_index: 210
@@ -450,6 +450,7 @@ items:
     components.
   inventory_item_indices:
   - 210
+  etabs_table_or_e2k_section: $STORYDATA (height) + Material Properties (concrete grade)
 - key: figure.materials.concrete
   description: 'Figure 3: Material Property (Concrete)'
   type: image
