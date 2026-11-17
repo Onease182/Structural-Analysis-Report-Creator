@@ -430,8 +430,8 @@ items:
   condition: No owner-approved NBC 105:2025 mapping supplied.
   inventory_item_index: 208
   example: null
-  target_clause_2025: null
-  mapping_status: needs_owner_decision
+  target_clause_2025: Annex A, Cl. 2.1
+  mapping_status: owner_mapped
   inventory_item_indices:
   - 208
   sample_clause: '2.1'
@@ -1731,8 +1731,8 @@ items:
   condition: No owner-approved NBC 105:2025 mapping supplied.
   inventory_item_index: 418
   example: null
-  target_clause_2025: null
-  mapping_status: needs_owner_decision
+  target_clause_2025: 3.6.1
+  mapping_status: owner_mapped
   inventory_item_indices:
   - 418
   - 419
@@ -2558,8 +2558,8 @@ items:
   condition: The sample cites NBC 105:2077; no owner-approved 2025 mapping supplied.
   inventory_item_index: 533
   example: null
-  target_clause_2025: null
-  mapping_status: needs_owner_decision
+  target_clause_2025: 5.5.3
+  mapping_status: owner_mapped
   inventory_item_indices:
   - 533
   - 535
@@ -2795,8 +2795,8 @@ items:
   condition: No owner-approved NBC 105:2025 mapping supplied.
   inventory_item_index: 591
   example: null
-  target_clause_2025: null
-  mapping_status: needs_owner_decision
+  target_clause_2025: '5.4'
+  mapping_status: owner_mapped
   inventory_item_indices:
   - 591
   sample_clause: '5.5'
@@ -2811,8 +2811,8 @@ items:
   condition: No owner-approved NBC 105:2025 mapping supplied.
   inventory_item_index: 593
   example: null
-  target_clause_2025: null
-  mapping_status: needs_owner_decision
+  target_clause_2025: 5.4.2.1
+  mapping_status: owner_mapped
   inventory_item_indices:
   - 593
   sample_clause: 5.5.2.1

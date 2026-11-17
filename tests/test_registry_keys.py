@@ -277,8 +277,8 @@ class ClauseFieldTests(unittest.TestCase):
 
     def test_owner_mapped_clauses_have_target(self) -> None:
         owner_mapped = [e for e in self.clauses if e.get("mapping_status") == "owner_mapped"]
-        self.assertEqual(len(owner_mapped), 6,
-                         f"Expected 6 owner-mapped clauses, got {len(owner_mapped)}")
+        self.assertEqual(len(owner_mapped), 11,
+                         f"Expected 11 owner-mapped clauses, got {len(owner_mapped)}")
         bad = [(e["key"], e.get("target_clause_2025")) for e in owner_mapped
                if not e.get("target_clause_2025")]
         self.assertEqual(bad, [], f"Owner-mapped clauses with null target: {bad}")

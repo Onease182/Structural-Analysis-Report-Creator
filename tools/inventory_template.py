@@ -675,6 +675,7 @@ WORD_REGENERATED_FIELDS = {"TOC", "PAGEREF", "PAGE", "NUMPAGES", "HYPERLINK", "S
 # Owner clause map: sample 2020 clause -> (codes.clauses.* registry key, 2025 target).
 # All clause keys live under the `codes.*` group; the singular `code.*` prefix
 # has been merged into `codes.*` per the registry review gate.
+# All 11 clauses below are owner-approved; there are no unresolved clauses.
 OWNER_CLAUSE_MAP = {
     "5.5.1.2": ("codes.clauses.soft_storey", "5.4.1.2"),
     "5.5.1.4": ("codes.clauses.in_plane_discontinuity", "5.4.1.4"),
@@ -682,14 +683,14 @@ OWNER_CLAUSE_MAP = {
     "5.5.2.2": ("codes.clauses.reentrant_corner", "5.4.2.3"),
     "5.5.2.3": ("codes.clauses.diaphragm_discontinuity", "5.4.2.4"),
     "5.5.2.4": ("codes.clauses.out_of_plane_offset", "5.4.2.5"),
+    # Final Phase 1 decisions — previously unresolved, now owner-approved.
+    "2.1": ("codes.clauses.material_properties", "Annex A, Cl. 2.1"),
+    "3.6.1": ("codes.clauses.load_combinations", "3.6.1"),
+    "5.5": ("codes.clauses.irregularity_general", "5.4"),
+    "5.5.2.1": ("codes.clauses.torsional_irregularity", "5.4.2.1"),
+    "5.6.3": ("codes.clauses.serviceability_drift", "5.5.3"),
 }
-UNRESOLVED_CLAUSE_KEYS = {
-    "2.1": ("codes.clauses.material_properties", "No owner-approved NBC 105:2025 mapping supplied."),
-    "3.6.1": ("codes.clauses.load_combinations", "No owner-approved NBC 105:2025 mapping supplied."),
-    "5.5": ("codes.clauses.structural_irregularity_general", "No owner-approved NBC 105:2025 mapping supplied."),
-    "5.5.2.1": ("codes.clauses.torsional_irregularity", "No owner-approved NBC 105:2025 mapping supplied."),
-    "5.6.3": ("codes.clauses.serviceability_drift", "The sample cites NBC 105:2077; no owner-approved 2025 mapping supplied."),
-}
+UNRESOLVED_CLAUSE_KEYS: dict[str, tuple[str, str]] = {}
 CURRENT_CLAUSE_KEYS = {
     "3.2.1": "codes.clauses.equivalent_static_method",
     "4.1.2": "codes.clauses.spectral_shape_factor",

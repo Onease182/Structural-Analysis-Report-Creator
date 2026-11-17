@@ -319,12 +319,13 @@ CLAUSE_MAPPINGS: dict[str, dict[str, Any]] = {
     "codes.clauses.importance_factor":        {"sample_clause": "4.1.5", "target_clause_2025": "4.1.5", "mapping_status": "sample_reference"},
     "codes.clauses.equivalent_static_method": {"sample_clause": "3.2.1", "target_clause_2025": "3.2.1", "mapping_status": "sample_reference"},
     "codes.clauses.modal_mass_participation": {"sample_clause": "7.3",   "target_clause_2025": "7.3",   "mapping_status": "sample_reference"},
-    # Genuinely unresolved (6 clause questions; 5 distinct keys).
-    "codes.clauses.material_properties":      {"sample_clause": "2.1",     "target_clause_2025": None, "mapping_status": "needs_owner_decision"},
-    "codes.clauses.load_combinations":        {"sample_clause": "3.6.1",   "target_clause_2025": None, "mapping_status": "needs_owner_decision"},
-    "codes.clauses.serviceability_drift":     {"sample_clause": "5.6.3",   "target_clause_2025": None, "mapping_status": "needs_owner_decision"},
-    "codes.clauses.irregularity_general":     {"sample_clause": "5.5",     "target_clause_2025": None, "mapping_status": "needs_owner_decision"},
-    "codes.clauses.torsional_irregularity":   {"sample_clause": "5.5.2.1", "target_clause_2025": None, "mapping_status": "needs_owner_decision"},
+    # Owner-approved mappings — final Phase 1 decisions (all 5 previously
+    # unresolved keys are now resolved; 6 clause questions, 5 distinct keys).
+    "codes.clauses.material_properties":      {"sample_clause": "2.1",     "target_clause_2025": "Annex A, Cl. 2.1", "mapping_status": "owner_mapped"},
+    "codes.clauses.load_combinations":        {"sample_clause": "3.6.1",   "target_clause_2025": "3.6.1",           "mapping_status": "owner_mapped"},
+    "codes.clauses.serviceability_drift":     {"sample_clause": "5.6.3",   "target_clause_2025": "5.5.3",           "mapping_status": "owner_mapped"},
+    "codes.clauses.irregularity_general":     {"sample_clause": "5.5",     "target_clause_2025": "5.4",             "mapping_status": "owner_mapped"},
+    "codes.clauses.torsional_irregularity":   {"sample_clause": "5.5.2.1", "target_clause_2025": "5.4.2.1",         "mapping_status": "owner_mapped"},
 }
 
 # ----------------------------------------------------------------------------
