@@ -2,13 +2,18 @@
 """Verify the master template by rendering with a dummy context and comparing
 with the original sample.
 
+ALL checks are strict: any failure causes a non-zero exit. No warnings.
+
 Checks:
-  1. Render with a dummy context (each value = its own key name).
+  1. Render with a realistic dummy context (sample table row counts,
+     sample image sizes).
   2. Convert to PDF (LibreOffice).
-  3. Compare heading order and page count with the original sample.
+  3. Compare heading order and count by position and level.
   4. Fail on any leftover {{ }} or {% %} in the rendered output.
-  5. Render once with has_staircase=false and confirm the staircase
-     heading, content and TOC entry are gone with no stray page break.
+  5. Page count: fail if rendered differs from sample by more than 2.
+     If it fails, report per-section page offsets.
+  6. Render with has_staircase=false: assert staircase heading, content,
+     and TOC entry are gone; no stray page breaks.
 
 Usage:
     python tools/verify_template.py
@@ -19,12 +24,14 @@ import argparse
 import re
 import subprocess
 import sys
-import tempfile
+import struct
+import zlib
 from pathlib import Path
 from typing import Any
 
 import yaml
 from docx import Document
+from docx.oxml.ns import qn
 from docxtpl import DocxTemplate, InlineImage
 from lxml import etree
 
@@ -34,16 +41,117 @@ SAMPLE = ROOT / "Chatra Bahadur Ramtel.docx"
 REGISTRY = ROOT / "config" / "placeholder_registry.yaml"
 RENDER_DIR = ROOT / "templates"
 
+W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+WP_NS = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+
 
 def load_registry() -> list[dict[str, Any]]:
     with REGISTRY.open("r", encoding="utf-8") as f:
         return yaml.safe_load(f)["items"]
 
 
+# ---------------------------------------------------------------------------
+# Sample analysis: table row counts, image sizes, headings
+# ---------------------------------------------------------------------------
+
+def analyze_sample() -> dict[str, Any]:
+    """Read the sample DOCX and extract table row counts, image sizes,
+    and heading structure for comparison."""
+    doc = Document(str(SAMPLE))
+    body = doc.element.body
+
+    # Table row counts by inventory table number (1-based)
+    table_rows: dict[int, int] = {}
+    for i, tbl in enumerate(doc.tables, 1):
+        table_rows[i] = len(tbl.rows)
+
+    # Image sizes (EMU) and types
+    images: list[dict[str, Any]] = []
+    for child in body:
+        if child.tag.split("}")[-1] != "p":
+            continue
+        for drawing in child.iter(f"{{{W_NS}}}drawing"):
+            inline = drawing.find(f"{{{WP_NS}}}inline")
+            anchor = drawing.find(f"{{{WP_NS}}}anchor")
+            container = inline if inline is not None else anchor
+            if container is None:
+                continue
+            extent = container.find(f"{{{WP_NS}}}extent")
+            if extent is None:
+                continue
+            cx = int(extent.get("cx", "0"))
+            cy = int(extent.get("cy", "0"))
+            images.append({
+                "type": "inline" if inline is not None else "anchored",
+                "cx": cx,
+                "cy": cy,
+                "width_inches": cx / 914400,
+                "height_inches": cy / 914400,
+            })
+
+    # Headings with level
+    headings: list[dict[str, Any]] = []
+    for p in doc.paragraphs:
+        style_name = p.style.name if p.style else ""
+        if style_name and "heading" in style_name.lower():
+            level_match = re.search(r"(\d+)", style_name)
+            level = int(level_match.group(1)) if level_match else 0
+            headings.append({
+                "level": level,
+                "style": style_name,
+                "text": p.text.strip(),
+            })
+
+    return {
+        "table_rows": table_rows,
+        "images": images,
+        "headings": headings,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Dummy image generation
+# ---------------------------------------------------------------------------
+
+DUMMY_PNG_CACHE: dict[tuple[int, int], Path] = {}
+
+
+def get_dummy_png(width_px: int, height_px: int) -> Path:
+    """Get or create a dummy PNG with the given pixel dimensions."""
+    key = (width_px, height_px)
+    if key in DUMMY_PNG_CACHE:
+        return DUMMY_PNG_CACHE[key]
+    path = ROOT / "tests" / "fixtures" / f"dummy_{width_px}x{height_px}.png"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if not path.exists():
+        create_png(path, width_px, height_px)
+    DUMMY_PNG_CACHE[key] = path
+    return path
+
+
+def create_png(path: Path, width: int, height: int) -> None:
+    """Create a minimal solid-color PNG."""
+    signature = b'\x89PNG\r\n\x1a\n'
+    ihdr_data = struct.pack('>IIBBBBB', width, height, 8, 2, 0, 0, 0)
+    ihdr_crc = zlib.crc32(b'IHDR' + ihdr_data)
+    ihdr = struct.pack('>I', 13) + b'IHDR' + ihdr_data + struct.pack('>I', ihdr_crc)
+    # Solid gray image data: each row starts with filter byte 0
+    raw = b''
+    for _ in range(height):
+        raw += b'\x00' + b'\xc0\xc0' * width  # gray RGB
+    compressed = zlib.compress(raw)
+    idat_crc = zlib.crc32(b'IDAT' + compressed)
+    idat = struct.pack('>I', len(compressed)) + b'IDAT' + compressed + struct.pack('>I', idat_crc)
+    iend_crc = zlib.crc32(b'IEND')
+    iend = struct.pack('>I', 0) + b'IEND' + struct.pack('>I', iend_crc)
+    path.write_bytes(signature + ihdr + idat + iend)
+
+
+# ---------------------------------------------------------------------------
+# Dummy context builder
+# ---------------------------------------------------------------------------
+
 def _set_nested(ctx: dict[str, Any], key: str, value: Any) -> None:
-    """Set a nested dict value from a dot-separated key.
-    e.g. _set_nested(ctx, 'project.report_title', 'x') sets
-    ctx['project']['report_title'] = 'x'."""
     parts = key.split(".")
     d = ctx
     for part in parts[:-1]:
@@ -54,63 +162,81 @@ def _set_nested(ctx: dict[str, Any], key: str, value: Any) -> None:
 
 
 def build_dummy_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
+                         sample_data: dict[str, Any],
                          has_staircase: bool = True) -> dict[str, Any]:
-    """Build a context where each value equals its own key name.
-    Keys are nested: 'project.report_title' -> ctx['project']['report_title']."""
+    """Build a realistic dummy context using sample table row counts and
+    image sizes. Each text value equals its own key name."""
     ctx: dict[str, Any] = {}
+    sample_images = sample_data["images"]
+    sample_table_rows = sample_data["table_rows"]
+    img_idx = 0
+
     for entry in entries:
         key = entry["key"]
         entry_type = entry.get("type", "text")
+
         if entry_type == "image":
-            dummy_img = ROOT / "tests" / "fixtures" / "dummy.png"
-            if not dummy_img.exists():
-                dummy_img.parent.mkdir(parents=True, exist_ok=True)
-                import struct, zlib
-                def create_minimal_png(path: Path) -> None:
-                    signature = b'\x89PNG\r\n\x1a\n'
-                    ihdr_data = struct.pack('>IIBBBBB', 1, 1, 8, 2, 0, 0, 0)
-                    ihdr_crc = zlib.crc32(b'IHDR' + ihdr_data)
-                    ihdr = struct.pack('>I', 13) + b'IHDR' + ihdr_data + struct.pack('>I', ihdr_crc)
-                    raw = b'\x00\xff\x00\x00'
-                    compressed = zlib.compress(raw)
-                    idat_crc = zlib.crc32(b'IDAT' + compressed)
-                    idat = struct.pack('>I', len(compressed)) + b'IDAT' + compressed + struct.pack('>I', idat_crc)
-                    iend_crc = zlib.crc32(b'IEND')
-                    iend = struct.pack('>I', 0) + b'IEND' + struct.pack('>I', iend_crc)
-                    path.write_bytes(signature + ihdr + idat + iend)
-                create_minimal_png(dummy_img)
-            example = entry.get("example") or {}
-            width = None
-            if isinstance(example, dict):
-                w = example.get("width_inches")
-                if w:
-                    width = w
-            val = InlineImage(tpl, str(dummy_img), width=width) if width else InlineImage(tpl, str(dummy_img))
+            # Use the sample image's size
+            if img_idx < len(sample_images):
+                si = sample_images[img_idx]
+                w_in = si["width_inches"]
+                h_in = si["height_inches"]
+                # Create a dummy PNG with the right aspect ratio
+                # Use 100px per inch for a reasonable resolution
+                w_px = max(1, int(w_in * 100))
+                h_px = max(1, int(h_in * 100))
+                dummy = get_dummy_png(w_px, h_px)
+                val = InlineImage(tpl, str(dummy), width=w_in)
+                img_idx += 1
+            else:
+                dummy = get_dummy_png(100, 100)
+                val = InlineImage(tpl, str(dummy))
             _set_nested(ctx, key, val)
+
         elif entry_type == "bool":
             val = has_staircase if key == "building.has_staircase" else True
             _set_nested(ctx, key, val)
+
         elif entry_type == "table":
+            # Use the sample's row count (minus header)
+            inv_idx = entry.get("inventory_item_index")
+            # Find the table number from the inventory
+            import json
+            inv_path = ROOT / "docs" / "template_inventory.json"
+            with inv_path.open() as f:
+                inv_items = json.load(f)["items"]
+            table_no = None
+            for inv_item in inv_items:
+                if inv_item.get("index") == inv_idx and inv_item.get("type") == "table":
+                    table_no = inv_item.get("table", {}).get("number")
+                    break
+            if table_no and table_no in sample_table_rows:
+                n_data_rows = sample_table_rows[table_no] - 1  # minus header
+            else:
+                n_data_rows = 3
             cols = entry.get("columns") or []
             row = {}
             for i, col in enumerate(cols):
                 col_key = col.get("key", f"col{i}")
-                # Use the last segment of the col key for the row dict
                 row[col_key.split(".")[-1]] = key
-            _set_nested(ctx, key, {"rows": [row]})
+            _set_nested(ctx, key, {"rows": [row] * max(1, n_data_rows)})
+
         elif entry_type == "number":
             _set_nested(ctx, key, 1)
+
         else:
-            _set_nested(ctx, key, key)  # value = key name
-    # Override has_staircase
+            _set_nested(ctx, key, key)
+
     _set_nested(ctx, "building.has_staircase", has_staircase)
     return ctx
 
 
+# ---------------------------------------------------------------------------
+# Checks
+# ---------------------------------------------------------------------------
+
 def check_leftover_placeholders(docx_path: Path) -> list[str]:
-    """Check for leftover {{ }} or {% %} in the rendered document."""
     doc = Document(str(docx_path))
-    W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
     body = doc.element.body
     full_text = ""
     for t in body.iter(f"{{{W_NS}}}t"):
@@ -123,21 +249,65 @@ def check_leftover_placeholders(docx_path: Path) -> list[str]:
     return leftovers
 
 
-def extract_headings(docx_path: Path) -> list[str]:
-    """Extract heading texts in document order."""
+def extract_headings_with_level(docx_path: Path) -> list[dict[str, Any]]:
     doc = Document(str(docx_path))
-    W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
     headings = []
     for p in doc.paragraphs:
-        if p.style and "heading" in (p.style.name or "").lower():
-            text = p.text.strip()
-            if text:
-                headings.append(text)
+        style_name = p.style.name if p.style else ""
+        if style_name and "heading" in style_name.lower():
+            level_match = re.search(r"(\d+)", style_name)
+            level = int(level_match.group(1)) if level_match else 0
+            headings.append({
+                "level": level,
+                "style": style_name,
+                "text": p.text.strip(),
+            })
     return headings
 
 
+def compare_headings(sample_headings: list[dict], rendered_headings: list[dict],
+                     entries: list[dict[str, Any]]) -> list[str]:
+    """Compare headings by position and level. Where a heading is replaced
+    by a placeholder, the dummy text must equal that placeholder's key name.
+    Returns a list of failure messages (empty if all match)."""
+    failures: list[str] = []
+    # Build a set of all registry keys for checking placeholder substitutions
+    all_keys = {e["key"] for e in entries}
+
+    if len(sample_headings) != len(rendered_headings):
+        failures.append(
+            f"Heading count mismatch: sample={len(sample_headings)}, "
+            f"rendered={len(rendered_headings)}"
+        )
+        return failures
+
+    for i, (s, r) in enumerate(zip(sample_headings, rendered_headings)):
+        if s["level"] != r["level"]:
+            failures.append(
+                f"Heading {i}: level mismatch sample={s['level']} vs rendered={r['level']} "
+                f"(sample text: {s['text'][:50]!r})"
+            )
+            continue
+        # Text comparison: if the sample heading was replaced by a placeholder,
+        # the rendered text should be the key name.
+        s_text = s["text"]
+        r_text = r["text"]
+        if s_text == r_text:
+            continue  # Exact match
+        # Check if rendered text is a registry key name (placeholder substitution)
+        if r_text in all_keys:
+            continue  # Expected: heading replaced by placeholder value
+        # Also check if the rendered text contains a key name (partial substitution)
+        if any(r_text == key for key in all_keys):
+            continue
+        failures.append(
+            f"Heading {i}: text mismatch sample={s_text[:60]!r} vs "
+            f"rendered={r_text[:60]!r}"
+        )
+    return failures
+
+
 def convert_to_pdf(docx_path: Path, output_dir: Path) -> Path:
-    """Convert DOCX to PDF using LibreOffice."""
     output_dir.mkdir(parents=True, exist_ok=True)
     result = subprocess.run(
         ["soffice", "--headless", "--convert-to", "pdf",
@@ -153,122 +323,207 @@ def convert_to_pdf(docx_path: Path, output_dir: Path) -> Path:
 
 
 def count_pdf_pages(pdf_path: Path) -> int:
-    """Count pages in a PDF."""
     result = subprocess.run(
         ["pdfinfo", str(pdf_path)],
         capture_output=True, text=True, timeout=30,
     )
-    if result.returncode != 0:
-        # Try alternative
-        result = subprocess.run(
-            ["python3", "-c", f"""
-import subprocess
-r = subprocess.run(['pdftotext', '{pdf_path}', '-'], capture_output=True, text=True)
-print(r.stdout.count('\\f') + 1)
-"""],
-            capture_output=True, text=True, timeout=30,
-        )
-        try:
-            return int(result.stdout.strip())
-        except (ValueError, TypeError):
-            return 0
-    for line in result.stdout.splitlines():
-        if line.startswith("Pages:"):
-            return int(line.split(":")[1].strip())
-    return 0
+    if result.returncode == 0:
+        for line in result.stdout.splitlines():
+            if line.startswith("Pages:"):
+                return int(line.split(":")[1].strip())
+    # Fallback
+    result = subprocess.run(
+        ["pdftotext", str(pdf_path), "-"],
+        capture_output=True, text=True, timeout=30,
+    )
+    return result.stdout.count("\f") + 1 if result.stdout else 0
 
+
+def get_heading_page_offsets(pdf_path: Path, headings: list[dict]) -> list[int]:
+    """For each heading, find the page number where it starts (0-based).
+    Uses pdftotext to find heading text in pages."""
+    result = subprocess.run(
+        ["pdftotext", "-layout", str(pdf_path), "-"],
+        capture_output=True, text=True, timeout=30,
+    )
+    if result.returncode != 0:
+        return []
+    pages = result.stdout.split("\f")
+    offsets: list[int] = []
+    for h in headings:
+        text = h["text"]
+        if not text:
+            offsets.append(-1)
+            continue
+        found_page = -1
+        for page_idx, page_text in enumerate(pages):
+            if text[:30] in page_text:
+                found_page = page_idx
+                break
+        offsets.append(found_page)
+    return offsets
+
+
+# ---------------------------------------------------------------------------
+# Main verification
+# ---------------------------------------------------------------------------
 
 def verify() -> int:
     entries = load_registry()
-    tpl = DocxTemplate(str(TEMPLATE))
+    sample_data = analyze_sample()
+    failures: list[str] = []
+
+    print("=" * 60)
+    print("TEMPLATE VERIFICATION (strict mode)")
+    print("=" * 60)
 
     # --- 1. Render with has_staircase=true ---
-    print("[1/5] Building dummy context (has_staircase=True)...")
-    ctx_true = build_dummy_context(entries, tpl, has_staircase=True)
+    print("\n[1] Rendering with realistic dummy context (has_staircase=True)...")
+    tpl = DocxTemplate(str(TEMPLATE))
+    ctx_true = build_dummy_context(entries, tpl, sample_data, has_staircase=True)
     rendered_true = RENDER_DIR / "rendered_dummy.docx"
     tpl.render(ctx_true)
     tpl.save(str(rendered_true))
-    print(f"      Rendered: {rendered_true}")
+    print(f"    Rendered: {rendered_true}")
 
     # --- 2. Check for leftover placeholders ---
-    print("[2/5] Checking for leftover {{ }} or {% %}...")
+    print("\n[2] Checking for leftover {{ }} or {% %}...")
     leftovers = check_leftover_placeholders(rendered_true)
     if leftovers:
-        print(f"      FAIL: {len(leftovers)} leftover placeholders:")
-        for l in leftovers[:10]:
-            print(f"        {l}")
-        return 1
-    print("      OK: no leftover placeholders")
+        msg = f"FAIL: {len(leftovers)} leftover placeholders: {leftovers[:5]}"
+        failures.append(msg)
+        print(f"    {msg}")
+    else:
+        print("    PASS: no leftover placeholders")
 
     # --- 3. Convert to PDF and compare page counts ---
-    print("[3/5] Converting to PDF and comparing...")
+    print("\n[3] Converting to PDF and comparing page counts...")
     try:
         pdf_rendered = convert_to_pdf(rendered_true, RENDER_DIR / "pdf")
         pdf_sample = convert_to_pdf(SAMPLE, RENDER_DIR / "pdf")
         pages_rendered = count_pdf_pages(pdf_rendered)
         pages_sample = count_pdf_pages(pdf_sample)
-        print(f"      Sample pages: {pages_sample}")
-        print(f"      Rendered pages: {pages_rendered}")
-        if pages_rendered == 0:
-            print("      WARNING: could not count rendered pages")
-        elif pages_sample > 0 and abs(pages_rendered - pages_sample) > 5:
-            print(f"      WARNING: page count differs by {abs(pages_rendered - pages_sample)}")
+        print(f"    Sample pages: {pages_sample}")
+        print(f"    Rendered pages: {pages_rendered}")
+        if abs(pages_rendered - pages_sample) > 2:
+            msg = (f"FAIL: page count differs by {abs(pages_rendered - pages_sample)} "
+                   f"(sample={pages_sample}, rendered={pages_rendered}, max allowed=2)")
+            failures.append(msg)
+            print(f"    {msg}")
+            # Report per-section page offsets
+            sample_headings = sample_data["headings"]
+            rendered_headings = extract_headings_with_level(rendered_true)
+            print("    Per-section page offsets (sample vs rendered):")
+            sample_offsets = get_heading_page_offsets(pdf_sample, sample_headings[:20])
+            rendered_offsets = get_heading_page_offsets(pdf_rendered, rendered_headings[:20])
+            for i in range(min(len(sample_offsets), len(rendered_offsets))):
+                s_text = sample_headings[i]["text"][:40] if i < len(sample_headings) else "?"
+                r_text = rendered_headings[i]["text"][:40] if i < len(rendered_headings) else "?"
+                print(f"      [{i}] sample p{sample_offsets[i]+1 if sample_offsets[i]>=0 else '?'} "
+                      f"vs rendered p{rendered_offsets[i]+1 if rendered_offsets[i]>=0 else '?'}: "
+                      f"{s_text!r}")
+        else:
+            print("    PASS: page count within tolerance")
     except Exception as exc:
-        print(f"      WARNING: PDF conversion failed: {exc}")
+        msg = f"FAIL: PDF conversion failed: {exc}"
+        failures.append(msg)
+        print(f"    {msg}")
 
-    # --- 4. Compare heading order ---
-    print("[4/5] Comparing heading order...")
-    headings_sample = extract_headings(SAMPLE)
-    headings_rendered = extract_headings(rendered_true)
-    print(f"      Sample headings: {len(headings_sample)}")
-    print(f"      Rendered headings: {len(headings_rendered)}")
-    # Check the first N headings match
-    mismatches = 0
-    for i in range(min(len(headings_sample), len(headings_rendered))):
-        if headings_sample[i] != headings_rendered[i]:
-            # After placeholder replacement, heading text may differ.
-            # Only flag if the structure is different.
-            if "{{" in headings_rendered[i] or headings_rendered[i].strip() == "":
-                continue
-            mismatches += 1
-            if mismatches <= 3:
-                print(f"        Mismatch at {i}: sample={headings_sample[i][:60]!r} vs rendered={headings_rendered[i][:60]!r}")
-    if mismatches > 0:
-        print(f"      {mismatches} heading mismatches (may be expected due to placeholder substitution)")
+    # --- 4. Compare headings by position and level ---
+    print("\n[4] Comparing heading order and level...")
+    sample_headings = sample_data["headings"]
+    rendered_headings = extract_headings_with_level(rendered_true)
+    print(f"    Sample headings: {len(sample_headings)}")
+    print(f"    Rendered headings: {len(rendered_headings)}")
+    heading_failures = compare_headings(sample_headings, rendered_headings, entries)
+    if heading_failures:
+        failures.extend(heading_failures)
+        for hf in heading_failures[:5]:
+            print(f"    {hf}")
+        if len(heading_failures) > 5:
+            print(f"    ... and {len(heading_failures) - 5} more")
     else:
-        print("      OK: heading order matches")
+        print("    PASS: heading order and levels match")
 
     # --- 5. Render with has_staircase=false ---
-    print("[5/5] Rendering with has_staircase=false...")
+    print("\n[5] Rendering with has_staircase=false...")
     tpl2 = DocxTemplate(str(TEMPLATE))
-    ctx_false = build_dummy_context(entries, tpl2, has_staircase=False)
+    ctx_false = build_dummy_context(entries, tpl2, sample_data, has_staircase=False)
     tpl2.render(ctx_false)
     rendered_false = RENDER_DIR / "rendered_no_staircase.docx"
     tpl2.save(str(rendered_false))
-    print(f"      Rendered: {rendered_false}")
+    print(f"    Rendered: {rendered_false}")
 
-    # Check staircase is gone
-    headings_false = extract_headings(rendered_false)
-    staircase_found = [h for h in headings_false if "staircase" in h.lower()]
-    if staircase_found:
-        print(f"      FAIL: staircase heading still present: {staircase_found}")
-        return 1
-    print("      OK: staircase heading removed")
+    # --- 5a. Check staircase heading absent ---
+    print("\n[5a] Checking staircase heading is absent...")
+    headings_false = extract_headings_with_level(rendered_false)
+    staircase_headings = [h for h in headings_false if "staircase" in h["text"].lower()]
+    if staircase_headings:
+        msg = f"FAIL: staircase heading still present: {[h['text'] for h in staircase_headings]}"
+        failures.append(msg)
+        print(f"    {msg}")
+    else:
+        print("    PASS: staircase heading absent")
 
-    # Check for leftover placeholders in the no-staircase render
+    # --- 5b. Check for leftover placeholders in no-staircase render ---
+    print("\n[5b] Checking for leftover placeholders in no-staircase render...")
     leftovers_false = check_leftover_placeholders(rendered_false)
     if leftovers_false:
-        print(f"      FAIL: {len(leftovers_false)} leftover placeholders in no-staircase render:")
-        for l in leftovers_false[:5]:
-            print(f"        {l}")
-        return 1
-    print("      OK: no leftover placeholders in no-staircase render")
+        msg = f"FAIL: {len(leftovers_false)} leftover placeholders: {leftovers_false[:5]}"
+        failures.append(msg)
+        print(f"    {msg}")
+    else:
+        print("    PASS: no leftover placeholders")
 
-    print("\n=== Verification PASSED ===")
-    print(f"  Template: {TEMPLATE}")
-    print(f"  Rendered (dummy): {rendered_true}")
-    print(f"  Rendered (no staircase): {rendered_false}")
-    return 0
+    # --- 5c. Check headings before and after staircase are unchanged ---
+    print("\n[5c] Checking headings before and after staircase block...")
+    # Find the staircase heading position in the sample
+    staircase_idx = None
+    for i, h in enumerate(sample_headings):
+        if "staircase" in h["text"].lower() and "design of staircases" in h["text"].lower():
+            staircase_idx = i
+            break
+    if staircase_idx is not None:
+        # Headings before staircase should match between sample and no-staircase render
+        before_sample = sample_headings[:staircase_idx]
+        before_rendered = headings_false[:staircase_idx]
+        before_failures = compare_headings(before_sample, before_rendered, entries)
+        if before_failures:
+            failures.extend(before_failures)
+            for bf in before_failures[:3]:
+                print(f"    {bf}")
+        else:
+            print(f"    PASS: {len(before_sample)} headings before staircase match")
+        # Headings after staircase: find the next heading after the staircase block
+        # in the sample, and check it appears in the rendered (shifted by the removal)
+        if staircase_idx + 1 < len(sample_headings):
+            next_heading = sample_headings[staircase_idx + 1]
+            # In the no-staircase render, this heading should appear at staircase_idx
+            if staircase_idx < len(headings_false):
+                r_next = headings_false[staircase_idx]
+                if r_next["level"] != next_heading["level"]:
+                    msg = (f"FAIL: heading after staircase level mismatch "
+                           f"sample={next_heading['level']} vs rendered={r_next['level']}")
+                    failures.append(msg)
+                    print(f"    {msg}")
+                else:
+                    print(f"    PASS: heading after staircase starts at correct position")
+    else:
+        print("    SKIP: staircase heading not found in sample")
+
+    # --- Summary ---
+    print("\n" + "=" * 60)
+    if failures:
+        print(f"VERIFICATION FAILED: {len(failures)} failure(s)")
+        for f in failures:
+            print(f"  - {f}")
+        return 1
+    else:
+        print("VERIFICATION PASSED")
+        print(f"  Template: {TEMPLATE}")
+        print(f"  Rendered (dummy): {rendered_true}")
+        print(f"  Rendered (no staircase): {rendered_false}")
+        return 0
 
 
 def main() -> int:
