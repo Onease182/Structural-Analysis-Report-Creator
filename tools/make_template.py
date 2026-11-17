@@ -152,6 +152,58 @@ def build_item_mapping(body_element) -> list[tuple[int, int, str]]:
     return mapping
 
 
+def apply_style_overrides(body_children, idx_to_child, rules, logger) -> None:
+    """For template rules with a style_override, change the paragraph style
+    in the template. Used to restyle conclusion headings to Body Text."""
+    # Build a map of variant_key -> style_override from the rules
+    overrides: dict[str, str] = {}
+    for rule in rules:
+        action = rule.get("action") or {}
+        if action.get("style_override"):
+            variant_key = action.get("variant_key")
+            if variant_key:
+                overrides[variant_key] = action["style_override"]
+
+    if not overrides:
+        return
+
+    # Style ID mapping: style name -> style ID in the DOCX
+    # Body Text -> BodyText, Heading 4 -> Heading4, etc.
+    style_id_map = {
+        "Body Text": "BodyText",
+        "BodyText": "BodyText",
+        "Normal": "Normal",
+    }
+
+    # For each override, find the paragraph and change its style
+    for variant_key, style_name in overrides.items():
+        # The variant_key is like "analysis.in_plane_discontinuity_result"
+        # Find the registry entry for this key to get the inventory_item_index
+        # We need to search the body for paragraphs that contain this placeholder
+        target_style_id = style_id_map.get(style_name, style_name)
+        for child in body_children:
+            tag = child.tag.split("}")[-1]
+            if tag != "p":
+                continue
+            text = get_paragraph_text(child)
+            if f"{{{{ {variant_key} }}}}" in text:
+                # Found the paragraph — change its style
+                pPr = child.find(f"{{{W_NS}}}pPr")
+                if pPr is None:
+                    pPr = etree.SubElement(child, f"{{{W_NS}}}pPr")
+                    child.insert(0, pPr)
+                pStyle = pPr.find(f"{{{W_NS}}}pStyle")
+                if pStyle is None:
+                    pStyle = etree.SubElement(pPr, f"{{{W_NS}}}pStyle")
+                old_style = pStyle.get(f"{{{W_NS}}}val", "")
+                pStyle.set(f"{{{W_NS}}}val", target_style_id)
+                logger.log(
+                    f"style override for {variant_key}",
+                    f"style: {old_style}",
+                    f"style: {target_style_id}",
+                )
+
+
 # ---------------------------------------------------------------------------
 # Caption detection
 # ---------------------------------------------------------------------------
@@ -587,6 +639,9 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
                 if c_idx == child_idx and i_type == "paragraph":
                     substitute_caption_fragments(child, logger, item_idx)
                     break
+
+    # --- Apply style overrides (e.g., conclusion headings -> Body Text) ---
+    apply_style_overrides(body_children, idx_to_child, rules, logger)
 
     # --- Process clause citation paragraphs (NBC edition replacement) ---
     for entry in entries:

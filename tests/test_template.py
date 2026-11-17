@@ -114,7 +114,6 @@ class TemplatePlaceholderTests(unittest.TestCase):
         identical in the template."""
         import re
         from docx import Document
-        from docx.oxml.ns import qn
         W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 
         sample_doc = Document(str(ROOT / "Chatra Bahadur Ramtel.docx"))
@@ -129,12 +128,9 @@ class TemplatePlaceholderTests(unittest.TestCase):
         self.assertGreater(len(caption_texts), 5, "Expected several captions in sample")
 
         # For each caption, check that the template still has the label prefix
-        # (the caption text may have variable fragments substituted, but the
-        # "Table N:" / "Figure N:" prefix must remain).
         tmpl_text = self.full_text
         missing_labels = []
         for ct in caption_texts:
-            # Extract the label prefix (e.g. "Table 8:")
             label_match = re.match(r"^((?:Table|Figure)\s+\d+\s*:)", ct)
             if label_match:
                 label = label_match.group(1)
@@ -142,6 +138,29 @@ class TemplatePlaceholderTests(unittest.TestCase):
                     missing_labels.append(label)
         self.assertEqual(missing_labels, [],
                          f"Caption labels missing from template: {missing_labels}")
+
+    def test_conclusion_paragraphs_not_heading_styled(self) -> None:
+        """The in-plane and mass-irregularity conclusion paragraphs must be
+        restyled to Body Text, not heading-styled, and must not appear in
+        the TOC."""
+        from docx import Document
+        W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+
+        tmpl_doc = Document(str(TEMPLATE))
+        conclusion_keys = {
+            "analysis.in_plane_discontinuity_result",
+            "analysis.mass_irregularity_result",
+        }
+        for p in tmpl_doc.paragraphs:
+            text = p.text.strip()
+            for key in conclusion_keys:
+                if f"{{{{ {key} }}}}" in text:
+                    style_name = p.style.name if p.style else ""
+                    self.assertNotIn(
+                        "heading", style_name.lower(),
+                        f"Conclusion paragraph for {key} is still heading-styled "
+                        f"({style_name}); should be Body Text"
+                    )
 
 
 if __name__ == "__main__":
