@@ -8,16 +8,15 @@ analysis:
   soft_storey_result: No soft stoy is observed in the building.
 building:
   has_staircase: 'True'
-  height_ground_floor_m: 3.175 meters
-  height_period_m: 9.525 meters
-  height_typical_floor_m: 3.175 meters
+  height_ground_floor_m: '3.175'
+  height_period_m: '9.525'
+  height_typical_floor_m: '3.175'
   infill_wall_material: brick
   location: Damak
   num_basements: '0'
   num_storeys_analysed: '3'
   occupancy: The live loads for the floor and roof are determined using I
   occupancy_class: Residential
-  occupancy_class_building: Residential Building
   occupancy_sentence: The live loads for the floor and roof are determined using I
   primary_frame_material: reinforced concrete
   span_x_m: '4.216'
@@ -25,12 +24,10 @@ building:
   storeys_above_grade: three
   storeys_count_numeric: '3'
   story_height_m: '3.175'
-  total_height_m: 9.525 meters
-  total_height_numeric: '9.525'
+  total_height_m: '9.525'
 client:
   application_date: 2026/xx/xx
-  consultant_firm: CivoraX Infra
-  consultant_name: Civira X
+  consultant_name: CivoraX Infra
   designer_contact: 9841xxxxxxx
   designer_name: Mr. Sachin KC
   designer_nec_reg: 131xx”Civil A”
@@ -105,8 +102,9 @@ slab:
   type: Conventional
 structural:
   system_type: Moment Resisting Frames
-  system_type_concrete: Moment Resisting Concrete Frame
-  system_type_full: Reinforced Concrete Moment Resisting Frame
+  system_type_generic: Moment Resisting Frames
+  system_type_period_category: Moment Resisting Concrete Frame
+  system_type_table_5_2: Reinforced Concrete Moment Resisting Frame
 table:
   building: '...'
   client: '...'

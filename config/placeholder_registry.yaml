@@ -3722,8 +3722,8 @@ items:
   example: null
   figure_origin: user_supplied
   generator: null
-- key: client.consultant_firm
-  description: Consulting firm name (full form, for table T0)
+- key: building.occupancy_class
+  description: Occupancy class (e.g. Residential)
   type: text
   unit: null
   format:
@@ -3732,29 +3732,7 @@ items:
   required: true
   condition: null
   inventory_item_index: null
-  example: CivoraX Infra
-- key: building.occupancy_class_building
-  description: Occupancy type with 'Building' suffix (T2 row 8)
-  type: text
-  unit: null
-  format:
-    decimals: null
-  source: excel
-  required: true
-  condition: null
-  inventory_item_index: null
-  example: Residential Building
-- key: client.designer_name
-  description: Name of the structural designer
-  type: text
-  unit: null
-  format:
-    decimals: null
-  source: excel
-  required: true
-  condition: null
-  inventory_item_index: null
-  example: Mr. Sachin KC
+  example: Residential
 - key: client.designer_nec_reg
   description: NEC registration number of the structural designer
   type: text
@@ -3799,17 +3777,6 @@ items:
   condition: null
   inventory_item_index: null
   example: 2026/xx/xx
-- key: building.occupancy_class
-  description: Occupancy class (e.g. Residential)
-  type: text
-  unit: null
-  format:
-    decimals: null
-  source: excel
-  required: true
-  condition: null
-  inventory_item_index: null
-  example: Residential
 - key: building.occupancy_sentence
   description: IS 875 live-load sentence for the occupancy type
   type: text
@@ -3881,8 +3848,8 @@ items:
   inventory_item_index: null
   example: 9.525
   etabs_table_or_e2k_section: $STORYDATA
-- key: structural.system_type_concrete
-  description: Structural system type as 'Moment Resisting Concrete Frame' (T8 wording)
+- key: structural.system_type_generic
+  description: Structural system type (generic, T4 heading)
   type: text
   unit: null
   format:
@@ -3891,10 +3858,21 @@ items:
   required: true
   condition: null
   inventory_item_index: null
-  example: Moment Resisting Concrete Frame
+  example: Moment Resisting Frames
   etabs_table_or_e2k_section: Frame Section Assignments + Connectivity
-- key: structural.system_type_full
-  description: Full structural system type (T12 wording)
+- key: structural.system_type_period_category
+  description: Structural system type for period formula (T8, NBC 105:2025 period category)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: Moment Resisting Concrete Frame
+- key: structural.system_type_table_5_2
+  description: Structural system type for seismic parameters (T12, NBC 105:2025 Table 5-2 system name)
   type: text
   unit: null
   format:

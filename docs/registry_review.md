@@ -2,15 +2,15 @@
 
 **Review gate:** this curated registry is owned by the structural engineer. Do not generate a production master template until the six unresolved NBC 105:2025 clause mappings in `docs/needs_my_decision.md` are answered.
 
-Curated entries: **224**.
-Types: bool: 1, image: 56, number: 65, table: 21, text: 81.
-Sources: computed: 72, e2k: 10, etabs_api: 54, excel: 88.
+Curated entries: **222**.
+Types: bool: 1, image: 56, number: 65, table: 21, text: 79.
+Sources: computed: 72, e2k: 10, etabs_api: 54, excel: 86.
 
 ## Counts per group
 
 - `analysis`: 5
-- `building`: 18
-- `client`: 8
+- `building`: 17
+- `client`: 6
 - `codes`: 30
 - `design`: 20
 - `figure`: 56
@@ -21,7 +21,7 @@ Sources: computed: 72, e2k: 10, etabs_api: 54, excel: 88.
 - `project`: 2
 - `seismic`: 17
 - `slab`: 1
-- `structural`: 3
+- `structural`: 4
 - `table`: 40
 - `totals`: 7
 
@@ -30,7 +30,7 @@ Sources: computed: 72, e2k: 10, etabs_api: 54, excel: 88.
 - `computed`: 72
 - `e2k`: 10
 - `etabs_api`: 54
-- `excel`: 88
+- `excel`: 86
 
 ## Key rename map
 
@@ -69,7 +69,6 @@ Three additional keys reverted to FIXED and dropped from the registry:
 
 Three keys kept as real-input VARIABLE:
 
-- `building.occupancy` — Real input. Project fact: residential occupancy. The IS 875 reference is boilerplate but the occupancy choice is a proje…
 - `materials.as_building_is_less_than_12_m` — Real input / computed narrative. Project facts: height <12 m (from e2k $STORYDATA), grade M20 (from ETABS Material Prope…
 - `project.brick_specs` — Real input. Material spec with project values: crushing strength 3.5 N/mm², brick size 250x100x75 mm, mortar 10 mm. Sour…
 

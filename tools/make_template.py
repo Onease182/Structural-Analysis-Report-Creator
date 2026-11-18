@@ -790,7 +790,7 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         (0, 4, 2): "client.designer_name",
         (0, 5, 2): "client.designer_nec_reg",
         (0, 6, 2): "client.designer_contact",
-        (0, 7, 2): "client.consultant_firm",
+        (0, 7, 2): "client.consultant_name",
         (0, 8, 2): "client.municipality_reg",
         (0, 9, 2): "client.application_date",
         # T2 (Building general info) — derived from row label in col 1
@@ -802,7 +802,7 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         (2, 5, 2): "building.height_typical_floor_m",
         (2, 6, 2): "building.total_height_m",
         (2, 7, 2): "building.height_period_m",
-        (2, 8, 2): "building.occupancy_class_building",
+        (2, 8, 2): "building.occupancy_class",
         # T3 (Element sizes) — col 1 = description, col 2 = grade
         (3, 1, 1): "table.elements.col_desc",
         (3, 1, 2): "materials.concrete_grade_used",
@@ -816,12 +816,12 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         (3, 5, 2): "materials.concrete_grade_used",
         (3, 5, 3): "foundation.soil_bearing",
         # T4 (Structural system & foundation)
-        (4, 0, 2): "structural.system_type",
+        (4, 0, 2): "structural.system_type_generic",
         (4, 1, 2): "foundation.type",
         (4, 2, 2): "slab.type",
         # T8 (Empirical period)
-        (8, 0, 5): "building.total_height_numeric",
-        (8, 1, 1): "structural.system_type_concrete",
+        (8, 0, 5): "building.total_height_m",
+        (8, 1, 1): "structural.system_type_period_category",
         (8, 2, 1): "seismic.time_coefficient_kt",
         (8, 3, 4): "modal.empirical_period_unamplified_s",
         (8, 5, 3): "modal.empirical_period_s",
@@ -839,7 +839,7 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         (12, 9, 2): "seismic.importance_factor_i_table",
         (12, 10, 3): "seismic.elastic_site_spectra_c",
         (12, 11, 3): "seismic.elastic_site_spectra_cs",
-        (12, 13, 3): "structural.system_type_full",
+        (12, 13, 3): "structural.system_type_table_5_2",
         (12, 14, 3): "seismic.response_modification_factor_rmu",
         # T13 (Overstrength factors)
         (13, 0, 1): "design.overstrength_ultimate",
@@ -865,6 +865,17 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         # T15 removed → image placeholder (no cell map needed)
     }
 
+    # Cell suffixes: fixed text appended after the placeholder in specific cells
+    CELL_SUFFIXES: dict[tuple[int, int, int], str] = {
+        # T2 height cells have " meters" suffix in the sample
+        (2, 4, 2): " meters",
+        (2, 5, 2): " meters",
+        (2, 6, 2): " meters",
+        (2, 7, 2): " meters",
+        # T2 occupancy row 8 has " Building" suffix
+        (2, 8, 2): " Building",
+    }
+
     # Apply cell placeholders
     for (tbl_idx, row_idx, col_idx), key in TABLE_CELL_MAP.items():
         if tbl_idx < len(doc.tables):
@@ -873,6 +884,8 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
                 cell = tbl.rows[row_idx].cells[col_idx]
                 old_cell_text = cell.text.strip()
                 if old_cell_text and "{{" not in old_cell_text:
+                    suffix = CELL_SUFFIXES.get((tbl_idx, row_idx, col_idx), "")
+                    placeholder = f"{{{{ {key} }}}}{suffix}"
                     # Replace cell text with placeholder
                     for p in cell.paragraphs:
                         for run in p.runs:
@@ -880,13 +893,13 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
                     if cell.paragraphs:
                         p = cell.paragraphs[0]
                         if p.runs:
-                            p.runs[0].text = f"{{{{ {key} }}}}"
+                            p.runs[0].text = placeholder
                         else:
-                            p.add_run(f"{{{{ {key} }}}}")
+                            p.add_run(placeholder)
                     logger.log(
                         f"table T{tbl_idx} cell ({row_idx},{col_idx})",
                         old_cell_text[:60],
-                        f"{{{{ {key} }}}}",
+                        placeholder,
                     )
 
     # --- T15: Replace slab design table with image placeholder ---

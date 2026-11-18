@@ -39,7 +39,6 @@ Six keys were reviewed for FIXED boilerplate / TABLE / real input. The three FIX
 
 ### Real input (kept as VARIABLE)
 
-- `building.occupancy` — Real input. Project fact: residential occupancy. The IS 875 reference is boilerplate but the occupancy choice is a project decision. Source: excel.
 - `materials.as_building_is_less_than_12_m` — Real input / computed narrative. Project facts: height <12 m (from e2k $STORYDATA), grade M20 (from ETABS Material Properties). The sentence is computed from those facts.
 - `project.brick_specs` — Real input. Material spec with project values: crushing strength 3.5 N/mm², brick size 250x100x75 mm, mortar 10 mm. Source: excel (engineer-supplied spec).
 

@@ -112,18 +112,18 @@ Total replacements: **185**.
 | 106 | table T0 cell (4,2) | Mr. Sachin KC | `{{ client.designer_name }}` |
 | 107 | table T0 cell (5,2) | 131xx”Civil A” | `{{ client.designer_nec_reg }}` |
 | 108 | table T0 cell (6,2) | 9841xxxxxxx | `{{ client.designer_contact }}` |
-| 109 | table T0 cell (7,2) | CivoraX Infra | `{{ client.consultant_firm }}` |
+| 109 | table T0 cell (7,2) | CivoraX Infra | `{{ client.consultant_name }}` |
 | 110 | table T0 cell (8,2) | Xxxx | `{{ client.municipality_reg }}` |
 | 111 | table T0 cell (9,2) | 2026/xx/xx | `{{ client.application_date }}` |
 | 112 | table T2 cell (0,2) | Damak | `{{ building.location }}` |
 | 113 | table T2 cell (1,2) | 3 | `{{ building.storeys_count_numeric }}` |
 | 114 | table T2 cell (2,2) | 3 | `{{ building.num_storeys_analysed }}` |
 | 115 | table T2 cell (3,2) | 0 | `{{ building.num_basements }}` |
-| 116 | table T2 cell (4,2) | 3.175 meters | `{{ building.height_ground_floor_m }}` |
-| 117 | table T2 cell (5,2) | 3.175 meters | `{{ building.height_typical_floor_m }}` |
-| 118 | table T2 cell (6,2) | 9.525 meters | `{{ building.total_height_m }}` |
-| 119 | table T2 cell (7,2) | 9.525 meters | `{{ building.height_period_m }}` |
-| 120 | table T2 cell (8,2) | Residential Building | `{{ building.occupancy_class_building }}` |
+| 116 | table T2 cell (4,2) | 3.175 meters | `{{ building.height_ground_floor_m }} meters` |
+| 117 | table T2 cell (5,2) | 3.175 meters | `{{ building.height_typical_floor_m }} meters` |
+| 118 | table T2 cell (6,2) | 9.525 meters | `{{ building.total_height_m }} meters` |
+| 119 | table T2 cell (7,2) | 9.525 meters | `{{ building.height_period_m }} meters` |
+| 120 | table T2 cell (8,2) | Residential Building | `{{ building.occupancy_class }} Building` |
 | 121 | table T3 cell (1,1) | 355 mm X 355 mm | `{{ table.elements.col_desc }}` |
 | 122 | table T3 cell (1,2) | M20 | `{{ materials.concrete_grade_used }}` |
 | 123 | table T3 cell (2,1) | 250 mm X 430 mm | `{{ table.elements.beam_desc }}` |
@@ -135,11 +135,11 @@ Total replacements: **185**.
 | 129 | table T3 cell (5,1) | Combined Footing | `{{ table.elements.foundation_desc }}` |
 | 130 | table T3 cell (5,2) | M20 | `{{ materials.concrete_grade_used }}` |
 | 131 | table T3 cell (5,3) | Soil Bearing Capacity is taken as 120 kN/m2 | `{{ foundation.soil_bearing }}` |
-| 132 | table T4 cell (0,2) | Moment Resisting Frames | `{{ structural.system_type }}` |
+| 132 | table T4 cell (0,2) | Moment Resisting Frames | `{{ structural.system_type_generic }}` |
 | 133 | table T4 cell (1,2) | Combined Footing | `{{ foundation.type }}` |
 | 134 | table T4 cell (2,2) | Conventional | `{{ slab.type }}` |
-| 135 | table T8 cell (0,5) | 9.525 | `{{ building.total_height_numeric }}` |
-| 136 | table T8 cell (1,1) | Moment Resisting Concrete Frame | `{{ structural.system_type_concrete }}` |
+| 135 | table T8 cell (0,5) | 9.525 | `{{ building.total_height_m }}` |
+| 136 | table T8 cell (1,1) | Moment Resisting Concrete Frame | `{{ structural.system_type_period_category }}` |
 | 137 | table T8 cell (2,1) | 0.075 | `{{ seismic.time_coefficient_kt }}` |
 | 138 | table T8 cell (3,4) | 0.407 | `{{ modal.empirical_period_unamplified_s }}` |
 | 139 | table T8 cell (5,3) | 0.508 | `{{ modal.empirical_period_s }}` |
@@ -156,7 +156,7 @@ Total replacements: **185**.
 | 150 | table T12 cell (9,2) | 1 | `{{ seismic.importance_factor_i_table }}` |
 | 151 | table T12 cell (10,3) | 0.875 | `{{ seismic.elastic_site_spectra_c }}` |
 | 152 | table T12 cell (11,3) | 0.175 | `{{ seismic.elastic_site_spectra_cs }}` |
-| 153 | table T12 cell (13,3) | Reinforced Concrete Moment Resisting Frame | `{{ structural.system_type_full }}` |
+| 153 | table T12 cell (13,3) | Reinforced Concrete Moment Resisting Frame | `{{ structural.system_type_table_5_2 }}` |
 | 154 | table T12 cell (14,3) | 4 | `{{ seismic.response_modification_factor_rmu }}` |
 | 155 | table T13 cell (0,1) | 1.5 | `{{ design.overstrength_ultimate }}` |
 | 156 | table T13 cell (1,1) | 1.25 | `{{ design.overstrength_serviceability }}` |

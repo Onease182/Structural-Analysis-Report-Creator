@@ -47,20 +47,87 @@ owner_approved:
     match_type: loop_table
     table_indices: [9, 10, 11, 14]
 
-  # Clause changes — exact old-to-new pairs only, owner-approved
-  - description: "Clause references updated to NBC 105:2025 values"
-    match_type: clause_change
-    patterns:
-      - "5.5.1.2"
-      - "5.5.1.4"
-      - "5.5.1.5"
-      - "5.5.2.2"
-      - "5.5.2.3"
-      - "5.5.2.4"
-      - "2.1"
-      - "3.6.1"
-      - "5.5"
-      - "5.5.2.1"
-      - "5.6.3"
-      - "NBC 105:2020"
-      - "NBC 105:2077"
+  # D1: NBC edition spacing — one exact-text difference for para 179
+  - description: "D1: NBC edition typo corrected (NBC105:2025 → NBC 105:2025)"
+    match_type: exact_text
+    old_fragment: "NBC105:2025 clause 7.3"
+    new_fragment: "NBC 105:2025 clause 7.3"
+
+  # D2: Consultant name typo — one exact-text difference for the paragraph
+  - description: "D2: Consultant name typo corrected (Civira X → CivoraX Infra)"
+    match_type: exact_text
+    old_fragment: "Civira X"
+    new_fragment: "CivoraX Infra"
+
+  # Clause changes — exact old-to-new pairs, owner-approved.
+  # The comparison verifies that after replacing old with new the rest of
+  # the text is IDENTICAL.
+  - description: "Clause 2.1 reference updated (item 208)"
+    match_type: clause_change_exact
+    old: "According to NBC105:2020, The material should be taken as per Cl.2.1."
+    new: "According to NBC 105:2025, The material should be taken as per Annex A, Cl. 2.1."
+
+  - description: "Clause 3.2.1 reference updated (item 413)"
+    match_type: clause_change_exact
+    old: "As per Clause 3.2.1 of NBC 105:2025"
+    new: "As per Clause 3.2.1 of NBC 105:2025"
+
+  - description: "Clause 3.6.1 reference updated (item 418)"
+    match_type: clause_change_exact
+    old: "clause 3.6.1 of NBC 105:2020"
+    new: "clause 3.6.1 of NBC 105:2025"
+
+  - description: "Clause 5.5 general irregularity updated (item 591)"
+    match_type: clause_change_exact
+    old: "5.5 of NBC 105:2025 has given provisions"
+    new: "5.4 of NBC 105:2025 has given provisions"
+
+  - description: "Clause 5.5.2.1 torsional irregularity updated (item 593)"
+    match_type: clause_change_exact
+    old: "clause 5.5.2.1 of NBC 105:2020"
+    new: "clause 5.4.2.1 of NBC 105:2025"
+
+  - description: "Clause 5.5.1.2 soft storey updated (item 603)"
+    match_type: clause_change_exact
+    old: "clause 5.5.1.2"
+    new: "clause 5.4.1.2 of NBC 105:2025"
+
+  - description: "Clause 5.5.1.4 in-plane discontinuity updated (item 610)"
+    match_type: clause_change_exact
+    old: "clause 5.5.1.4 of NBC 105:2020"
+    new: "clause 5.4.1.4 of NBC 105:2025"
+
+  - description: "Clause 5.5.1.5 mass irregularity updated (item 617)"
+    match_type: clause_change_exact
+    old: "clause 5.5.1.5 of NBC 105:2020"
+    new: "clause 5.4.1.5 of NBC 105:2025"
+
+  - description: "Clause 5.5.2.2 re-entrant corner updated (item 624)"
+    match_type: clause_change_exact
+    old: "clause 5.5.2.2 of NBC 105:2020"
+    new: "clause 5.4.2.3 of NBC 105:2025"
+
+  - description: "Clause 5.5.2.3 diaphragm discontinuity updated (item 632)"
+    match_type: clause_change_exact
+    old: "clause 5.5.2.3 of NBC 105:2020"
+    new: "clause 5.4.2.4 of NBC 105:2025"
+
+  - description: "Clause 5.5.2.4 out-of-plane offset updated (item 640)"
+    match_type: clause_change_exact
+    old: "clause 5.5.2.4 of NBC 105:2020"
+    new: "clause 5.4.2.5 of NBC 105:2025"
+
+  - description: "Clause 5.6.3 serviceability drift updated (items 533, 535)"
+    match_type: clause_change_exact
+    old: "5.6.3 of NBC 105:2077"
+    new: "5.5.3 of NBC 105:2025"
+
+  - description: "NBC 105:2020 → NBC 105:2025 edition update"
+    match_type: clause_change_exact
+    old: "NBC 105:2020"
+    new: "NBC 105:2025"
+
+  - description: "NBC 105:2077 → NBC 105:2025 edition update"
+    match_type: clause_change_exact
+    old: "NBC 105:2077"
+    new: "NBC 105:2025"

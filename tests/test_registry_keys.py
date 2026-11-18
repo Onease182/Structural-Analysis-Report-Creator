@@ -437,7 +437,8 @@ class Task4KeyReviewTests(unittest.TestCase):
         self.assertIn("seismic.intro_statement", content)
         self.assertIn("materials.as_building_is_less_than_12_m", content)
         self.assertIn("project.brick_specs", content)
-        self.assertIn("building.occupancy", content)
+        # building.occupancy was removed per owner decision D3 (split into
+        # building.occupancy_class and building.occupancy_sentence)
 
 
 class FigureOriginTests(unittest.TestCase):

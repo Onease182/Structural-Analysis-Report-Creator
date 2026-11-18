@@ -152,14 +152,10 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
             # uses {{ codes.edition }} everywhere.
             # This is a sample inconsistency — proposed for owner approval.
             _set(key, "NBC 105:2025")
-        elif key == "building.occupancy":
-            # Old key — use the IS 875 sentence
-            _set(key, "The live loads for the floor and roof are determined using IS 875 part 2, as referenced by the National Building Code.")
         elif key == "building.occupancy_sentence":
             _set(key, "The live loads for the floor and roof are determined using IS 875 part 2, as referenced by the National Building Code. For residential buildings, the appropriate live load values specified in Table 1 of IS 875 Part 2 are considered. Since the building is intended for residential use, the loading intensity for dwelling houses under the residential category is taken into account.")
         elif key == "client.consultant_name":
-            # The paragraph says "Civira X" while the table says "CivoraX Infra"
-            _set(key, "Civira X")  # paragraph text
+            _set(key, "CivoraX Infra")  # D2: canonical form
         elif key == "building.storeys_above_grade":
             # The sentence template uses the word form ("three") but table
             # cells need the digit form ("3"). We set the word form here
@@ -186,14 +182,13 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
         (0, 1, 2): "client.owner_name", (0, 2, 2): "building.location",
         (0, 3, 2): "building.occupancy_class", (0, 4, 2): "client.designer_name",
         (0, 5, 2): "client.designer_nec_reg", (0, 6, 2): "client.designer_contact",
-        (0, 7, 2): "client.consultant_firm", (0, 8, 2): "client.municipality_reg",
+        (0, 7, 2): "client.consultant_name", (0, 8, 2): "client.municipality_reg",
         (0, 9, 2): "client.application_date",
         # T2
         (2, 0, 2): "building.location", (2, 1, 2): "building.storeys_count_numeric",
         (2, 2, 2): "building.num_storeys_analysed", (2, 3, 2): "building.num_basements",
         (2, 4, 2): "building.height_ground_floor_m", (2, 5, 2): "building.height_typical_floor_m",
-        (2, 6, 2): "building.total_height_m", (2, 7, 2): "building.height_period_m",
-        (2, 8, 2): "building.occupancy_class_building",
+        (2, 8, 2): "building.occupancy_class",
         # T3
         (3, 1, 1): "table.elements.col_desc", (3, 1, 2): "materials.concrete_grade_used",
         (3, 2, 1): "table.elements.beam_desc", (3, 2, 2): "materials.concrete_grade_used",
@@ -204,7 +199,6 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
         # T4
         (4, 0, 2): "structural.system_type", (4, 1, 2): "foundation.type", (4, 2, 2): "slab.type",
         # T8
-        (8, 0, 5): "building.total_height_numeric", (8, 1, 1): "structural.system_type_concrete",
         (8, 2, 1): "seismic.time_coefficient_kt", (8, 3, 4): "modal.empirical_period_unamplified_s",
         (8, 5, 3): "modal.empirical_period_s",
         # T12
@@ -215,7 +209,7 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
         (12, 7, 1): "building.location", (12, 7, 3): "seismic.zone_factor_z",
         (12, 8, 2): "seismic.structural_type", (12, 9, 2): "seismic.importance_factor_i_table",
         (12, 10, 3): "seismic.elastic_site_spectra_c", (12, 11, 3): "seismic.elastic_site_spectra_cs",
-        (12, 13, 3): "structural.system_type_full", (12, 14, 3): "seismic.response_modification_factor_rmu",
+        (12, 13, 3): "structural.system_type_table_5_2", (12, 14, 3): "seismic.response_modification_factor_rmu",
         # T13
         (13, 0, 1): "design.overstrength_ultimate", (13, 1, 1): "design.overstrength_serviceability",
         (13, 2, 1): "seismic.hsc_uls", (13, 3, 1): "seismic.hsc_sls",
@@ -242,8 +236,13 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
                 if val:
                     _set(beam_keys[ri], val)
 
-    # Read cell values from the sample and set them in the context
+    # Read cell values from the sample and set them in the context.
+    # Skip cells that have a CELL_SUFFIX in make_template.py — the template
+    # adds the suffix as fixed text, so the context value should NOT include it.
+    SUFFIX_CELLS = {(2, 4, 2), (2, 5, 2), (2, 6, 2), (2, 7, 2), (2, 8, 2)}
     for (sidx, ri, ci), key in SAMPLE_CELL_KEYS.items():
+        if (sidx, ri, ci) in SUFFIX_CELLS:
+            continue  # Skip — value comes from registry example, not sample
         if sidx < len(sample_doc.tables):
             tbl = sample_doc.tables[sidx]
             if ri < len(tbl.rows) and ci < len(tbl.rows[ri].cells):
@@ -252,15 +251,12 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
                     _set(key, val)
 
     # Add separate keys for T8/T12 structural system type variants
-    _set("structural.system_type_concrete", "Moment Resisting Concrete Frame")
-    _set("structural.system_type_full", "Reinforced Concrete Moment Resisting Frame")
-    # Height values need " meters" suffix to match sample T2 cells
-    _set("building.height_ground_floor_m", "3.175 meters")
-    _set("building.height_typical_floor_m", "3.175 meters")
-    _set("building.total_height_m", "9.525 meters")
-    _set("building.height_period_m", "9.525 meters")
-    # T8 uses numeric value without " meters" suffix
-    _set("building.total_height_numeric", "9.525")
+    _set("structural.system_type_period_category", "Moment Resisting Concrete Frame")
+    _set("structural.system_type_table_5_2", "Reinforced Concrete Moment Resisting Frame")
+    # Height values: numeric only, the template adds " meters" suffix in T2 cells
+    _set("building.height_ground_floor_m", "3.175")
+    _set("building.height_typical_floor_m", "3.175")
+    _set("building.height_period_m", "9.525")
     # T2 cell needs numeric storey count (not word form)
     _set("building.storeys_count_numeric", "3")
     # T16 check result: escape "<" as "&lt;" to prevent XML stripping
@@ -352,55 +348,30 @@ def classify_diff(location: str, expected: str, actual: str,
             key = rule.get("key", "")
             if key in act_lower or key in exp_lower:
                 return "owner_approved"
-        elif mt == "clause_change":
-            for p in rule.get("patterns", []):
-                if p in expected:
+        elif mt == "exact_text":
+            old_frag = rule.get("old_fragment", "")
+            new_frag = rule.get("new_fragment", "")
+            if old_frag in expected and new_frag in actual:
+                rest_expected = expected.replace(old_frag, new_frag)
+                if normalize(rest_expected) == normalize(actual):
                     return "owner_approved"
-        elif mt == "nbc_spacing":
-            if rule.get("expected_contains", "") in expected:
-                return "owner_approved"
-        elif mt == "calc_wording":
-            for p in rule.get("expected_contains_any", []):
-                if p in expected:
+        elif mt == "clause_change_exact":
+            old_frag = rule.get("old", "")
+            new_frag = rule.get("new", "")
+            if old_frag in expected:
+                replaced = expected.replace(old_frag, new_frag)
+                if normalize(replaced) == normalize(actual):
                     return "owner_approved"
-        elif mt == "number_words":
-            for p in rule.get("expected_contains_any", []):
-                if p in expected:
-                    return "owner_approved"
-        elif mt == "paragraph_alignment":
-            for p in rule.get("expected_contains_any", []):
-                if p in expected or p in actual:
-                    return "owner_approved"
-        elif mt == "whitespace_only":
-            # Check if the only difference is whitespace
-            exp_stripped = re.sub(r"\s+", "", expected)
-            act_stripped = re.sub(r"\s+", "", actual)
-            if exp_stripped == act_stripped:
-                return "owner_approved"
-        elif mt == "sentence_template":
-            for p in rule.get("expected_contains_any", []):
-                if p in expected or p in actual:
+                if new_frag in actual:
                     return "owner_approved"
         elif mt in ("table_replaced_with_image", "table_pending", "loop_table", "table_removed"):
-            idx = rule.get("table_index") or rule.get("table_indices", [None])[0]
+            idx = rule.get("table_index")
             if idx is not None and f"T{idx}" in location:
                 return "owner_approved"
             for ti in rule.get("table_indices", []):
                 if f"T{ti}" in location:
                     return "owner_approved"
-        elif mt == "sentence_template":
-            if "{{" in expected or "{{" in actual:
-                return "owner_approved"
-        elif mt == "table_cell_placeholder":
-            if "cell" in location or "(" in location:
-                if "{{" in expected or "{{" in actual:
-                    return "owner_approved"
-    # Check for T6 pending
-    for e in allowed.get("owner_approved", []):
-        if e.get("match_type") == "table_pending" and f"T{e.get('table_index')}" in location:
-            return "owner_approved"
     return "unexpected"
-
 
 def compare_paragraphs_seq(sample_doc: Document, rendered_doc: Document,
                            allowed: dict[str, Any]) -> list[dict[str, str]]:
@@ -426,8 +397,8 @@ def compare_paragraphs_seq(sample_doc: Document, rendered_doc: Document,
                     diffs.append({
                         "location": f"para {i}",
                         "kind": f"text_{tag}",
-                        "expected": s_text[:100],
-                        "actual": r_text[:100],
+                        "expected": s_text,
+                        "actual": r_text,
                         "classification": cls,
                     })
         if tag in ("replace", "insert"):
@@ -438,8 +409,8 @@ def compare_paragraphs_seq(sample_doc: Document, rendered_doc: Document,
                 diffs.append({
                     "location": f"para {j}",
                     "kind": f"text_{tag}",
-                    "expected": s_text[:100],
-                    "actual": r_text[:100],
+                    "expected": s_text,
+                    "actual": r_text,
                     "classification": cls,
                 })
     return diffs
@@ -521,7 +492,7 @@ def compare_tables_by_identity(sample_doc: Document, rendered_doc: Document,
                     if s_val != r_val:
                         cls = classify_diff(f"T{sidx} row '{s_label}' ({ci})", s_val, r_val, allowed)
                         diffs.append({"location": f"T{sidx} row '{s_label}' col {ci}", "kind": "cell",
-                                      "expected": s_val[:100], "actual": r_val[:100],
+                                      "expected": s_val, "actual": r_val,
                                       "classification": cls})
             else:
                 # Row missing in rendered
@@ -530,7 +501,7 @@ def compare_tables_by_identity(sample_doc: Document, rendered_doc: Document,
                     if s_val:
                         cls = classify_diff(f"T{sidx} row '{s_label}' col {ci}", s_val, "", allowed)
                         diffs.append({"location": f"T{sidx} row '{s_label}' col {ci}", "kind": "cell_missing",
-                                      "expected": s_val[:100], "actual": "",
+                                      "expected": s_val, "actual": "",
                                       "classification": cls})
     return diffs
 
