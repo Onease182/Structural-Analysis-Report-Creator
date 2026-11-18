@@ -1,6 +1,6 @@
 # Template Replacement Log
 
-Total replacements: **185**.
+Total replacements: **187**.
 
 | # | Location | Old text (preview) | Placeholder |
 |---|----------|-------------------|-------------|
@@ -179,13 +179,15 @@ Total replacements: **185**.
 | 173 | table T6 cell (11,1) | 3.175 | `{{ building.story_height_m }}` |
 | 174 | table T15 cell (17,2) | 3.175 | `{{ loads.slab_dead_load }}` |
 | 175 | table T15 | [88×8 slab design table] | `{{ figure.design.slab_sheet }} (image placeholder)` |
-| 176 | table T9 footer | [row 5] | `placeholders: ['totals.wi_kg', 'totals.wi_hik', 'totals.fi']` |
-| 177 | table T9 (loop) | [6 rows → 5 rows] | `for + template + endfor + 1 footer(s)` |
-| 178 | table T10 footer | [row 5] | `placeholders: ['totals.fi', 'totals.fi_di_x', 'totals.wi_di2_x']` |
-| 179 | table T10 footer | [row 6] | `placeholders: ['modal.rayleigh_period_x_s']` |
-| 180 | table T10 (loop) | [7 rows → 6 rows] | `for + template + endfor + 2 footer(s)` |
-| 181 | table T11 footer | [row 5] | `placeholders: ['totals.fi', 'totals.fi_di_y', 'totals.wi_di2_y']` |
-| 182 | table T11 footer | [row 6] | `placeholders: ['modal.rayleigh_period_y_s']` |
-| 183 | table T11 (loop) | [7 rows → 6 rows] | `for + template + endfor + 2 footer(s)` |
-| 184 | table T14 (loop) | [11 rows → 5 rows] | `for + template + endfor + 0 footer(s)` |
-| 185 | paragraphs idx=370..379 | Design of Staircases block | `{%p if building.has_staircase %}...{%p endif %}` |
+| 176 | hard-coded clause in paragraph | Ch(t)=Spectral Shape factor as per cl.{{ codes.clauses.spectral_shape_factor }}  | `Ch(t)=Spectral Shape factor as per cl.{{ codes.clauses.spectral_shape_factor }} ` |
+| 177 | hard-coded clause in paragraph | For Parallel System (Cl. 3.6.1) | `For Parallel System ({{ codes.clauses.load_combinations }})` |
+| 178 | table T9 footer | [row 5] | `placeholders: ['totals.wi_kg', 'totals.wi_hik', 'totals.fi']` |
+| 179 | table T9 (loop) | [6 rows → 5 rows] | `for + template + endfor + 1 footer(s)` |
+| 180 | table T10 footer | [row 5] | `placeholders: ['totals.fi', 'totals.fi_di_x', 'totals.wi_di2_x']` |
+| 181 | table T10 footer | [row 6] | `placeholders: ['modal.rayleigh_period_x_s']` |
+| 182 | table T10 (loop) | [7 rows → 6 rows] | `for + template + endfor + 2 footer(s)` |
+| 183 | table T11 footer | [row 5] | `placeholders: ['totals.fi', 'totals.fi_di_y', 'totals.wi_di2_y']` |
+| 184 | table T11 footer | [row 6] | `placeholders: ['modal.rayleigh_period_y_s']` |
+| 185 | table T11 (loop) | [7 rows → 6 rows] | `for + template + endfor + 2 footer(s)` |
+| 186 | table T14 (loop) | [11 rows → 5 rows] | `for + template + endfor + 0 footer(s)` |
+| 187 | paragraphs idx=370..379 | Design of Staircases block | `{%p if building.has_staircase %}...{%p endif %}` |

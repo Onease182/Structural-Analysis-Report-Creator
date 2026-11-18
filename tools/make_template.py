@@ -110,6 +110,18 @@ def validate_registry_strict(entries: list[dict[str, Any]]) -> None:
         )
 
 
+def check_pending_implementation(entries: list[dict[str, Any]], fail: bool = False) -> list[str]:
+    """Check for entries with status=pending_implementation.
+    Returns the list of pending keys. If fail=True, raises ValueError."""
+    pending = [e["key"] for e in entries if e.get("status") == "pending_implementation"]
+    if pending and fail:
+        raise ValueError(
+            f"Strict mode: entries with status=pending_implementation block the build: {pending}. "
+            f"These must be implemented before the template can be used in production."
+        )
+    return pending
+
+
 # ---------------------------------------------------------------------------
 # Build item-index -> (body_child_index, sub_type) mapping
 # ---------------------------------------------------------------------------
@@ -524,8 +536,14 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
     inv_items = load_inventory(args.inventory)
     rules = load_rules(args.rules)
 
-    # Strict-mode validation
+    # Strict-mode validation (clauses only — always enforced)
     validate_registry_strict(entries)
+
+    # Check for pending_implementation (warn during template generation,
+    # fail during strict builds)
+    pending = check_pending_implementation(entries, fail=False)
+    if pending:
+        print(f"[WARN] Pending implementation: {pending}. Strict builds will fail.", file=sys.stderr)
 
     # Load the sample DOCX
     doc = Document(str(args.input))
@@ -840,6 +858,36 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         tbl15_element.getparent().remove(tbl15_element)
         logger.log("table T15", "[88×8 slab design table]",
                    "{{ figure.design.slab_sheet }} (image placeholder)")
+
+    # --- Fix hard-coded clause references in ALL paragraphs ---
+    # Replace "4.1.4" → {{ codes.clauses.seismic_zoning_factor }}
+    # Replace "4.1.5" → {{ codes.clauses.importance_factor }}
+    # Replace "(Cl. 3.6.1)" → ({{ codes.clauses.load_combinations }})
+    # These appear in body paragraphs (the Ch(t) definition line and the
+    # "For Parallel System" paragraph), not just table cells.
+    PARA_CLAUSE_REPLACEMENTS = [
+        ("4.1.4", "{{ codes.clauses.seismic_zoning_factor }}"),
+        ("4.1.5", "{{ codes.clauses.importance_factor }}"),
+        ("(Cl. 3.6.1)", "({{ codes.clauses.load_combinations }})"),
+        ("Cl. 3.6.1", "{{ codes.clauses.load_combinations }}"),
+    ]
+    for child in body_children:
+        tag = child.tag.split("}")[-1]
+        if tag != "p":
+            continue
+        text = get_paragraph_text(child)
+        # Do NOT skip paragraphs that already have placeholders — they may
+        # also contain hard-coded clause values (e.g., the Ch(t) paragraph
+        # has {{ codes.clauses.spectral_shape_factor }} but also "4.1.4").
+        modified = False
+        new_text = text
+        for old_val, replacement in PARA_CLAUSE_REPLACEMENTS:
+            if old_val in new_text:
+                new_text = new_text.replace(old_val, replacement)
+                modified = True
+        if modified:
+            replace_paragraph_text_with_placeholder(child, new_text)
+            logger.log("hard-coded clause in paragraph", text[:80], new_text[:80])
 
     # --- Fix hard-coded clause references in table cells ---
     # Replace "4.1.4" → {{ codes.clauses.seismic_zoning_factor }}

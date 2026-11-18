@@ -557,6 +557,15 @@ def verify() -> int:
         failures.append(msg)
         print(f"    {msg}")
 
+    # Check for pending_implementation (reported as failure, does not block render)
+    pending = [e["key"] for e in entries if e.get("status") == "pending_implementation"]
+    if pending:
+        msg = f"FAIL: pending implementation blocks strict build: {pending}"
+        failures.append(msg)
+        print(f"    {msg}")
+    else:
+        print("    PASS: no pending implementation entries")
+
     # Replace anchored images using replace_pic (keeps anchor position/wrap/extent)
     # Note: replace_pic is queued and processed at save time. If the rId is
     # not in docxtpl's pic map, it raises ValueError at save. We skip

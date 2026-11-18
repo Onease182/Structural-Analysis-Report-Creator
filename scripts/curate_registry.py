@@ -763,6 +763,11 @@ def curate_entries(items: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], l
             item["figure_origin"] = origin["figure_origin"]
             item["generator"] = origin["generator"]
 
+        # T6 guard: mark the load assessment table as pending implementation.
+        # Strict mode must fail while this flag is set.
+        if new_key == "table.loads.load_assessment":
+            item["status"] = "pending_implementation"
+
         if new_key in seen_new_keys:
             raise ValueError(f"Duplicate new key after rename: {new_key}")
         seen_new_keys.add(new_key)

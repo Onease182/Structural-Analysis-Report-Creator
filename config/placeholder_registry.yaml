@@ -732,6 +732,7 @@ items:
   inventory_item_indices:
   - 288
   etabs_table_or_e2k_section: Load Patterns + Floor Loads
+  status: pending_implementation
 - key: figure.loads.wall_first
   description: 'Figure 6: Wall Load (First Floor in kN/m)'
   type: image

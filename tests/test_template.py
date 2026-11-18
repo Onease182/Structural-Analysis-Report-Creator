@@ -234,6 +234,30 @@ class TemplatePlaceholderTests(unittest.TestCase):
         # Should not raise
         validate_context_strict(ctx, entries)
 
+    def test_t6_guard_present(self) -> None:
+        """T6 (table.loads.load_assessment) must have status=pending_implementation."""
+        with REGISTRY.open("r", encoding="utf-8") as f:
+            entries = yaml.safe_load(f)["items"]
+        t6 = next(e for e in entries if e["key"] == "table.loads.load_assessment")
+        self.assertEqual(t6.get("status"), "pending_implementation",
+                         "T6 must have status=pending_implementation")
+
+    def test_clause_placeholders_in_template(self) -> None:
+        """The template must contain clause key placeholders for 4.1.4, 4.1.5,
+        and (Cl. 3.6.1) — they must not appear as hard-coded text."""
+        import re
+        cleaned = re.sub(r"\{\{[^}]+\}\}", "", self.full_text)
+        self.assertNotIn("4.1.4", cleaned,
+                         "Hard-coded '4.1.4' found in template — should be {{ codes.clauses.seismic_zoning_factor }}")
+        self.assertNotIn("4.1.5", cleaned,
+                         "Hard-coded '4.1.5' found in template — should be {{ codes.clauses.importance_factor }}")
+        self.assertNotIn("(Cl. 3.6.1)", cleaned,
+                         "Hard-coded '(Cl. 3.6.1)' found in template — should be ({{ codes.clauses.load_combinations }})")
+        # Verify the placeholders ARE present
+        self.assertIn("codes.clauses.seismic_zoning_factor", self.full_text)
+        self.assertIn("codes.clauses.importance_factor", self.full_text)
+        self.assertIn("codes.clauses.load_combinations", self.full_text)
+
 
 if __name__ == "__main__":
     unittest.main()
