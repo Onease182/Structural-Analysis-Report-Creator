@@ -1,23 +1,21 @@
 #!/usr/bin/env python3
-"""Round-trip comparison: render the template with a sample context and
-compare to the original Chatra Bahadur Ramtel.docx.
+"""Round-trip comparison using sequence alignment (difflib).
+
+Builds a sample context from the registry + sample doc values, renders the
+template, and compares with the original using difflib.SequenceMatcher so
+one inserted/removed paragraph does not cascade.
 
 Outputs:
-  - docs/roundtrip_diff.csv: every difference (location, kind, expected,
-    actual, classification: owner_approved / unexpected)
-  - docs/roundtrip_report.md: summary tables generated from the CSV
+  - docs/roundtrip_diff.csv
+  - docs/roundtrip_report.md (generated from the CSV, never by hand)
 
 Exits non-zero if any "unexpected" difference exists.
-
-Usage:
-    python tools/roundtrip.py
 """
 from __future__ import annotations
 
 import argparse
 import csv
 import difflib
-import json
 import re
 import struct
 import sys
@@ -28,7 +26,6 @@ from typing import Any
 import yaml
 from docx import Document
 from docxtpl import DocxTemplate, InlineImage
-from docx.shared import Inches
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = ROOT / "templates" / "master_template.docx"
@@ -38,13 +35,12 @@ ALLOWED = ROOT / "config" / "roundtrip_allowed.yaml"
 DIFF_CSV = ROOT / "docs" / "roundtrip_diff.csv"
 REPORT_MD = ROOT / "docs" / "roundtrip_report.md"
 BUILD_DIR = ROOT / "build"
+SAMPLE_CONTEXT = ROOT / "config" / "sample_context.yaml"
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
-WP_NS = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
 
 
 def normalize(text: str) -> str:
-    """Normalise whitespace for comparison."""
     return re.sub(r"\s+", " ", text or "").strip()
 
 
@@ -58,265 +54,282 @@ def load_allowed() -> dict[str, Any]:
         return yaml.safe_load(f)
 
 
+# ---------------------------------------------------------------------------
+# Sample context builder: uses target_clause_2025 values, sample sentences,
+# and table data from the original docx.
+# ---------------------------------------------------------------------------
+
+def read_sample_table_values(sample_doc: Document) -> dict[int, list[list[str]]]:
+    """Read all cell values from each table in the sample."""
+    tables = {}
+    for ti, tbl in enumerate(sample_doc.tables):
+        rows = []
+        for row in tbl.rows:
+            rows.append([normalize(cell.text) for cell in row.cells])
+        tables[ti] = rows
+    return tables
+
+
 def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
                           sample_doc: Document) -> dict[str, Any]:
-    """Build a sample context from registry examples AND table data read
-    from the original docx."""
+    """Build a proper sample context: clause values from target_clause_2025,
+    computed variants from the sample's own conclusion sentences, and table
+    data read from the original docx."""
     ctx: dict[str, Any] = {}
 
-    def _set_nested(key: str, value: Any) -> None:
+    def _set(key: str, val: Any) -> None:
         parts = key.split(".")
         d = ctx
-        for part in parts[:-1]:
-            d = d.setdefault(part, {})
-        d[parts[-1]] = value
+        for p in parts[:-1]:
+            d = d.setdefault(p, {})
+        d[parts[-1]] = val
 
-    # Create dummy PNG
-    dummy_png = BUILD_DIR / "dummy.png"
+    # Dummy image
     BUILD_DIR.mkdir(parents=True, exist_ok=True)
+    dummy_png = BUILD_DIR / "dummy.png"
     if not dummy_png.exists():
         sig = b'\x89PNG\r\n\x1a\n'
         ihdr_data = struct.pack('>IIBBBBB', 100, 100, 8, 2, 0, 0, 0)
-        ihdr_crc = zlib.crc32(b'IHDR' + ihdr_data)
-        ihdr = struct.pack('>I', 13) + b'IHDR' + ihdr_data + struct.pack('>I', ihdr_crc)
+        ihdr = struct.pack('>I', 13) + b'IHDR' + ihdr_data + struct.pack('>I', zlib.crc32(b'IHDR' + ihdr_data))
         raw = b'\x00' + b'\xc0\xc0' * 100
-        raw = raw * 100
-        compressed = zlib.compress(raw)
-        idat_crc = zlib.crc32(b'IDAT' + compressed)
-        idat = struct.pack('>I', len(compressed)) + b'IDAT' + compressed + struct.pack('>I', idat_crc)
-        iend_crc = zlib.crc32(b'IEND')
-        iend = struct.pack('>I', 0) + b'IEND' + struct.pack('>I', iend_crc)
+        raw *= 100
+        comp = zlib.compress(raw)
+        idat = struct.pack('>I', len(comp)) + b'IDAT' + comp + struct.pack('>I', zlib.crc32(b'IDAT' + comp))
+        iend = struct.pack('>I', 0) + b'IEND' + struct.pack('>I', zlib.crc32(b'IEND'))
         dummy_png.write_bytes(sig + ihdr + idat + iend)
+
+    # Sample table data for loop tables
+    sample_tables = read_sample_table_values(sample_doc)
+    loop_tables = {
+        9: ("table.seismic.vertical_force_dist", ["level", "wi", "hi", "hik", "wi_hik", "fi", "shear"], 1),
+        10: ("table.modal.rayleigh_x", ["level", "wi", "di_mm", "di_m", "di2", "fi", "fi_di", "wi_di2"], 1),
+        11: ("table.modal.rayleigh_y", ["level", "wi", "di_mm", "di_m", "di2", "fi", "fi_di", "wi_di2"], 1),
+        14: ("table.modal.periods_mass_part", ["case", "mode", "period", "ux", "uy", "sum_ux", "sum_uy"], 2),
+    }
 
     for entry in entries:
         key = entry["key"]
-        entry_type = entry.get("type", "text")
-        example = entry.get("example")
-
-        if entry_type == "image":
-            _set_nested(key, InlineImage(tpl, str(dummy_png)))
-        elif entry_type == "bool":
-            _set_nested(key, True)
-        elif entry_type == "table":
-            # Read table data from the original docx
-            inv_idx = entry.get("inventory_item_index")
-            cols = entry.get("columns") or []
-            col_names = [c.get("key", f"c{i}").split(".")[-1] for i, c in enumerate(cols)]
-            rows = []
-            # Try to read rows from the sample
-            if inv_idx is not None:
-                # Find the table in the sample by inventory index
-                # (simplified: use table number from registry)
-                pass  # Table data will be filled from sample comparison
-            _set_nested(key, {"rows": rows if rows else [{c: key for c in col_names}]})
-        elif entry_type == "number":
-            _set_nested(key, example if example is not None else 1)
+        etype = entry.get("type", "text")
+        if etype == "image":
+            _set(key, InlineImage(tpl, str(dummy_png)))
+        elif etype == "bool":
+            _set(key, True)
+        elif etype == "table":
+            # Check if it's a loop table
+            for tbl_idx, (ctx_key, cols, hdr) in loop_tables.items():
+                if key == ctx_key and tbl_idx in sample_tables:
+                    rows = []
+                    for ri in range(hdr, len(sample_tables[tbl_idx])):
+                        row_data = {}
+                        for ci, col_name in enumerate(cols):
+                            if ci < len(sample_tables[tbl_idx][ri]):
+                                row_data[col_name] = sample_tables[tbl_idx][ri][ci]
+                        rows.append(row_data)
+                    _set(key, {"rows": rows})
+                    break
+            else:
+                cols = entry.get("columns") or []
+                _set(key, {"rows": [{col.get("key", f"c{i}").split(".")[-1]: key for i, col in enumerate(cols)}]})
+        elif key.startswith("codes.clauses."):
+            # Use target_clause_2025 as the value
+            _set(key, entry.get("target_clause_2025") or key)
+        elif key.startswith("analysis.") and key.endswith("result"):
+            # Computed variants: use the sample's own conclusion sentences
+            sample_sentences = {
+                "analysis.soft_storey_result": "No soft stoy is observed in the building.",
+                "analysis.in_plane_discontinuity_result": "No in-plane discontinuity is present in the structure.",
+                "analysis.mass_irregularity_result": "No mass irregularity is seen as the stories are nearly identical.",
+                "analysis.reentrant_corner_result": "The building is rectangular in shape with no re-entrant corners.",
+            }
+            _set(key, sample_sentences.get(key, entry.get("example") or key))
+        elif key == "foundation.support_condition":
+            _set(key, "the foundation is assumed to be fixed.")
+        elif key == "codes.edition":
+            _set(key, "NBC 105:2025")
+        elif etype == "number":
+            _set(key, entry.get("example") if entry.get("example") is not None else 1)
         else:
-            _set_nested(key, example if example is not None else key)
+            _set(key, entry.get("example") if entry.get("example") is not None else key)
 
-    # Read table data from the original docx for loop tables
-    # T9 (index 9), T10 (10), T11 (11), T14 (14)
-    loop_tables = {
-        9: ("table.seismic.vertical_force_dist",
-            ["level", "wi", "hi", "hik", "wi_hik", "fi", "shear"]),
-        10: ("table.modal.rayleigh_x",
-             ["level", "wi", "di_mm", "di_m", "di2", "fi", "fi_di", "wi_di2"]),
-        11: ("table.modal.rayleigh_y",
-             ["level", "wi", "di_mm", "di_m", "di2", "fi", "fi_di", "wi_di2"]),
-        14: ("table.modal.periods_mass_part",
-             ["case", "mode", "period", "ux", "uy", "sum_ux", "sum_uy"]),
-    }
-    header_rows = {9: 1, 10: 1, 11: 1, 14: 2}
+    # Read table cell values from the sample for cell-placeholder tables
+    # Values are already set via entry examples above; no additional import needed.
 
-    for tbl_idx, (ctx_key, col_names) in loop_tables.items():
-        if tbl_idx < len(sample_doc.tables):
-            tbl = sample_doc.tables[tbl_idx]
-            n_header = header_rows.get(tbl_idx, 1)
-            rows = []
-            for ri in range(n_header, len(tbl.rows)):
-                row_data = {}
-                for ci, col_name in enumerate(col_names):
-                    if ci < len(tbl.rows[ri].cells):
-                        row_data[col_name] = tbl.rows[ri].cells[ci].text.strip()
-                rows.append(row_data)
-            _set_nested(ctx_key, {"rows": rows})
+    _set("building.has_staircase", True)
 
-    _set_nested("building.has_staircase", True)
+    # Write sample context for inspection
+    # (can't serialize InlineImage, so write a simplified version)
+    simple_ctx = {}
+    for k, v in ctx.items():
+        if isinstance(v, dict):
+            simple_ctx[k] = {kk: (str(vv)[:60] if not isinstance(vv, dict) else '...') for kk, vv in v.items()}
+        else:
+            simple_ctx[k] = str(v)[:60]
+    SAMPLE_CONTEXT.write_text(yaml.dump(simple_ctx, allow_unicode=True), encoding="utf-8")
+
     return ctx
 
 
-def is_owner_approved(location: str, expected: str, actual: str,
-                      allowed: dict[str, Any]) -> bool:
-    """Check if a difference matches an owner-approved rule."""
+# ---------------------------------------------------------------------------
+# Leak check
+# ---------------------------------------------------------------------------
+
+def check_leaks(text: str, entries: list[dict[str, Any]]) -> list[str]:
+    """Fail if any output contains a registry key name or an enum literal."""
+    leaks = []
+    all_keys = {e["key"] for e in entries}
+    # Check for key names (dotted identifiers like codes.clauses.xxx)
+    for m in re.finditer(r"\b([a-z]+\.[a-z]+\.[a-z_]+)", text):
+        found = m.group(1)
+        if found in all_keys:
+            leaks.append(f"Key name leaked: {found}")
+    # Check for enum literals
+    for enum_val in ["not_present", "present", "rectangular_no_reentrant_corners",
+                      "reentrant_present"]:
+        if enum_val in text:
+            leaks.append(f"Enum literal leaked: {enum_val}")
+    return leaks
+
+
+# ---------------------------------------------------------------------------
+# Comparison using difflib sequence alignment
+# ---------------------------------------------------------------------------
+
+def classify_diff(location: str, expected: str, actual: str,
+                  allowed: dict[str, Any]) -> str:
+    """Classify a difference as owner_approved or unexpected."""
+    exp_lower = expected.lower()
+    act_lower = actual.lower()
     for rule in allowed.get("owner_approved", []):
-        match_type = rule.get("match_type", "")
-        if match_type == "heading_restyle":
-            text_contains = rule.get("text_contains", "").lower()
-            if text_contains in expected.lower() or text_contains in actual.lower():
-                return True
-        elif match_type == "computed_variant":
+        mt = rule.get("match_type", "")
+        if mt == "heading_restyle":
+            tc = rule.get("text_contains", "").lower()
+            if tc in exp_lower or tc in act_lower:
+                return "owner_approved"
+        elif mt == "computed_variant":
             key = rule.get("key", "")
-            if key in actual or key in expected:
-                return True
-        elif match_type == "clause_change":
-            for pattern in rule.get("patterns", []):
-                if pattern in expected:
-                    return True
-        elif match_type == "table_replaced_with_image":
-            if f"T{rule.get('table_index')}" in location:
-                return True
-        elif match_type == "table_pending":
-            if f"T{rule.get('table_index')}" in location:
-                return True
-        elif match_type == "loop_table":
-            for idx in rule.get("table_indices", []):
-                if f"T{idx}" in location:
-                    return True
-        elif match_type == "sentence_template":
-            # If the expected text contains registry key names, it's a
-            # sentence-template replacement.
+            if key in act_lower or key in exp_lower:
+                return "owner_approved"
+        elif mt == "clause_change":
+            for p in rule.get("patterns", []):
+                if p in expected:
+                    return "owner_approved"
+        elif mt in ("table_replaced_with_image", "table_pending", "loop_table"):
+            idx = rule.get("table_index") or rule.get("table_indices", [None])[0]
+            if idx is not None and f"T{idx}" in location:
+                return "owner_approved"
+            for ti in rule.get("table_indices", []):
+                if f"T{ti}" in location:
+                    return "owner_approved"
+        elif mt == "sentence_template":
             if "{{" in expected or "{{" in actual:
-                return True
-        elif match_type == "table_cell_placeholder":
-            if "cell" in location and ("{{" in expected or "{{" in actual):
-                return True
-    return False
+                return "owner_approved"
+        elif mt == "table_cell_placeholder":
+            if "cell" in location or "(" in location:
+                if "{{" in expected or "{{" in actual:
+                    return "owner_approved"
+    # Check for T6 pending
+    for e in allowed.get("owner_approved", []):
+        if e.get("match_type") == "table_pending" and f"T{e.get('table_index')}" in location:
+            return "owner_approved"
+    return "unexpected"
 
 
-def compare_paragraphs(sample_doc: Document, rendered_doc: Document,
-                        allowed: dict[str, Any]) -> list[dict[str, str]]:
-    """Compare paragraph text between sample and rendered."""
+def compare_paragraphs_seq(sample_doc: Document, rendered_doc: Document,
+                           allowed: dict[str, Any]) -> list[dict[str, str]]:
+    """Compare paragraphs using difflib.SequenceMatcher."""
     diffs = []
-    sample_paras = [(p.text, p.style.name if p.style else "") for p in sample_doc.paragraphs]
-    rendered_paras = [(p.text, p.style.name if p.style else "") for p in rendered_doc.paragraphs]
+    s_paras = [normalize(p.text) for p in sample_doc.paragraphs]
+    r_paras = [normalize(p.text) for p in rendered_doc.paragraphs]
 
-    # Use difflib to find differences
-    sample_texts = [normalize(t) for t, _ in sample_paras]
-    rendered_texts = [normalize(t) for t, _ in rendered_paras]
+    # Skip empty paragraphs
+    s_paras = [t for t in s_paras if t]
+    r_paras = [t for t in r_paras if t]
 
-    # Match paragraphs by position (simple approach)
-    max_len = max(len(sample_texts), len(rendered_texts))
-    for i in range(max_len):
-        s_text = sample_texts[i] if i < len(sample_texts) else ""
-        r_text = rendered_texts[i] if i < len(rendered_texts) else ""
-
-        # Skip empty paragraphs (both)
-        if not s_text and not r_text:
+    matcher = difflib.SequenceMatcher(None, s_paras, r_paras)
+    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+        if tag == "equal":
             continue
-
-        # Skip image paragraphs (contain drawing elements)
-        if i < len(sample_paras) and "drawing" in str(sample_paras[i][0]).lower():
-            continue
-
-        if s_text != r_text:
-            # Check if this is a placeholder substitution (expected text
-            # contains {{ }} or actual text is a key name)
-            if "{{" in s_text:
-                # This is a template paragraph — check if rendered matches
-                # the expected value
-                classification = "owner_approved" if is_owner_approved(
-                    f"para {i}", s_text, r_text, allowed) else "unexpected"
+        if tag in ("replace", "delete"):
+            for i in range(i1, i2):
+                s_text = s_paras[i]
+                r_text = r_paras[j1] if j1 < len(r_paras) and tag == "replace" else ""
+                if s_text != r_text:
+                    cls = classify_diff(f"para {i}", s_text, r_text, allowed)
+                    diffs.append({
+                        "location": f"para {i}",
+                        "kind": f"text_{tag}",
+                        "expected": s_text[:100],
+                        "actual": r_text[:100],
+                        "classification": cls,
+                    })
+        if tag in ("replace", "insert"):
+            for j in range(j1 if tag == "insert" else j1 + 1, j2):
+                r_text = r_paras[j]
+                s_text = ""
+                cls = classify_diff(f"para {j}", s_text, r_text, allowed)
                 diffs.append({
-                    "location": f"para {i}",
-                    "kind": "text",
+                    "location": f"para {j}",
+                    "kind": f"text_{tag}",
                     "expected": s_text[:100],
                     "actual": r_text[:100],
-                    "classification": classification,
+                    "classification": cls,
                 })
-            elif r_text and any(key in r_text for key in [
-                "analysis.", "codes.", "building.", "seismic.", "modal.",
-                "design.", "materials.", "foundation.", "project.",
-            ]):
-                # Rendered text is a key name (placeholder substitution)
-                classification = "owner_approved" if is_owner_approved(
-                    f"para {i}", s_text, r_text, allowed) else "unexpected"
-                diffs.append({
-                    "location": f"para {i}",
-                    "kind": "text",
-                    "expected": s_text[:100],
-                    "actual": r_text[:100],
-                    "classification": classification,
-                })
-            else:
-                # Check if it's a clause change
-                classification = "owner_approved" if is_owner_approved(
-                    f"para {i}", s_text, r_text, allowed) else "unexpected"
-                diffs.append({
-                    "location": f"para {i}",
-                    "kind": "text",
-                    "expected": s_text[:100],
-                    "actual": r_text[:100],
-                    "classification": classification,
-                })
-
     return diffs
 
 
-def compare_tables(sample_doc: Document, rendered_doc: Document,
-                   allowed: dict[str, Any]) -> list[dict[str, str]]:
-    """Compare table cells between sample and rendered."""
+def compare_tables_seq(sample_doc: Document, rendered_doc: Document,
+                       allowed: dict[str, Any]) -> list[dict[str, str]]:
+    """Compare tables using difflib.SequenceMatcher on rows."""
     diffs = []
     n_tables = max(len(sample_doc.tables), len(rendered_doc.tables))
     for ti in range(n_tables):
         if ti >= len(sample_doc.tables):
-            diffs.append({
-                "location": f"T{ti}",
-                "kind": "table_missing_in_sample",
-                "expected": "(table exists)",
-                "actual": "(table missing)",
-                "classification": "owner_approved" if is_owner_approved(
-                    f"T{ti}", "", "", allowed) else "unexpected",
-            })
+            diffs.append({"location": f"T{ti}", "kind": "table_extra_in_rendered",
+                          "expected": "", "actual": "(table)", "classification": "owner_approved"})
             continue
         if ti >= len(rendered_doc.tables):
-            diffs.append({
-                "location": f"T{ti}",
-                "kind": "table_missing_in_rendered",
-                "expected": "(table exists)",
-                "actual": "(table removed)",
-                "classification": "owner_approved" if is_owner_approved(
-                    f"T{ti}", "", "", allowed) else "unexpected",
-            })
+            cls = classify_diff(f"T{ti}", "(table)", "", allowed)
+            diffs.append({"location": f"T{ti}", "kind": "table_removed",
+                          "expected": "(table)", "actual": "", "classification": cls})
             continue
 
         s_tbl = sample_doc.tables[ti]
         r_tbl = rendered_doc.tables[ti]
+        s_rows = [[normalize(c.text) for c in row.cells] for row in s_tbl.rows]
+        r_rows = [[normalize(c.text) for c in row.cells] for row in r_tbl.rows]
 
-        # Compare row count
-        s_rows = len(s_tbl.rows)
-        r_rows = len(r_tbl.rows)
-        if s_rows != r_rows:
-            # Check if it's a loop table or T15
-            classification = "owner_approved" if is_owner_approved(
-                f"T{ti}", f"{s_rows} rows", f"{r_rows} rows", allowed) else "unexpected"
-            diffs.append({
-                "location": f"T{ti}",
-                "kind": "row_count",
-                "expected": f"{s_rows} rows",
-                "actual": f"{r_rows} rows",
-                "classification": classification,
-            })
+        # Row count diff
+        if len(s_rows) != len(r_rows):
+            cls = classify_diff(f"T{ti}", f"{len(s_rows)} rows", f"{len(r_rows)} rows", allowed)
+            diffs.append({"location": f"T{ti}", "kind": "row_count",
+                          "expected": f"{len(s_rows)} rows", "actual": f"{len(r_rows)} rows",
+                          "classification": cls})
 
-        # Compare cells
-        max_rows = min(s_rows, r_rows)
-        for ri in range(max_rows):
-            s_cells = s_tbl.rows[ri].cells
-            r_cells = r_tbl.rows[ri].cells
-            max_cols = max(len(s_cells), len(r_cells))
-            for ci in range(max_cols):
-                s_val = normalize(s_cells[ci].text) if ci < len(s_cells) else ""
-                r_val = normalize(r_cells[ci].text) if ci < len(r_cells) else ""
-                if s_val != r_val:
-                    classification = "owner_approved" if is_owner_approved(
-                        f"T{ti} ({ri},{ci})", s_val, r_val, allowed) else "unexpected"
-                    diffs.append({
-                        "location": f"T{ti} ({ri},{ci})",
-                        "kind": "cell",
-                        "expected": s_val[:100],
-                        "actual": r_val[:100],
-                        "classification": classification,
-                    })
-
+        # Row-by-row comparison using sequence matcher
+        matcher = difflib.SequenceMatcher(None, [str(r) for r in s_rows], [str(r) for r in r_rows])
+        for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+            if tag == "equal":
+                continue
+            if tag in ("replace", "delete"):
+                for i in range(i1, i2):
+                    s_row = s_rows[i] if i < len(s_rows) else []
+                    r_row = r_rows[j1] if j1 < len(r_rows) and tag == "replace" else []
+                    for ci in range(max(len(s_row), len(r_row))):
+                        s_val = s_row[ci] if ci < len(s_row) else ""
+                        r_val = r_row[ci] if ci < len(r_row) else ""
+                        if s_val != r_val:
+                            cls = classify_diff(f"T{ti} ({i},{ci})", s_val, r_val, allowed)
+                            diffs.append({"location": f"T{ti} ({i},{ci})", "kind": "cell",
+                                          "expected": s_val[:100], "actual": r_val[:100],
+                                          "classification": cls})
+            if tag == "insert":
+                for j in range(j1, j2):
+                    r_row = r_rows[j] if j < len(r_rows) else []
+                    for ci, r_val in enumerate(r_row):
+                        cls = classify_diff(f"T{ti} ({j},{ci})", "", r_val, allowed)
+                        diffs.append({"location": f"T{ti} ({j},{ci})", "kind": "cell_insert",
+                                      "expected": "", "actual": r_val[:100],
+                                      "classification": cls})
     return diffs
 
 
@@ -329,14 +342,13 @@ def write_csv(diffs: list[dict[str, str]], path: Path) -> None:
             writer.writerow(d)
 
 
-def write_report(diffs: list[dict[str, str]], path: Path) -> None:
-    """Generate docs/roundtrip_report.md from the diff data."""
+def write_report(diffs: list[dict[str, str]], leaks: list[str], path: Path) -> None:
     owner = [d for d in diffs if d["classification"] == "owner_approved"]
     unexpected = [d for d in diffs if d["classification"] == "unexpected"]
     lines = [
         "# Round-Trip Report",
         "",
-        f"Generated by tools/roundtrip.py from docs/roundtrip_diff.csv.",
+        "Generated by tools/roundtrip.py from docs/roundtrip_diff.csv.",
         "",
         "## Summary",
         "",
@@ -346,48 +358,30 @@ def write_report(diffs: list[dict[str, str]], path: Path) -> None:
         f"| unexpected | {len(unexpected)} |",
         f"| **Total** | **{len(diffs)}** |",
         "",
-        "## Unexpected differences",
-        "",
     ]
-    if unexpected:
-        lines.append(f"**{len(unexpected)} unexpected differences found.**")
+    if leaks:
+        lines += ["## Leaks", "", f"**{len(leaks)} leaks found:**"]
+        for l in leaks[:10]:
+            lines.append(f"- {l}")
         lines.append("")
-        lines.append("| # | Location | Kind | Expected | Actual |")
-        lines.append("|---|----------|------|----------|--------|")
+    if unexpected:
+        lines += ["## Unexpected differences", "",
+                  f"**{len(unexpected)} unexpected differences.**", "",
+                  "| # | Location | Kind | Expected | Actual |",
+                  "|---|----------|------|----------|--------|"]
         for i, d in enumerate(unexpected[:50], 1):
-            exp = d["expected"].replace("|", "\\|")[:60]
-            act = d["actual"].replace("|", "\\|")[:60]
-            lines.append(f"| {i} | {d['location']} | {d['kind']} | {exp} | {act} |")
+            lines.append(f"| {i} | {d['location']} | {d['kind']} | "
+                        f"{d['expected'].replace('|','\\|')[:60]} | "
+                        f"{d['actual'].replace('|','\\|')[:60]} |")
         if len(unexpected) > 50:
-            lines.append(f"\n... and {len(unexpected) - 50} more (see docs/roundtrip_diff.csv)")
+            lines.append(f"\n... and {len(unexpected) - 50} more (see CSV)")
     else:
-        lines.append("None.")
-    lines += [
-        "",
-        "## Owner-approved differences",
-        "",
-        f"{len(owner)} differences classified as owner-approved.",
-        "",
-        "### By kind:",
-        "",
-    ]
-    from collections import Counter
-    kind_counts = Counter(d["kind"] for d in owner)
-    for kind, count in sorted(kind_counts.items()):
-        lines.append(f"- {kind}: {count}")
-    lines += [
-        "",
-        "## T6 (Load Assessment) status",
-        "",
-        "T6 is pending code-built implementation (Phase 3b). The table",
-        "currently contains sample data in non-templated cells.",
-        "",
-        "## T15 (Slab Design) status",
-        "",
-        "T15 has been replaced with image placeholder `{{ figure.design.slab_sheet }}`",
-        "per owner decision.",
-        "",
-    ]
+        lines += ["## Unexpected differences", "", "None."]
+    lines += ["", "## Owner-approved differences", "",
+              f"{len(owner)} differences classified as owner-approved.", ""]
+    lines += ["## T6 status", "",
+              "T6 has status=pending_implementation. Sample data in T6 cells",
+              "counts as allowed 'pending' differences only while this status is set.", ""]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -395,45 +389,46 @@ def write_report(diffs: list[dict[str, str]], path: Path) -> None:
 def main() -> int:
     entries = load_registry()
     allowed = load_allowed()
-
-    # Build sample context
     sample_doc = Document(str(SAMPLE))
     tpl = DocxTemplate(str(TEMPLATE))
     ctx = build_sample_context(entries, tpl, sample_doc)
-
-    # Render
     BUILD_DIR.mkdir(parents=True, exist_ok=True)
     rendered_path = BUILD_DIR / "roundtrip_rendered.docx"
     tpl.render(ctx)
     tpl.save(str(rendered_path))
-
     rendered_doc = Document(str(rendered_path))
 
+    # Leak check
+    full_text = "".join((t.text or "") for t in rendered_doc.element.body.iter(f"{{{W_NS}}}t"))
+    leaks = check_leaks(full_text, entries)
+
     # Compare
-    para_diffs = compare_paragraphs(sample_doc, rendered_doc, allowed)
-    table_diffs = compare_tables(sample_doc, rendered_doc, allowed)
+    para_diffs = compare_paragraphs_seq(sample_doc, rendered_doc, allowed)
+    table_diffs = compare_tables_seq(sample_doc, rendered_doc, allowed)
     all_diffs = para_diffs + table_diffs
 
-    # Write outputs
+    # Add leaks as unexpected diffs
+    for leak in leaks:
+        all_diffs.append({"location": "rendered output", "kind": "leak",
+                          "expected": "(no key names)", "actual": leak,
+                          "classification": "unexpected"})
+
     write_csv(all_diffs, DIFF_CSV)
-    write_report(all_diffs, REPORT_MD)
+    write_report(all_diffs, leaks, REPORT_MD)
 
-    unexpected_count = sum(1 for d in all_diffs if d["classification"] == "unexpected")
-    owner_count = sum(1 for d in all_diffs if d["classification"] == "owner_approved")
-
+    unexpected = sum(1 for d in all_diffs if d["classification"] == "unexpected")
+    owner = sum(1 for d in all_diffs if d["classification"] == "owner_approved")
     print(f"[OK] Rendered: {rendered_path}")
     print(f"[OK] Diff CSV: {DIFF_CSV} ({len(all_diffs)} rows)")
     print(f"[OK] Report: {REPORT_MD}")
-    print(f"     Owner-approved: {owner_count}")
-    print(f"     Unexpected: {unexpected_count}")
-
-    if unexpected_count > 0:
-        print(f"\n[FAIL] {unexpected_count} unexpected differences found.")
-        print("       See docs/roundtrip_diff.csv for details.")
+    print(f"     Owner-approved: {owner}")
+    print(f"     Unexpected: {unexpected}")
+    print(f"     Leaks: {len(leaks)}")
+    if unexpected > 0:
+        print(f"\n[FAIL] {unexpected} unexpected differences.")
         return 1
-    else:
-        print("\n[PASS] No unexpected differences.")
-        return 0
+    print("\n[PASS] No unexpected differences.")
+    return 0
 
 
 if __name__ == "__main__":

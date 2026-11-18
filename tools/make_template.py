@@ -762,58 +762,86 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
     # replace specific cells containing sample data with {{ key }}.
     # The mapping is (table_index_in_doc, row, col) -> registry key.
     TABLE_CELL_MAP: dict[tuple[int, int, int], str] = {
-        # T0 (Client details) — table index 0 in document.tables
-        (0, 1, 2): "client.owner_name",          # "Mr. Chatra Bahadur Ramtel"
-        (0, 2, 2): "building.location",          # "Damak"
-        (0, 3, 2): "building.occupancy",         # "Residential"
-        (0, 4, 2): "building.storeys_above_grade",  # "3"
-        # T2 (Building general info) — table index 2
-        (2, 0, 2): "building.location",          # "Damak"
-        (2, 1, 2): "building.storeys_above_grade",  # "3"
-        (2, 2, 2): "building.occupancy",         # "Residential"
-        (2, 3, 2): "building.story_height_m",    # "3.175"
-        (2, 4, 2): "building.span_x_m",          # span
-        (2, 5, 2): "building.span_y_m",          # span
-        (2, 6, 2): "building.primary_frame_material",  # "Reinforced Concrete"
-        (2, 7, 2): "building.infill_wall_material",    # "Brick"
-        # T3 (Element sizes) — table index 3
-        (3, 1, 1): "table.elements.col_desc",    # "355 mm X 355 mm"
-        (3, 1, 2): "materials.concrete_grade_used",  # "M20"
-        (3, 2, 1): "table.elements.beam_desc",   # beam size
+        # T0 (Client details) — derived from row label in col 1
+        (0, 1, 2): "client.owner_name",
+        (0, 2, 2): "building.location",
+        (0, 3, 2): "building.occupancy_class",
+        (0, 4, 2): "client.designer_name",
+        (0, 5, 2): "client.designer_nec_reg",
+        (0, 6, 2): "client.designer_contact",
+        (0, 7, 2): "client.consultant_name",
+        (0, 8, 2): "client.municipality_reg",
+        (0, 9, 2): "client.application_date",
+        # T2 (Building general info) — derived from row label in col 1
+        (2, 0, 2): "building.location",
+        (2, 1, 2): "building.storeys_above_grade",
+        (2, 2, 2): "building.num_storeys_analysed",
+        (2, 3, 2): "building.num_basements",
+        (2, 4, 2): "building.height_ground_floor_m",
+        (2, 5, 2): "building.height_typical_floor_m",
+        (2, 6, 2): "building.total_height_m",
+        (2, 7, 2): "building.height_period_m",
+        (2, 8, 2): "building.occupancy_class",
+        # T3 (Element sizes) — col 1 = description, col 2 = grade
+        (3, 1, 1): "table.elements.col_desc",
+        (3, 1, 2): "materials.concrete_grade_used",
+        (3, 2, 1): "table.elements.beam_desc",
         (3, 2, 2): "materials.concrete_grade_used",
-        (3, 3, 1): "table.elements.slab_desc",   # slab thickness
+        (3, 3, 1): "table.elements.stair_desc",
         (3, 3, 2): "materials.concrete_grade_used",
-        (3, 4, 1): "table.elements.wall_desc",   # wall thickness
-        (3, 5, 1): "table.elements.stair_desc",  # staircase
-        # T4 (Structural system & foundation) — table index 4
-        (4, 0, 2): "structural.system_type",     # "Moment Resisting Frames"
-        (4, 1, 2): "foundation.type",            # "Combined Footing"
-        (4, 2, 2): "slab.type",                  # "Conventional"
-        # T8 (Empirical period) — table index 8
-        (8, 0, 5): "building.total_height_m",    # "9.525"
-        (8, 5, 3): "modal.empirical_period_s",   # "0.508"
-        # T12 (Seismic design parameters) — table index 12
-        (12, 0, 2): "modal.empirical_period_s",  # "0.508"
-        (12, 5, 1): "seismic.alpha",              # "2.5"
-        (12, 5, 3): "seismic.distribution_exponent_k",  # "1.004"
-        (12, 6, 2): "seismic.spectral_shape_factor_cht",  # "2.50"
-        (12, 7, 1): "building.location",          # "Damak"
-        (12, 7, 3): "seismic.zone_factor_z",     # "0.35"
-        (12, 10, 3): "seismic.elastic_site_spectra_c",   # "0.875"
-        (12, 11, 3): "seismic.elastic_site_spectra_cs",  # "0.175"
-        (12, 13, 3): "structural.system_type",    # "Reinforced Concrete..."
-        (12, 14, 3): "seismic.response_modification_factor_rmu",  # "4"
-        # T13 (Overstrength factors) — table index 13
-        (13, 0, 1): "design.overstrength_ultimate",  # "1.5"
-        (13, 1, 1): "design.overstrength_serviceability",  # "1.25"
-        # T16 (Beam deflection check) — table index 16
-        (16, 1, 1): "table.design.beam_boundary",    # "Continuous"
-        # T6 (Load assessment) — irregular table, but this specific cell
-        # has the story height which is a known variable.
-        (6, 11, 1): "building.story_height_m",       # "3.175"
-        # T15 (Slab design) — irregular table; this cell has the slab dead
-        # load which is a calculated value.
-        (15, 17, 2): "loads.slab_dead_load",          # "3.175"
+        (3, 4, 1): "table.elements.slab_desc",
+        (3, 4, 2): "materials.concrete_grade_used",
+        (3, 5, 1): "table.elements.foundation_desc",
+        (3, 5, 2): "materials.concrete_grade_used",
+        (3, 5, 3): "foundation.soil_bearing",
+        # T4 (Structural system & foundation)
+        (4, 0, 2): "structural.system_type",
+        (4, 1, 2): "foundation.type",
+        (4, 2, 2): "slab.type",
+        # T8 (Empirical period)
+        (8, 0, 5): "building.total_height_m",
+        (8, 1, 1): "structural.system_type",
+        (8, 2, 1): "seismic.time_coefficient_kt",
+        (8, 3, 4): "modal.empirical_period_unamplified_s",
+        (8, 5, 3): "modal.empirical_period_s",
+        # T12 (Seismic design parameters)
+        (12, 0, 2): "modal.empirical_period_s",
+        (12, 2, 2): "seismic.site_soil_category",
+        (12, 3, 3): "seismic.tc",
+        (12, 4, 2): "seismic.soil_class",
+        (12, 5, 1): "seismic.alpha",
+        (12, 5, 3): "seismic.distribution_exponent_k",
+        (12, 6, 2): "seismic.spectral_shape_factor_cht",
+        (12, 7, 1): "building.location",
+        (12, 7, 3): "seismic.zone_factor_z",
+        (12, 8, 2): "seismic.structural_type",
+        (12, 9, 2): "seismic.importance_factor_i",
+        (12, 10, 3): "seismic.elastic_site_spectra_c",
+        (12, 11, 3): "seismic.elastic_site_spectra_cs",
+        (12, 13, 3): "structural.system_type",
+        (12, 14, 3): "seismic.response_modification_factor_rmu",
+        # T13 (Overstrength factors)
+        (13, 0, 1): "design.overstrength_ultimate",
+        (13, 1, 1): "design.overstrength_serviceability",
+        (13, 2, 1): "seismic.hsc_uls",
+        (13, 3, 1): "seismic.hsc_sls",
+        # T16 (Beam deflection check)
+        (16, 1, 1): "table.design.beam_boundary",
+        (16, 2, 1): "table.design.beam_effective_span",
+        (16, 3, 1): "table.design.beam_overall_depth",
+        (16, 4, 1): "table.design.beam_effective_depth",
+        (16, 5, 1): "table.design.beam_basic_ld_ratio",
+        (16, 6, 1): "table.design.beam_ast_req",
+        (16, 7, 1): "table.design.beam_ast_prov",
+        (16, 8, 1): "table.design.beam_pt",
+        (16, 9, 1): "table.design.beam_fs",
+        (16, 10, 1): "table.design.beam_mod_factor",
+        (16, 11, 1): "table.design.beam_permissible_ld",
+        (16, 12, 1): "table.design.beam_provided_ld",
+        (16, 13, 1): "table.design.beam_check_result",
+        # T6 (Load assessment) — specific cell with story height
+        (6, 11, 1): "building.story_height_m",
+        # T15 removed → image placeholder (no cell map needed)
     }
 
     # Apply cell placeholders

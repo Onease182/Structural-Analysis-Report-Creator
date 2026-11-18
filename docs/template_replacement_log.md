@@ -1,6 +1,6 @@
 # Template Replacement Log
 
-Total replacements: **187**.
+Total replacements: **217**.
 
 | # | Location | Old text (preview) | Placeholder |
 |---|----------|-------------------|-------------|
@@ -140,54 +140,84 @@ Total replacements: **187**.
 | 134 | image idx=688 | [image #688] | `{{ figure.elements.rebar_story3 }}` |
 | 135 | table T0 cell (1,2) | Mr. Chatra Bahadur Ramtel | `{{ client.owner_name }}` |
 | 136 | table T0 cell (2,2) | Damak | `{{ building.location }}` |
-| 137 | table T0 cell (3,2) | Residential | `{{ building.occupancy }}` |
-| 138 | table T0 cell (4,2) | Mr. Sachin KC | `{{ building.storeys_above_grade }}` |
-| 139 | table T2 cell (0,2) | Damak | `{{ building.location }}` |
-| 140 | table T2 cell (1,2) | 3 | `{{ building.storeys_above_grade }}` |
-| 141 | table T2 cell (2,2) | 3 | `{{ building.occupancy }}` |
-| 142 | table T2 cell (3,2) | 0 | `{{ building.story_height_m }}` |
-| 143 | table T2 cell (4,2) | 3.175 meters | `{{ building.span_x_m }}` |
-| 144 | table T2 cell (5,2) | 3.175 meters | `{{ building.span_y_m }}` |
-| 145 | table T2 cell (6,2) | 9.525 meters | `{{ building.primary_frame_material }}` |
-| 146 | table T2 cell (7,2) | 9.525 meters | `{{ building.infill_wall_material }}` |
-| 147 | table T3 cell (1,1) | 355 mm X 355 mm | `{{ table.elements.col_desc }}` |
-| 148 | table T3 cell (1,2) | M20 | `{{ materials.concrete_grade_used }}` |
-| 149 | table T3 cell (2,1) | 250 mm X 430 mm | `{{ table.elements.beam_desc }}` |
-| 150 | table T3 cell (2,2) | M20 | `{{ materials.concrete_grade_used }}` |
-| 151 | table T3 cell (3,1) | 150 mm | `{{ table.elements.slab_desc }}` |
-| 152 | table T3 cell (3,2) | M20 | `{{ materials.concrete_grade_used }}` |
-| 153 | table T3 cell (4,1) | 125 mm | `{{ table.elements.wall_desc }}` |
-| 154 | table T3 cell (5,1) | Combined Footing | `{{ table.elements.stair_desc }}` |
-| 155 | table T4 cell (0,2) | Moment Resisting Frames | `{{ structural.system_type }}` |
-| 156 | table T4 cell (1,2) | Combined Footing | `{{ foundation.type }}` |
-| 157 | table T4 cell (2,2) | Conventional | `{{ slab.type }}` |
-| 158 | table T8 cell (0,5) | 9.525 | `{{ building.total_height_m }}` |
-| 159 | table T8 cell (5,3) | 0.508 | `{{ modal.empirical_period_s }}` |
-| 160 | table T12 cell (0,2) | 0.508 | `{{ modal.empirical_period_s }}` |
-| 161 | table T12 cell (5,1) | 2.5 | `{{ seismic.alpha }}` |
-| 162 | table T12 cell (5,3) | 1.004 | `{{ seismic.distribution_exponent_k }}` |
-| 163 | table T12 cell (6,2) | 2.50 | `{{ seismic.spectral_shape_factor_cht }}` |
-| 164 | table T12 cell (7,1) | Damak | `{{ building.location }}` |
-| 165 | table T12 cell (7,3) | 0.35 | `{{ seismic.zone_factor_z }}` |
-| 166 | table T12 cell (10,3) | 0.875 | `{{ seismic.elastic_site_spectra_c }}` |
-| 167 | table T12 cell (11,3) | 0.175 | `{{ seismic.elastic_site_spectra_cs }}` |
-| 168 | table T12 cell (13,3) | Reinforced Concrete Moment Resisting Frame | `{{ structural.system_type }}` |
-| 169 | table T12 cell (14,3) | 4 | `{{ seismic.response_modification_factor_rmu }}` |
-| 170 | table T13 cell (0,1) | 1.5 | `{{ design.overstrength_ultimate }}` |
-| 171 | table T13 cell (1,1) | 1.25 | `{{ design.overstrength_serviceability }}` |
-| 172 | table T16 cell (1,1) | Continuous | `{{ table.design.beam_boundary }}` |
-| 173 | table T6 cell (11,1) | 3.175 | `{{ building.story_height_m }}` |
-| 174 | table T15 cell (17,2) | 3.175 | `{{ loads.slab_dead_load }}` |
-| 175 | table T15 | [88×8 slab design table] | `{{ figure.design.slab_sheet }} (image placeholder)` |
-| 176 | hard-coded clause in paragraph | Ch(t)=Spectral Shape factor as per cl.{{ codes.clauses.spectral_shape_factor }}  | `Ch(t)=Spectral Shape factor as per cl.{{ codes.clauses.spectral_shape_factor }} ` |
-| 177 | hard-coded clause in paragraph | For Parallel System (Cl. 3.6.1) | `For Parallel System ({{ codes.clauses.load_combinations }})` |
-| 178 | table T9 footer | [row 5] | `placeholders: ['totals.wi_kg', 'totals.wi_hik', 'totals.fi']` |
-| 179 | table T9 (loop) | [6 rows → 5 rows] | `for + template + endfor + 1 footer(s)` |
-| 180 | table T10 footer | [row 5] | `placeholders: ['totals.fi', 'totals.fi_di_x', 'totals.wi_di2_x']` |
-| 181 | table T10 footer | [row 6] | `placeholders: ['modal.rayleigh_period_x_s']` |
-| 182 | table T10 (loop) | [7 rows → 6 rows] | `for + template + endfor + 2 footer(s)` |
-| 183 | table T11 footer | [row 5] | `placeholders: ['totals.fi', 'totals.fi_di_y', 'totals.wi_di2_y']` |
-| 184 | table T11 footer | [row 6] | `placeholders: ['modal.rayleigh_period_y_s']` |
-| 185 | table T11 (loop) | [7 rows → 6 rows] | `for + template + endfor + 2 footer(s)` |
-| 186 | table T14 (loop) | [11 rows → 5 rows] | `for + template + endfor + 0 footer(s)` |
-| 187 | paragraphs idx=370..379 | Design of Staircases block | `{%p if building.has_staircase %}...{%p endif %}` |
+| 137 | table T0 cell (3,2) | Residential | `{{ building.occupancy_class }}` |
+| 138 | table T0 cell (4,2) | Mr. Sachin KC | `{{ client.designer_name }}` |
+| 139 | table T0 cell (5,2) | 131xx”Civil A” | `{{ client.designer_nec_reg }}` |
+| 140 | table T0 cell (6,2) | 9841xxxxxxx | `{{ client.designer_contact }}` |
+| 141 | table T0 cell (7,2) | CivoraX Infra | `{{ client.consultant_name }}` |
+| 142 | table T0 cell (8,2) | Xxxx | `{{ client.municipality_reg }}` |
+| 143 | table T0 cell (9,2) | 2026/xx/xx | `{{ client.application_date }}` |
+| 144 | table T2 cell (0,2) | Damak | `{{ building.location }}` |
+| 145 | table T2 cell (1,2) | 3 | `{{ building.storeys_above_grade }}` |
+| 146 | table T2 cell (2,2) | 3 | `{{ building.num_storeys_analysed }}` |
+| 147 | table T2 cell (3,2) | 0 | `{{ building.num_basements }}` |
+| 148 | table T2 cell (4,2) | 3.175 meters | `{{ building.height_ground_floor_m }}` |
+| 149 | table T2 cell (5,2) | 3.175 meters | `{{ building.height_typical_floor_m }}` |
+| 150 | table T2 cell (6,2) | 9.525 meters | `{{ building.total_height_m }}` |
+| 151 | table T2 cell (7,2) | 9.525 meters | `{{ building.height_period_m }}` |
+| 152 | table T2 cell (8,2) | Residential Building | `{{ building.occupancy_class }}` |
+| 153 | table T3 cell (1,1) | 355 mm X 355 mm | `{{ table.elements.col_desc }}` |
+| 154 | table T3 cell (1,2) | M20 | `{{ materials.concrete_grade_used }}` |
+| 155 | table T3 cell (2,1) | 250 mm X 430 mm | `{{ table.elements.beam_desc }}` |
+| 156 | table T3 cell (2,2) | M20 | `{{ materials.concrete_grade_used }}` |
+| 157 | table T3 cell (3,1) | 150 mm | `{{ table.elements.stair_desc }}` |
+| 158 | table T3 cell (3,2) | M20 | `{{ materials.concrete_grade_used }}` |
+| 159 | table T3 cell (4,1) | 125 mm | `{{ table.elements.slab_desc }}` |
+| 160 | table T3 cell (4,2) | M20 | `{{ materials.concrete_grade_used }}` |
+| 161 | table T3 cell (5,1) | Combined Footing | `{{ table.elements.foundation_desc }}` |
+| 162 | table T3 cell (5,2) | M20 | `{{ materials.concrete_grade_used }}` |
+| 163 | table T3 cell (5,3) | Soil Bearing Capacity is taken as 120 kN/m2 | `{{ foundation.soil_bearing }}` |
+| 164 | table T4 cell (0,2) | Moment Resisting Frames | `{{ structural.system_type }}` |
+| 165 | table T4 cell (1,2) | Combined Footing | `{{ foundation.type }}` |
+| 166 | table T4 cell (2,2) | Conventional | `{{ slab.type }}` |
+| 167 | table T8 cell (0,5) | 9.525 | `{{ building.total_height_m }}` |
+| 168 | table T8 cell (1,1) | Moment Resisting Concrete Frame | `{{ structural.system_type }}` |
+| 169 | table T8 cell (2,1) | 0.075 | `{{ seismic.time_coefficient_kt }}` |
+| 170 | table T8 cell (3,4) | 0.407 | `{{ modal.empirical_period_unamplified_s }}` |
+| 171 | table T8 cell (5,3) | 0.508 | `{{ modal.empirical_period_s }}` |
+| 172 | table T12 cell (0,2) | 0.508 | `{{ modal.empirical_period_s }}` |
+| 173 | table T12 cell (2,2) | Very Soft Soil | `{{ seismic.site_soil_category }}` |
+| 174 | table T12 cell (3,3) | 1 | `{{ seismic.tc }}` |
+| 175 | table T12 cell (4,2) | C | `{{ seismic.soil_class }}` |
+| 176 | table T12 cell (5,1) | 2.5 | `{{ seismic.alpha }}` |
+| 177 | table T12 cell (5,3) | 1.004 | `{{ seismic.distribution_exponent_k }}` |
+| 178 | table T12 cell (6,2) | 2.50 | `{{ seismic.spectral_shape_factor_cht }}` |
+| 179 | table T12 cell (7,1) | Damak | `{{ building.location }}` |
+| 180 | table T12 cell (7,3) | 0.35 | `{{ seismic.zone_factor_z }}` |
+| 181 | table T12 cell (8,2) | Ordinary Structures | `{{ seismic.structural_type }}` |
+| 182 | table T12 cell (9,2) | 1 | `{{ seismic.importance_factor_i }}` |
+| 183 | table T12 cell (10,3) | 0.875 | `{{ seismic.elastic_site_spectra_c }}` |
+| 184 | table T12 cell (11,3) | 0.175 | `{{ seismic.elastic_site_spectra_cs }}` |
+| 185 | table T12 cell (13,3) | Reinforced Concrete Moment Resisting Frame | `{{ structural.system_type }}` |
+| 186 | table T12 cell (14,3) | 4 | `{{ seismic.response_modification_factor_rmu }}` |
+| 187 | table T13 cell (0,1) | 1.5 | `{{ design.overstrength_ultimate }}` |
+| 188 | table T13 cell (1,1) | 1.25 | `{{ design.overstrength_serviceability }}` |
+| 189 | table T13 cell (2,1) | 0.146 | `{{ seismic.hsc_uls }}` |
+| 190 | table T13 cell (3,1) | 0.140 | `{{ seismic.hsc_sls }}` |
+| 191 | table T16 cell (1,1) | Continuous | `{{ table.design.beam_boundary }}` |
+| 192 | table T16 cell (2,1) | 4191 mm | `{{ table.design.beam_effective_span }}` |
+| 193 | table T16 cell (3,1) | 430 mm | `{{ table.design.beam_overall_depth }}` |
+| 194 | table T16 cell (4,1) | 395 mm | `{{ table.design.beam_effective_depth }}` |
+| 195 | table T16 cell (5,1) | 26 | `{{ table.design.beam_basic_ld_ratio }}` |
+| 196 | table T16 cell (6,1) | 186 mm² | `{{ table.design.beam_ast_req }}` |
+| 197 | table T16 cell (7,1) | 226 mm² | `{{ table.design.beam_ast_prov }}` |
+| 198 | table T16 cell (8,1) | 0.229 % | `{{ table.design.beam_pt }}` |
+| 199 | table T16 cell (9,1) | 239 N/mm² | `{{ table.design.beam_fs }}` |
+| 200 | table T16 cell (10,1) | ≈ 1.68 | `{{ table.design.beam_mod_factor }}` |
+| 201 | table T16 cell (11,1) | 43.7 | `{{ table.design.beam_permissible_ld }}` |
+| 202 | table T16 cell (12,1) | 10.61 | `{{ table.design.beam_provided_ld }}` |
+| 203 | table T16 cell (13,1) | 10.61 < 43.7, OK | `{{ table.design.beam_check_result }}` |
+| 204 | table T6 cell (11,1) | 3.175 | `{{ building.story_height_m }}` |
+| 205 | table T15 | [88×8 slab design table] | `{{ figure.design.slab_sheet }} (image placeholder)` |
+| 206 | hard-coded clause in paragraph | Ch(t)=Spectral Shape factor as per cl.{{ codes.clauses.spectral_shape_factor }}  | `Ch(t)=Spectral Shape factor as per cl.{{ codes.clauses.spectral_shape_factor }} ` |
+| 207 | hard-coded clause in paragraph | For Parallel System (Cl. 3.6.1) | `For Parallel System ({{ codes.clauses.load_combinations }})` |
+| 208 | table T9 footer | [row 5] | `placeholders: ['totals.wi_kg', 'totals.wi_hik', 'totals.fi']` |
+| 209 | table T9 (loop) | [6 rows → 5 rows] | `for + template + endfor + 1 footer(s)` |
+| 210 | table T10 footer | [row 5] | `placeholders: ['totals.fi', 'totals.fi_di_x', 'totals.wi_di2_x']` |
+| 211 | table T10 footer | [row 6] | `placeholders: ['modal.rayleigh_period_x_s']` |
+| 212 | table T10 (loop) | [7 rows → 6 rows] | `for + template + endfor + 2 footer(s)` |
+| 213 | table T11 footer | [row 5] | `placeholders: ['totals.fi', 'totals.fi_di_y', 'totals.wi_di2_y']` |
+| 214 | table T11 footer | [row 6] | `placeholders: ['modal.rayleigh_period_y_s']` |
+| 215 | table T11 (loop) | [7 rows → 6 rows] | `for + template + endfor + 2 footer(s)` |
+| 216 | table T14 (loop) | [11 rows → 5 rows] | `for + template + endfor + 0 footer(s)` |
+| 217 | paragraphs idx=370..379 | Design of Staircases block | `{%p if building.has_staircase %}...{%p endif %}` |

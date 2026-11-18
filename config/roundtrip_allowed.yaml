@@ -53,6 +53,11 @@ owner_approved:
     table_index: 15
     replacement_key: figure.design.slab_sheet
 
+  # T15 table count change
+  - description: "T15 table removed (replaced by image)"
+    match_type: table_removed
+    table_index: 15
+
   # T6 pending implementation (still contains sample data)
   - description: "T6 load assessment table pending code-built implementation"
     match_type: table_pending

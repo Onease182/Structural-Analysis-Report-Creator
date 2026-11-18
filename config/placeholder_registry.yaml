@@ -3718,3 +3718,388 @@ items:
   example: null
   figure_origin: user_supplied
   generator: null
+- key: client.designer_name
+  description: Name of the structural designer
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: Mr. Sachin KC
+- key: client.designer_nec_reg
+  description: NEC registration number of the structural designer
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 131xx"Civil A"
+- key: client.designer_contact
+  description: Contact number of the structural designer
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 9841xxxxxxx
+- key: client.municipality_reg
+  description: Municipality registration/application number
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: Xxxx
+- key: client.application_date
+  description: Date of application in municipality
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 2026/xx/xx
+- key: building.occupancy_class
+  description: Occupancy class (e.g. Residential)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: Residential
+- key: building.occupancy_sentence
+  description: IS 875 live-load sentence for the occupancy type
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: The live loads for the floor and roof are determined using IS 875 part 2, as referenced by
+    the National Building Code.
+- key: building.num_storeys_analysed
+  description: Number of storeys considered in the design
+  type: number
+  unit: storey
+  format:
+    decimals: 0
+  source: e2k
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 3
+  etabs_table_or_e2k_section: $STORYDATA
+- key: building.num_basements
+  description: Number of basements
+  type: number
+  unit: null
+  format:
+    decimals: 0
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 0
+- key: building.height_ground_floor_m
+  description: Height of ground floor (m)
+  type: number
+  unit: m
+  format:
+    decimals: 3
+  source: e2k
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 3.175
+  etabs_table_or_e2k_section: $STORYDATA
+- key: building.height_typical_floor_m
+  description: Height of typical floor (m)
+  type: number
+  unit: m
+  format:
+    decimals: 3
+  source: e2k
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 3.175
+  etabs_table_or_e2k_section: $STORYDATA
+- key: building.height_period_m
+  description: Height considered for fundamental time period (m)
+  type: number
+  unit: m
+  format:
+    decimals: 3
+  source: e2k
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 9.525
+  etabs_table_or_e2k_section: $STORYDATA
+- key: table.elements.foundation_desc
+  description: Foundation description
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: Combined Footing
+  etabs_table_or_e2k_section: null
+- key: foundation.soil_bearing
+  description: Soil bearing capacity (kN/m2)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: Soil Bearing Capacity is taken as 120 kN/m2
+- key: seismic.time_coefficient_kt
+  description: Time coefficient kt
+  type: number
+  unit: null
+  format:
+    decimals: 3
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 0.075
+  etabs_table_or_e2k_section: null
+- key: modal.empirical_period_unamplified_s
+  description: Unamplified approximate fundamental time period (s)
+  type: number
+  unit: s
+  format:
+    decimals: 3
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 0.407
+  etabs_table_or_e2k_section: null
+- key: seismic.site_soil_category
+  description: Site soil category
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: Very Soft Soil
+- key: seismic.tc
+  description: Tc value
+  type: number
+  unit: null
+  format:
+    decimals: 1
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 1
+  etabs_table_or_e2k_section: null
+- key: seismic.structural_type
+  description: Structural type for seismic parameters
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: Ordinary Structures
+- key: seismic.hsc_uls
+  description: Horizontal seismic coefficient for ULS
+  type: number
+  unit: null
+  format:
+    decimals: 3
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 0.146
+  etabs_table_or_e2k_section: null
+- key: seismic.hsc_sls
+  description: Horizontal seismic coefficient for SLS
+  type: number
+  unit: null
+  format:
+    decimals: 3
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 0.14
+  etabs_table_or_e2k_section: null
+- key: table.design.beam_effective_span
+  description: Effective span of beam (mm)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 4191 mm
+  etabs_table_or_e2k_section: null
+- key: table.design.beam_overall_depth
+  description: Overall depth of beam (mm)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 430 mm
+  etabs_table_or_e2k_section: null
+- key: table.design.beam_effective_depth
+  description: Effective depth of beam (mm)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 395 mm
+  etabs_table_or_e2k_section: null
+- key: table.design.beam_basic_ld_ratio
+  description: Basic L/d ratio
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: '26'
+  etabs_table_or_e2k_section: null
+- key: table.design.beam_ast_req
+  description: Required steel area (bottom, ETABS)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: etabs_api
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 186 mm²
+  etabs_table_or_e2k_section: Beam Design Output
+- key: table.design.beam_ast_prov
+  description: Provided steel area
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 226 mm²
+- key: table.design.beam_pt
+  description: Tension reinforcement percentage
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 0.229 %
+  etabs_table_or_e2k_section: null
+- key: table.design.beam_fs
+  description: fs value (N/mm²)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 239 N/mm²
+  etabs_table_or_e2k_section: null
+- key: table.design.beam_mod_factor
+  description: Modification factor
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: ≈ 1.68
+  etabs_table_or_e2k_section: null
+- key: table.design.beam_permissible_ld
+  description: Permissible L/d
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: '43.7'
+  etabs_table_or_e2k_section: null
+- key: table.design.beam_provided_ld
+  description: Provided L/d
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: '10.61'
+  etabs_table_or_e2k_section: null
+- key: table.design.beam_check_result
+  description: Beam deflection check result
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 10.61 < 43.7, OK
+  etabs_table_or_e2k_section: null

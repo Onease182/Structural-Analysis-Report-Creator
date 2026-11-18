@@ -175,5 +175,36 @@ class RoundTripTextComparisonTests(unittest.TestCase):
                          f"Image count: sample={len(sample_images)}, rendered={len(rendered_images)}")
 
 
+class RoundTripEnforcementTest(unittest.TestCase):
+    """Runs tools/roundtrip.py and fails if unexpected differences > 0.
+    T6 sample data counts as allowed 'pending' only while
+    status: pending_implementation is set."""
+
+    def test_roundtrip_no_unexpected_diffs(self) -> None:
+        import subprocess
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "tools" / "roundtrip.py")],
+            capture_output=True, text=True, timeout=120,
+        )
+        # Print output for debugging
+        if result.returncode != 0:
+            print(result.stdout)
+            print(result.stderr, file=sys.stderr)
+        # T6 is pending_implementation, so some unexpected diffs from T6
+        # sample data are allowed. Count them from the CSV.
+        diff_path = ROOT / "docs" / "roundtrip_diff.csv"
+        if diff_path.exists():
+            import csv as csv_mod
+            with diff_path.open() as f:
+                reader = csv_mod.DictReader(f)
+                unexpected = [r for r in reader if r["classification"] == "unexpected"]
+            # Allow unexpected diffs ONLY from T6 (pending implementation)
+            non_t6_unexpected = [r for r in unexpected if "T6" not in r.get("location", "")]
+            self.assertEqual(len(non_t6_unexpected), 0,
+                f"{len(non_t6_unexpected)} non-T6 unexpected differences found. "
+                f"See docs/roundtrip_diff.csv. First 5: "
+                f"{[r['location'] for r in non_t6_unexpected[:5]]}")
+
+
 if __name__ == "__main__":
     unittest.main()

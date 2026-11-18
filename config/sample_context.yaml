@@ -1,0 +1,121 @@
+analysis:
+  foundation_reaction_combination: 1.5DL+1.5LL
+  in_plane_discontinuity_result: No in-plane discontinuity is present in the structure.
+  mass_irregularity_result: No mass irregularity is seen as the stories are nearly
+    ident
+  reentrant_corner_result: The building is rectangular in shape with no re-entrant
+    corn
+  soft_storey_result: No soft stoy is observed in the building.
+building:
+  has_staircase: 'True'
+  height_ground_floor_m: '3.175'
+  height_period_m: '9.525'
+  height_typical_floor_m: '3.175'
+  infill_wall_material: brick
+  location: Damak
+  num_basements: '0'
+  num_storeys_analysed: '3'
+  occupancy: The live loads for the floor and roof are determined using I
+  occupancy_class: Residential
+  occupancy_sentence: The live loads for the floor and roof are determined using I
+  primary_frame_material: reinforced concrete
+  span_x_m: '4.216'
+  span_y_m: '10.058'
+  storeys_above_grade: '3'
+  story_height_m: '3.175'
+  total_height_m: '9.525'
+client:
+  application_date: 2026/xx/xx
+  consultant_name: Civira X
+  designer_contact: 9841xxxxxxx
+  designer_name: Mr. Sachin KC
+  designer_nec_reg: 131xx"Civil A"
+  municipality_reg: Xxxx
+  owner_name: Mr. Chatra Bahadur Ramtel
+codes:
+  clauses: '...'
+  edition: NBC 105:2025
+  limits: '...'
+design:
+  beam: '...'
+  column: '...'
+  overstrength_serviceability: '1.25'
+  overstrength_ultimate: '1.5'
+figure:
+  building: '...'
+  design: '...'
+  drift: '...'
+  elements: '...'
+  foundation: '...'
+  irregularity: '...'
+  loads: '...'
+  materials: '...'
+  modal: '...'
+  project: '...'
+  staircase: '...'
+  summary: '...'
+foundation:
+  modeling_software: ETABS 19.0.0
+  soil_bearing: Soil Bearing Capacity is taken as 120 kN/m2
+  soil_class: firm soil
+  support_condition: the foundation is assumed to be fixed.
+  type: Combined Footing
+loads:
+  slab_dead_load: '3.175'
+materials:
+  as_building_is_less_than_12_m: M20
+  concrete_grade_used: M20
+  rebar_grade_used: Fe500
+modal:
+  base_shear_etabs: '240.02'
+  empirical_period_s: '0.508'
+  empirical_period_unamplified_s: '0.407'
+  modes_included_count: '12'
+  rayleigh_period_s: '0.531'
+  rayleigh_period_x_s: '0.602'
+  rayleigh_period_y_s: '0.531'
+  selected_period_method: empirical
+project:
+  brick_specs: 'Standard rectangular bricks are used, which are well burnt, '
+  report_title: Structural report of Residence Building of Chatra Bahadur Ra
+seismic:
+  alpha: '2.5'
+  design_period_used_s: '0.508'
+  distribution_exponent_k: '1.004'
+  elastic_site_spectra_c: '0.875'
+  elastic_site_spectra_cs: '0.175'
+  hsc_sls: '0.14'
+  hsc_uls: '0.146'
+  importance_factor_i: '1.0'
+  response_modification_factor_rmu: '4'
+  site_soil_category: Very Soft Soil
+  soil_class: C
+  spectral_coefficient_cd: '0.1458'
+  spectral_shape_factor_cht: '2.50'
+  structural_type: Ordinary Structures
+  tc: '1'
+  time_coefficient_kt: '0.075'
+  zone_factor_z: '0.35'
+slab:
+  type: Conventional
+structural:
+  system_type: Moment Resisting Frames
+table:
+  building: '...'
+  client: '...'
+  codes: '...'
+  design: '...'
+  drift: '...'
+  elements: '...'
+  loads: '...'
+  modal: '...'
+  modifiers: '...'
+  seismic: '...'
+totals:
+  fi: '240.10'
+  fi_di_x: '3.721'
+  fi_di_y: '2.904'
+  wi_di2_x: '0.3347'
+  wi_di2_y: '0.2033'
+  wi_hik: '865221.01'
+  wi_kg: '167868.70'
