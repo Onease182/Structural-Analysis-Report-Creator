@@ -3,3 +3,9 @@ sls_tables/
 report/
 validation/
 __pycache__/
+build/
+templates/rendered_*.docx
+templates/pdf/
+*.pdf
+!docs/*.pdf
+tests/fixtures/dummy_*.png

@@ -509,11 +509,65 @@ CAPTION_ONLY_KEYS: set[str] = {
 }
 
 
+def fix_sentence_template(template: str | None, old_key: str, new_key: str) -> str | None:
+    """Replace references to old_key in a sentence template with new_key."""
+    if template is None:
+        return None
+    # Replace both {{ old_key }} and bare old_key references
+    template = template.replace(f"{{{{ {old_key} }}}}", f"{{{{ {new_key} }}}}")
+    template = template.replace(f"{{{{{old_key}}}}}", f"{{{{ {new_key} }}}}")
+    return template
+
+
+# Sentence templates for items that don't have one from the inventory tool.
+# These are sub-paragraph templates: only the variable tokens are placeholders,
+# the fixed wording stays.
+EXTRA_SENTENCE_TEMPLATES: dict[str, str] = {
+    "materials.as_building_is_less_than_12_m":
+        "As the building is less than 12 m in height, {{ materials.concrete_grade_used }} concrete has been taken for all the structural components.",
+    "materials.rebar_grade_used":
+        "Steel Grade of {{ materials.rebar_grade_used }} has been used in the longitudinal and transverse reinforcement.",
+    "modal.base_shear_etabs":
+        "Base shear from ETABS {{ modal.base_shear_etabs }} kN.",
+    "foundation.modeling_software":
+        "The building was modeled using the {{ foundation.modeling_software }} software. {{ foundation.modeling_software }} is a specialized program designed specifically for the analysis and design of building systems. It offers a user-friendly interface and advanced features, making it both powerful and accessible for structural engineers.",
+}
+
+
 def strip_leading_tab(value: Any) -> Any:
     """Strip a leading literal "\\t" tab marker from a string example value."""
     if isinstance(value, str):
         return re.sub(r"^(?:\\t|\s)+", "", value)
     return value
+
+
+# Supplementary registry entries: keys referenced in sentence templates
+# that don't exist in the generated registry. These are added during
+# curation so the registry is complete.
+SUPPLEMENTARY_ENTRIES: list[dict[str, Any]] = [
+    {
+        "key": "materials.concrete_grade_used",
+        "description": "Concrete grade used in the project (e.g. M20)",
+        "type": "text",
+        "unit": None,
+        "format": {"decimals": None},
+        "source": "etabs_api",
+        "required": True,
+        "condition": None,
+        "inventory_item_index": 210,
+        "example": "M20",
+        "etabs_table_or_e2k_section": "Material Properties (concrete)",
+    },
+]
+
+# When a sentence template is added (EXTRA_SENTENCE_TEMPLATES), update the
+# entry's example to be just the variable value (not the whole sentence).
+SENTENCE_TEMPLATE_EXAMPLE_UPDATES: dict[str, Any] = {
+    "materials.as_building_is_less_than_12_m": "M20",  # The concrete grade
+    "materials.rebar_grade_used": "Fe500",  # The rebar grade
+    "modal.base_shear_etabs": "240.02",  # The base shear value in kN
+    "foundation.modeling_software": "ETABS 19.0.0",  # The software version
+}
 
 
 def curate_entries(items: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[str]]:
@@ -556,6 +610,24 @@ def curate_entries(items: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], l
         if "example" in item:
             item["example"] = strip_leading_tab(item["example"])
 
+        # Fix sentence_template: replace old key references with new keys.
+        if item.get("sentence_template"):
+            for old_k, new_k in RENAME_MAP.items():
+                item["sentence_template"] = fix_sentence_template(
+                    item["sentence_template"], old_k, new_k
+                )
+
+        # Add extra sentence templates for items that don't have one.
+        if new_key in EXTRA_SENTENCE_TEMPLATES and not item.get("sentence_template"):
+            item["sentence_template"] = EXTRA_SENTENCE_TEMPLATES[new_key]
+            # Update the example to be just the variable value
+            if new_key in SENTENCE_TEMPLATE_EXAMPLE_UPDATES:
+                item["example"] = SENTENCE_TEMPLATE_EXAMPLE_UPDATES[new_key]
+
+        # For entries with a sentence_template, update the example to be
+        # just the variable value (not the whole sentence). This makes the
+        # example consistent with the sub-paragraph placeholder approach.
+
         # Task 1: codes.clauses.* get target_clause_2025, sample_clause,
         # mapping_status. example is set to null (sample clause lives in
         # sample_clause).
@@ -589,6 +661,13 @@ def curate_entries(items: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], l
         seen_new_keys.add(new_key)
 
         curated.append(item)
+
+    # Add supplementary entries (keys referenced in sentence templates
+    # that don't exist in the generated registry).
+    for supp in SUPPLEMENTARY_ENTRIES:
+        if supp["key"] not in seen_new_keys:
+            curated.append(dict(supp))
+            seen_new_keys.add(supp["key"])
 
     return curated, dropped_fixed
 

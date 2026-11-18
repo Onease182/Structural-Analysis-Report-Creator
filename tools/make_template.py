@@ -56,6 +56,7 @@ INVENTORY_JSON = ROOT / "docs" / "template_inventory.json"
 TEMPLATE_RULES_YAML = ROOT / "config" / "template_rules.yaml"
 OUTPUT_DOCX = ROOT / "templates" / "master_template.docx"
 REPLACEMENT_LOG = ROOT / "docs" / "template_replacement_log.md"
+BUILD_DIR = ROOT / "build"
 
 
 def parse_args() -> argparse.Namespace:
@@ -575,17 +576,40 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         p_element = body_children[child_idx]
         old_text = get_paragraph_text(p_element)
 
-        # Skip if already processed (e.g., by clause citation logic)
-        if "{{" in old_text:
-            continue
-
         # Skip caption paragraphs — they are handled separately by
         # substitute_caption_fragments() to preserve style/SEQ/label.
         if is_caption(p_element):
             continue
 
-        # Determine the replacement
-        if key.startswith("codes.clauses."):
+        # PRIORITY 1: If the entry has a sentence_template, use it to replace
+        # the entire paragraph text. This is checked BEFORE the "skip if
+        # already processed" check because multiple entries may share the
+        # same paragraph (e.g. a clause citation + a structure height split).
+        # The sentence_template is the authoritative replacement; it
+        # overwrites any previous partial substitution.
+        sentence_template = entry.get("sentence_template")
+        if sentence_template and "{{" in sentence_template:
+            replace_paragraph_text_with_placeholder(p_element, sentence_template)
+            logger.log(f"paragraph idx={idx} (sentence template)", old_text[:100], sentence_template[:100])
+            continue
+
+        # Skip if already processed (e.g., by a sentence template from a
+        # previous entry sharing this paragraph).
+        if "{{" in old_text:
+            continue
+
+        # PRIORITY 2: Computed variants — whole-paragraph replacement is
+        # allowed ONLY where the owner decision defines computed variants.
+        if key.startswith("analysis.") and key.endswith("result"):
+            replace_paragraph_text_with_placeholder(p_element, f"{{{{ {key} }}}}")
+            logger.log(f"paragraph idx={idx}", old_text, f"{{{{ {key} }}}}")
+        elif key == "foundation.support_condition":
+            replace_paragraph_text_with_placeholder(p_element, f"{{{{ {key} }}}}")
+            logger.log(f"paragraph idx={idx}", old_text, f"{{{{ {key} }}}}")
+        elif key == "analysis.foundation_reaction_combination":
+            replace_paragraph_text_with_placeholder(p_element, f"{{{{ {key} }}}}")
+            logger.log(f"paragraph idx={idx}", old_text, f"{{{{ {key} }}}}")
+        elif key.startswith("codes.clauses."):
             # Clause citation: replace the sample clause with {{ key }}
             sample_clause = entry.get("sample_clause", "")
             target = entry.get("target_clause_2025", "")
@@ -603,20 +627,8 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
                             "{{ codes.edition }}",
                         )
                     logger.log(f"paragraph idx={idx}", old_text, f"{{{{ {key} }}}}")
-        elif key.startswith("analysis.") and key.endswith("result"):
-            # Computed variant: replace entire paragraph
-            replace_paragraph_text_with_placeholder(p_element, f"{{{{ {key} }}}}")
-            logger.log(f"paragraph idx={idx}", old_text, f"{{{{ {key} }}}}")
-        elif key == "foundation.support_condition":
-            # Support condition: replace with computed variant
-            replace_paragraph_text_with_placeholder(p_element, f"{{{{ {key} }}}}")
-            logger.log(f"paragraph idx={idx}", old_text, f"{{{{ {key} }}}}")
-        elif key == "analysis.foundation_reaction_combination":
-            # Foundation reaction caption: replace combination text
-            replace_paragraph_text_with_placeholder(p_element, f"{{{{ {key} }}}}")
-            logger.log(f"paragraph idx={idx}", old_text, f"{{{{ {key} }}}}")
         elif entry.get("source") == "computed" and entry.get("type") == "text":
-            # Computed text: replace entire paragraph
+            # Computed text without sentence template: replace entire paragraph
             replace_paragraph_text_with_placeholder(p_element, f"{{{{ {key} }}}}")
             logger.log(f"paragraph idx={idx}", old_text, f"{{{{ {key} }}}}")
         elif old_text.strip() and "{{" not in old_text:

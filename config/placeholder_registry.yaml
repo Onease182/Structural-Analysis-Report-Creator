@@ -446,11 +446,12 @@ items:
   required: true
   condition: null
   inventory_item_index: 210
-  example: As the building is less than 12 m in height, M20 concrete has been taken for all the structural
-    components.
+  example: M20
   inventory_item_indices:
   - 210
   etabs_table_or_e2k_section: $STORYDATA (height) + Material Properties (concrete grade)
+  sentence_template: As the building is less than 12 m in height, {{ materials.concrete_grade_used }}
+    concrete has been taken for all the structural components.
 - key: figure.materials.concrete
   description: 'Figure 3: Material Property (Concrete)'
   type: image
@@ -498,10 +499,12 @@ items:
   required: true
   condition: null
   inventory_item_index: 224
-  example: Steel Grade of Fe500 has been used in the longitudinal and transverse reinforcement.
+  example: Fe500
   inventory_item_indices:
   - 224
   etabs_table_or_e2k_section: Material Properties (rebar)
+  sentence_template: Steel Grade of {{ materials.rebar_grade_used }} has been used in the longitudinal
+    and transverse reinforcement.
 - key: table.modifiers.effective_stiffness
   description: 'Table 4: Effective stiffness of different components'
   type: table
@@ -653,16 +656,14 @@ items:
   required: false
   condition: The software/version narrative is project-specific and may be omitted.
   inventory_item_index: 258
-  example: The building was modeled using the ETABS 19.0.0 software. ETABS 19.0.0 is a specialized program
-    designed specifically for the analysis and design of building systems. It offers a user-friendly interface
-    and advanced features, making it both sophisticated and easy to use. The software provides intuitive
-    modeling capabilities, powerful analytical tools, efficient design procedures, robust numerical methods,
-    and supports various international design codes. With its ability to handle complex structures and
-    nonlinear behaviors, ETABS 19.0.0 is widely preferred by structural engineers in the building industry.
-    For the design of foundation, manual calculation was done.
+  example: ETABS 19.0.0
   inventory_item_indices:
   - 258
   etabs_table_or_e2k_section: null
+  sentence_template: The building was modeled using the {{ foundation.modeling_software }} software. {{
+    foundation.modeling_software }} is a specialized program designed specifically for the analysis and
+    design of building systems. It offers a user-friendly interface and advanced features, making it both
+    powerful and accessible for structural engineers.
 - key: project.brick_specs
   description: Standard rectangular bricks are used, which are well burnt, hand-formed or machine-made,
     and possess a crushing strength of at least 3.5 N/mm². The preferred brick size is 250 x 100 x 75
@@ -1093,10 +1094,11 @@ items:
   required: true
   condition: null
   inventory_item_index: 380
-  example: Base shear from ETABS 240.02 kN.
+  example: '240.02'
   inventory_item_indices:
   - 380
   etabs_table_or_e2k_section: Base Reactions / Story Forces
+  sentence_template: Base shear from ETABS {{ modal.base_shear_etabs }} kN.
 - key: codes.clauses.vertical_force_dist
   description: Clause citation value for 6.3
   type: text
@@ -1189,7 +1191,7 @@ items:
   sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
     s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
     }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}.
+    }}, Ωu = {{ design.overstrength_ultimate }}.
   inventory_item_indices:
   - 384
   etabs_table_or_e2k_section: null
@@ -1207,7 +1209,7 @@ items:
   sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
     s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
     }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}.
+    }}, Ωu = {{ design.overstrength_ultimate }}.
   inventory_item_indices:
   - 384
   etabs_table_or_e2k_section: null
@@ -1225,7 +1227,7 @@ items:
   sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
     s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
     }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}.
+    }}, Ωu = {{ design.overstrength_ultimate }}.
   inventory_item_indices:
   - 384
   etabs_table_or_e2k_section: null
@@ -1243,7 +1245,7 @@ items:
   sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
     s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
     }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}.
+    }}, Ωu = {{ design.overstrength_ultimate }}.
   inventory_item_indices:
   - 384
 - key: seismic.importance_factor_i
@@ -1260,7 +1262,7 @@ items:
   sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
     s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
     }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}.
+    }}, Ωu = {{ design.overstrength_ultimate }}.
   inventory_item_indices:
   - 384
 - key: seismic.response_modification_factor_rmu
@@ -1277,7 +1279,7 @@ items:
   sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
     s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
     }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}.
+    }}, Ωu = {{ design.overstrength_ultimate }}.
   inventory_item_indices:
   - 384
   etabs_table_or_e2k_section: null
@@ -1295,7 +1297,7 @@ items:
   sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
     s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
     }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}.
+    }}, Ωu = {{ design.overstrength_ultimate }}.
   inventory_item_indices:
   - 384
   etabs_table_or_e2k_section: null
@@ -1313,7 +1315,7 @@ items:
   sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
     s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
     }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_factor_ultimate_omega_u }}.
+    }}, Ωu = {{ design.overstrength_ultimate }}.
   inventory_item_indices:
   - 384
 - key: table.modal.rayleigh_x
@@ -1725,10 +1727,10 @@ items:
   example: '90'
   sentence_template: '{{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that
     number of modes to be used in the analysis should be such that the sum total of modal masses of all
-    modes considered is at least {{ codes.limits.modal_mass_participation_pct }} percent of the total
-    seismic mass of the structure. The analysis was carried out for {{ modal.modes_included_count }} modes
-    so that the mass participation satisfies this criterion in both orthogonal directions. The table shows
-    time period and mass participation ratio for all modes.'
+    modes considered is at least {{ codes.limits.modal_mass_part_pct }} percent of the total seismic mass
+    of the structure. The analysis was carried out for {{ modal.modes_included_count }} modes so that
+    the mass participation satisfies this criterion in both orthogonal directions. The table shows time
+    period and mass participation ratio for all modes.'
   inventory_item_indices:
   - 430
 - key: modal.modes_included_count
@@ -1744,10 +1746,10 @@ items:
   example: '12'
   sentence_template: '{{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that
     number of modes to be used in the analysis should be such that the sum total of modal masses of all
-    modes considered is at least {{ codes.limits.modal_mass_participation_pct }} percent of the total
-    seismic mass of the structure. The analysis was carried out for {{ modal.modes_included_count }} modes
-    so that the mass participation satisfies this criterion in both orthogonal directions. The table shows
-    time period and mass participation ratio for all modes.'
+    modes considered is at least {{ codes.limits.modal_mass_part_pct }} percent of the total seismic mass
+    of the structure. The analysis was carried out for {{ modal.modes_included_count }} modes so that
+    the mass participation satisfies this criterion in both orthogonal directions. The table shows time
+    period and mass participation ratio for all modes.'
   inventory_item_indices:
   - 430
   etabs_table_or_e2k_section: Modal Load Case
@@ -1843,10 +1845,9 @@ items:
   condition: null
   inventory_item_index: 450
   example: '1557'
-  sentence_template: = {{ design.column.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.column.maximum_reinforcement.section_width_mm
-    }}*{{ design.column.maximum_reinforcement.section_depth_mm }})*100% = {{ design.column.maximum_reinforcement.provided_pct
-    }}% < {{ design.column.maximum_reinforcement.limit_pct }}% ({{ design.column.maximum_reinforcement.status
-    }})
+  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{
+    design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct }}% < {{ design.column.max_limit_pct
+    }}% ({{ design.column.max_status }})
   inventory_item_indices:
   - 450
   etabs_table_or_e2k_section: null
@@ -1861,10 +1862,9 @@ items:
   condition: null
   inventory_item_index: 450
   example: '355'
-  sentence_template: = {{ design.column.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.column.maximum_reinforcement.section_width_mm
-    }}*{{ design.column.maximum_reinforcement.section_depth_mm }})*100% = {{ design.column.maximum_reinforcement.provided_pct
-    }}% < {{ design.column.maximum_reinforcement.limit_pct }}% ({{ design.column.maximum_reinforcement.status
-    }})
+  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{
+    design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct }}% < {{ design.column.max_limit_pct
+    }}% ({{ design.column.max_status }})
   inventory_item_indices:
   - 450
   etabs_table_or_e2k_section: null
@@ -1879,10 +1879,9 @@ items:
   condition: null
   inventory_item_index: 450
   example: '355'
-  sentence_template: = {{ design.column.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.column.maximum_reinforcement.section_width_mm
-    }}*{{ design.column.maximum_reinforcement.section_depth_mm }})*100% = {{ design.column.maximum_reinforcement.provided_pct
-    }}% < {{ design.column.maximum_reinforcement.limit_pct }}% ({{ design.column.maximum_reinforcement.status
-    }})
+  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{
+    design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct }}% < {{ design.column.max_limit_pct
+    }}% ({{ design.column.max_status }})
   inventory_item_indices:
   - 450
   etabs_table_or_e2k_section: null
@@ -1897,10 +1896,9 @@ items:
   condition: null
   inventory_item_index: 450
   example: '1.24'
-  sentence_template: = {{ design.column.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.column.maximum_reinforcement.section_width_mm
-    }}*{{ design.column.maximum_reinforcement.section_depth_mm }})*100% = {{ design.column.maximum_reinforcement.provided_pct
-    }}% < {{ design.column.maximum_reinforcement.limit_pct }}% ({{ design.column.maximum_reinforcement.status
-    }})
+  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{
+    design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct }}% < {{ design.column.max_limit_pct
+    }}% ({{ design.column.max_status }})
   inventory_item_indices:
   - 450
   etabs_table_or_e2k_section: null
@@ -1915,10 +1913,9 @@ items:
   condition: null
   inventory_item_index: 450
   example: '4'
-  sentence_template: = {{ design.column.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.column.maximum_reinforcement.section_width_mm
-    }}*{{ design.column.maximum_reinforcement.section_depth_mm }})*100% = {{ design.column.maximum_reinforcement.provided_pct
-    }}% < {{ design.column.maximum_reinforcement.limit_pct }}% ({{ design.column.maximum_reinforcement.status
-    }})
+  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{
+    design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct }}% < {{ design.column.max_limit_pct
+    }}% ({{ design.column.max_status }})
   inventory_item_indices:
   - 450
   etabs_table_or_e2k_section: null
@@ -1933,10 +1930,9 @@ items:
   condition: null
   inventory_item_index: 450
   example: pass
-  sentence_template: = {{ design.column.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.column.maximum_reinforcement.section_width_mm
-    }}*{{ design.column.maximum_reinforcement.section_depth_mm }})*100% = {{ design.column.maximum_reinforcement.provided_pct
-    }}% < {{ design.column.maximum_reinforcement.limit_pct }}% ({{ design.column.maximum_reinforcement.status
-    }})
+  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{
+    design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct }}% < {{ design.column.max_limit_pct
+    }}% ({{ design.column.max_status }})
   inventory_item_indices:
   - 450
   etabs_table_or_e2k_section: null
@@ -1951,8 +1947,8 @@ items:
   condition: null
   inventory_item_index: 454
   example: '1.026'
-  sentence_template: \t= {{ design.column.minimum_reinforcement.provided_pct }}%\t> {{ design.column.minimum_reinforcement.limit_pct
-    }}% ({{ design.column.minimum_reinforcement.status }})
+  sentence_template: \t= {{ design.column.min_provided_pct }}%\t> {{ design.column.min_limit_pct }}% ({{
+    design.column.min_status }})
   inventory_item_indices:
   - 454
   etabs_table_or_e2k_section: null
@@ -1967,8 +1963,8 @@ items:
   condition: null
   inventory_item_index: 454
   example: '1'
-  sentence_template: \t= {{ design.column.minimum_reinforcement.provided_pct }}%\t> {{ design.column.minimum_reinforcement.limit_pct
-    }}% ({{ design.column.minimum_reinforcement.status }})
+  sentence_template: \t= {{ design.column.min_provided_pct }}%\t> {{ design.column.min_limit_pct }}% ({{
+    design.column.min_status }})
   inventory_item_indices:
   - 454
   etabs_table_or_e2k_section: null
@@ -1983,8 +1979,8 @@ items:
   condition: null
   inventory_item_index: 454
   example: pass
-  sentence_template: \t= {{ design.column.minimum_reinforcement.provided_pct }}%\t> {{ design.column.minimum_reinforcement.limit_pct
-    }}% ({{ design.column.minimum_reinforcement.status }})
+  sentence_template: \t= {{ design.column.min_provided_pct }}%\t> {{ design.column.min_limit_pct }}% ({{
+    design.column.min_status }})
   inventory_item_indices:
   - 454
   etabs_table_or_e2k_section: null
@@ -1999,10 +1995,9 @@ items:
   condition: null
   inventory_item_index: 456
   example: '678.584'
-  sentence_template: = {{ design.beam.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.beam.maximum_reinforcement.section_width_mm
-    }}*{{ design.beam.maximum_reinforcement.section_depth_mm }})*100% = {{ design.beam.maximum_reinforcement.provided_pct
-    }}% < {{ design.beam.maximum_reinforcement.limit_pct }}% ({{ design.beam.maximum_reinforcement.status
-    }})
+  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm }}*{{
+    design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct }}% < {{ design.beam.max_limit_pct
+    }}% ({{ design.beam.maximum_reinforcement.status }})
   inventory_item_indices:
   - 456
   etabs_table_or_e2k_section: null
@@ -2017,10 +2012,9 @@ items:
   condition: null
   inventory_item_index: 456
   example: '250'
-  sentence_template: = {{ design.beam.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.beam.maximum_reinforcement.section_width_mm
-    }}*{{ design.beam.maximum_reinforcement.section_depth_mm }})*100% = {{ design.beam.maximum_reinforcement.provided_pct
-    }}% < {{ design.beam.maximum_reinforcement.limit_pct }}% ({{ design.beam.maximum_reinforcement.status
-    }})
+  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm }}*{{
+    design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct }}% < {{ design.beam.max_limit_pct
+    }}% ({{ design.beam.maximum_reinforcement.status }})
   inventory_item_indices:
   - 456
   etabs_table_or_e2k_section: null
@@ -2035,10 +2029,9 @@ items:
   condition: null
   inventory_item_index: 456
   example: '355'
-  sentence_template: = {{ design.beam.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.beam.maximum_reinforcement.section_width_mm
-    }}*{{ design.beam.maximum_reinforcement.section_depth_mm }})*100% = {{ design.beam.maximum_reinforcement.provided_pct
-    }}% < {{ design.beam.maximum_reinforcement.limit_pct }}% ({{ design.beam.maximum_reinforcement.status
-    }})
+  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm }}*{{
+    design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct }}% < {{ design.beam.max_limit_pct
+    }}% ({{ design.beam.maximum_reinforcement.status }})
   inventory_item_indices:
   - 456
   etabs_table_or_e2k_section: null
@@ -2053,10 +2046,9 @@ items:
   condition: null
   inventory_item_index: 456
   example: '0.764'
-  sentence_template: = {{ design.beam.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.beam.maximum_reinforcement.section_width_mm
-    }}*{{ design.beam.maximum_reinforcement.section_depth_mm }})*100% = {{ design.beam.maximum_reinforcement.provided_pct
-    }}% < {{ design.beam.maximum_reinforcement.limit_pct }}% ({{ design.beam.maximum_reinforcement.status
-    }})
+  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm }}*{{
+    design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct }}% < {{ design.beam.max_limit_pct
+    }}% ({{ design.beam.maximum_reinforcement.status }})
   inventory_item_indices:
   - 456
   etabs_table_or_e2k_section: null
@@ -2071,10 +2063,9 @@ items:
   condition: null
   inventory_item_index: 456
   example: '2.5'
-  sentence_template: = {{ design.beam.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.beam.maximum_reinforcement.section_width_mm
-    }}*{{ design.beam.maximum_reinforcement.section_depth_mm }})*100% = {{ design.beam.maximum_reinforcement.provided_pct
-    }}% < {{ design.beam.maximum_reinforcement.limit_pct }}% ({{ design.beam.maximum_reinforcement.status
-    }})
+  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm }}*{{
+    design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct }}% < {{ design.beam.max_limit_pct
+    }}% ({{ design.beam.maximum_reinforcement.status }})
   inventory_item_indices:
   - 456
   etabs_table_or_e2k_section: null
@@ -2089,10 +2080,9 @@ items:
   condition: null
   inventory_item_index: 456
   example: pass
-  sentence_template: = {{ design.beam.maximum_reinforcement.provided_reinforcement_area_mm2 }}/({{ design.beam.maximum_reinforcement.section_width_mm
-    }}*{{ design.beam.maximum_reinforcement.section_depth_mm }})*100% = {{ design.beam.maximum_reinforcement.provided_pct
-    }}% < {{ design.beam.maximum_reinforcement.limit_pct }}% ({{ design.beam.maximum_reinforcement.status
-    }})
+  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm }}*{{
+    design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct }}% < {{ design.beam.max_limit_pct
+    }}% ({{ design.beam.maximum_reinforcement.status }})
   inventory_item_indices:
   - 456
   etabs_table_or_e2k_section: null
@@ -2107,8 +2097,8 @@ items:
   condition: null
   inventory_item_index: 458
   example: '0.764'
-  sentence_template: = {{ design.beam.minimum_reinforcement.provided_pct }}% >{{ design.beam.minimum_reinforcement.limit_pct
-    }}% ({{ design.beam.minimum_reinforcement.status }})
+  sentence_template: = {{ design.beam.min_provided_pct }}% >{{ design.beam.min_limit_pct }}% ({{ design.beam.minimum_reinforcement.status
+    }})
   inventory_item_indices:
   - 458
   etabs_table_or_e2k_section: null
@@ -2123,8 +2113,8 @@ items:
   condition: null
   inventory_item_index: 458
   example: '0.26'
-  sentence_template: = {{ design.beam.minimum_reinforcement.provided_pct }}% >{{ design.beam.minimum_reinforcement.limit_pct
-    }}% ({{ design.beam.minimum_reinforcement.status }})
+  sentence_template: = {{ design.beam.min_provided_pct }}% >{{ design.beam.min_limit_pct }}% ({{ design.beam.minimum_reinforcement.status
+    }})
   inventory_item_indices:
   - 458
   etabs_table_or_e2k_section: null
@@ -2139,8 +2129,8 @@ items:
   condition: null
   inventory_item_index: 458
   example: pass
-  sentence_template: = {{ design.beam.minimum_reinforcement.provided_pct }}% >{{ design.beam.minimum_reinforcement.limit_pct
-    }}% ({{ design.beam.minimum_reinforcement.status }})
+  sentence_template: = {{ design.beam.min_provided_pct }}% >{{ design.beam.min_limit_pct }}% ({{ design.beam.minimum_reinforcement.status
+    }})
   inventory_item_indices:
   - 458
   etabs_table_or_e2k_section: null
@@ -2536,9 +2526,9 @@ items:
   example: '0.006'
   sentence_template: '{{ codes.clauses.serviceability_drift }} of {{ codes.edition }} is applied. The
     maximum deflection in any story due to the minimum specified design lateral force, with partial load
-    factor of 1.0 shall not exceed {{ codes.limits.maximum_story_deflection_ratio }} times the story height.
-    Furthermore, the drift shall not exceed {{ codes.limits.serviceability_story_drift_ratio }} in Serviceability
-    Limit State and {{ codes.limits.ultimate_story_drift_ratio }} in Ultimate Limit State case.'
+    factor of 1.0 shall not exceed {{ codes.limits.max_deflection_ratio }} times the story height. Furthermore,
+    the drift shall not exceed {{ codes.limits.sls_drift_ratio }} in Serviceability Limit State and {{
+    codes.limits.ultimate_story_drift_ratio }} in Ultimate Limit State case.'
   inventory_item_indices:
   - 535
 - key: codes.limits.sls_drift_ratio
@@ -2554,9 +2544,9 @@ items:
   example: '0.006'
   sentence_template: '{{ codes.clauses.serviceability_drift }} of {{ codes.edition }} is applied. The
     maximum deflection in any story due to the minimum specified design lateral force, with partial load
-    factor of 1.0 shall not exceed {{ codes.limits.maximum_story_deflection_ratio }} times the story height.
-    Furthermore, the drift shall not exceed {{ codes.limits.serviceability_story_drift_ratio }} in Serviceability
-    Limit State and {{ codes.limits.ultimate_story_drift_ratio }} in Ultimate Limit State case.'
+    factor of 1.0 shall not exceed {{ codes.limits.max_deflection_ratio }} times the story height. Furthermore,
+    the drift shall not exceed {{ codes.limits.sls_drift_ratio }} in Serviceability Limit State and {{
+    codes.limits.ultimate_story_drift_ratio }} in Ultimate Limit State case.'
   inventory_item_indices:
   - 535
 - key: codes.limits.ultimate_story_drift_ratio
@@ -2572,9 +2562,9 @@ items:
   example: '0.025'
   sentence_template: '{{ codes.clauses.serviceability_drift }} of {{ codes.edition }} is applied. The
     maximum deflection in any story due to the minimum specified design lateral force, with partial load
-    factor of 1.0 shall not exceed {{ codes.limits.maximum_story_deflection_ratio }} times the story height.
-    Furthermore, the drift shall not exceed {{ codes.limits.serviceability_story_drift_ratio }} in Serviceability
-    Limit State and {{ codes.limits.ultimate_story_drift_ratio }} in Ultimate Limit State case.'
+    factor of 1.0 shall not exceed {{ codes.limits.max_deflection_ratio }} times the story height. Furthermore,
+    the drift shall not exceed {{ codes.limits.sls_drift_ratio }} in Serviceability Limit State and {{
+    codes.limits.ultimate_story_drift_ratio }} in Ultimate Limit State case.'
   inventory_item_indices:
   - 535
 - key: figure.drift.displacement
@@ -2789,8 +2779,8 @@ items:
   sentence_template: As per the clause {{ codes.clauses.torsional_irregularity }} of {{ codes.edition
     }}, torsion irregularity is considered to exist when the maximum horizontal displacement of any floor
     in the direction of the lateral force, applied at the centre of mass, at one end of the storey is
-    more than {{ codes.limits.torsional_displacement_ratio }} times its minimum horizontal displacement
-    at the far end of the same storey in that direction.
+    more than {{ codes.limits.torsional_disp_ratio }} times its minimum horizontal displacement at the
+    far end of the same storey in that direction.
   inventory_item_indices:
   - 593
 - key: figure.irregularity.torsional
@@ -2859,10 +2849,10 @@ items:
   inventory_item_index: 603
   example: '70'
   sentence_template: As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition }}, a soft
-    story is the one whose stiffness of the lateral force resisting system is less than {{ codes.limits.soft_storey_adjacent_stiffness_pct
+    story is the one whose stiffness of the lateral force resisting system is less than {{ codes.limits.soft_storey_adj_pct
     }}% of the lateral force resisting system stiffness in an adjacent story above or below, or less than
-    {{ codes.limits.soft_storey_average_stiffness_pct }}% of the average lateral force resisting system
-    stiffness of the three storys above or below.
+    {{ codes.limits.soft_storey_avg_pct }}% of the average lateral force resisting system stiffness of
+    the three storys above or below.
   inventory_item_indices:
   - 603
 - key: codes.limits.soft_storey_avg_pct
@@ -2877,10 +2867,10 @@ items:
   inventory_item_index: 603
   example: '80'
   sentence_template: As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition }}, a soft
-    story is the one whose stiffness of the lateral force resisting system is less than {{ codes.limits.soft_storey_adjacent_stiffness_pct
+    story is the one whose stiffness of the lateral force resisting system is less than {{ codes.limits.soft_storey_adj_pct
     }}% of the lateral force resisting system stiffness in an adjacent story above or below, or less than
-    {{ codes.limits.soft_storey_average_stiffness_pct }}% of the average lateral force resisting system
-    stiffness of the three storys above or below.
+    {{ codes.limits.soft_storey_avg_pct }}% of the average lateral force resisting system stiffness of
+    the three storys above or below.
   inventory_item_indices:
   - 603
 - key: figure.irregularity.soft_story_panel_b
@@ -2948,7 +2938,7 @@ items:
   condition: Owner/engineer must verify against the approved NBC 105:2025 edition before use.
   inventory_item_index: 617
   example: '50'
-  sentence_template: If there is a difference of more than {{ codes.limits.mass_irregularity_effective_mass_difference_pct
+  sentence_template: If there is a difference of more than {{ codes.limits.mass_irregularity_diff_pct
     }}% between the effective masses of two consecutive storeys, then there will be the existence of mass
     irregularity in the structural system of the building as per the clause {{ codes.clauses.mass_irregularity
     }} of {{ codes.edition }}. However, for such checks, light roofs, penthouse and mezzanine floors are
@@ -2985,8 +2975,8 @@ items:
   example: '15'
   sentence_template: As per the clause {{ codes.clauses.reentrant_corner }} of {{ codes.edition }}, a
     structure is said to have re-entrant corner irregularity in a direction if its structural configuration
-    has a projection of greater than {{ codes.limits.reentrant_corner_projection_pct }}% of its overall
-    dimensions in that direction.
+    has a projection of greater than {{ codes.limits.reentrant_proj_pct }}% of its overall dimensions
+    in that direction.
   inventory_item_indices:
   - 624
 - key: figure.irregularity.re_entrant_corners
@@ -3037,8 +3027,8 @@ items:
   example: '50'
   sentence_template: If the diaphragm of a building has a cutout or open area greater than {{ codes.limits.diaphragm_opening_area_pct
     }}% of the gross enclosed diaphragm area or if the effective diaphragm stiffness changes more than
-    {{ codes.limits.diaphragm_stiffness_change_pct }}% from one story to the next, then as per the clause
-    {{ codes.clauses.diaphragm_discontinuity }} of {{ codes.edition }}, the building is said to have diaphragm
+    {{ codes.limits.diaphragm_stiffness_pct }}% from one story to the next, then as per the clause {{
+    codes.clauses.diaphragm_discontinuity }} of {{ codes.edition }}, the building is said to have diaphragm
     discontinuity irregularity. The Designer is required to check the existence of such irregularity in
     the building and provide the details in the structural design report.
   inventory_item_indices:
@@ -3056,8 +3046,8 @@ items:
   example: '50'
   sentence_template: If the diaphragm of a building has a cutout or open area greater than {{ codes.limits.diaphragm_opening_area_pct
     }}% of the gross enclosed diaphragm area or if the effective diaphragm stiffness changes more than
-    {{ codes.limits.diaphragm_stiffness_change_pct }}% from one story to the next, then as per the clause
-    {{ codes.clauses.diaphragm_discontinuity }} of {{ codes.edition }}, the building is said to have diaphragm
+    {{ codes.limits.diaphragm_stiffness_pct }}% from one story to the next, then as per the clause {{
+    codes.clauses.diaphragm_discontinuity }} of {{ codes.edition }}, the building is said to have diaphragm
     discontinuity irregularity. The Designer is required to check the existence of such irregularity in
     the building and provide the details in the structural design report.
   inventory_item_indices:
@@ -3442,3 +3432,15 @@ items:
   inventory_item_indices:
   - 625
   etabs_table_or_e2k_section: null
+- key: materials.concrete_grade_used
+  description: Concrete grade used in the project (e.g. M20)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: etabs_api
+  required: true
+  condition: null
+  inventory_item_index: 210
+  example: M20
+  etabs_table_or_e2k_section: Material Properties (concrete)

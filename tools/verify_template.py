@@ -41,7 +41,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = ROOT / "templates" / "master_template.docx"
 SAMPLE = ROOT / "Chatra Bahadur Ramtel.docx"
 REGISTRY = ROOT / "config" / "placeholder_registry.yaml"
-RENDER_DIR = ROOT / "templates"
+RENDER_DIR = ROOT / "build"
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 WP_NS = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
@@ -566,6 +566,7 @@ def verify() -> int:
     template_images = analyze_images_in_docx(TEMPLATE)
 
     rendered_true = RENDER_DIR / "rendered_dummy.docx"
+    RENDER_DIR.mkdir(parents=True, exist_ok=True)
     tpl.render(ctx_true)
     tpl.save(str(rendered_true))
     print(f"    Rendered: {rendered_true}")
