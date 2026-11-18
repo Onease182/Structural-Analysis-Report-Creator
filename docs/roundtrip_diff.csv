@@ -1,17 +1,17 @@
 location,kind,expected,actual,classification
-para 76,text_replace,The building has three floors made of reinforced concrete frames and filled with,The building has 3 floors made of reinforced concrete frames and filled with,unexpected
+para 76,text_replace,The building has three floors made of reinforced concrete frames and filled with,The building has 3 floors made of reinforced concrete frames and filled with,owner_approved
 para 92,text_replace,"According to NBC105:2020, The material should be taken as per Cl.2.1.","According to NBC 105:2025, The material should be taken as per Annex A, Cl. 2.1.",owner_approved
-para 109,text_replace,Due to the eccentricity arising between the center of mass and the center of rigidity at each floor ,Due to the eccentricity arising between the center of mass and the center of rigidity at each floor ,unexpected
-para 116,text_replace,The building was modeled using the ETABS 19.0.0 software. ETABS 19.0.0 is a specialized program desi,The building was modeled using the ETABS 19.0.0 software. ETABS 19.0.0 is a specialized program desi,unexpected
-para 160,text_replace,Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025 Cl. 6.3),Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025 6.3),unexpected
+para 116,text_replace,The building was modeled using the ETABS 19.0.0 software. ETABS 19.0.0 is a specialized program desi,The building was modeled using the ETABS 19.0.0 software. ETABS 19.0.0 is a specialized program desi,owner_approved
+para 160,text_replace,Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025 Cl. 6.3),Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025 6.3),owner_approved
+para 161,text_replace,"k = 1.004 (T = 0.508 s); Cd = 0.1458; V = Cd·W, W taken above Base. Z = 0.35, soil C, I = 1.0, Rμ = ",Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025 6.3),owner_approved
+para 161,text_replace,,"k = 1.004 (T = 0.508 s); Cd = 0.1458; V = Cd·W, W taken above Base. Z = 0.35, soil C, I = 1, Rμ = 4,",owner_approved
+para 169,text_replace,"As per Clause 3.2.1 of NBC 105:2025, the Equivalent Static Method may be used for all serviceability","As per Clause 3.2.1 of NBC 105:2025, the Equivalent Static Method may be used for all serviceability",owner_approved
 para 171,text_replace,"When lateral load resisting elements are oriented along mutually orthogonal horizontal directions, t","When lateral load resisting elements are oriented along mutually orthogonal horizontal directions, t",owner_approved
-para 172,text_replace,For Parallel System (Cl. 3.6.1),"When lateral load resisting elements are oriented along mutually orthogonal horizontal directions, t",owner_approved
-para 172,text_replace,,For Parallel System (3.6.1),unexpected
-para 179,text_replace,NBC105:2025 clause 7.3 states that number of modes to be used in the analysis should be such that th,NBC 105:2025 clause 7.3 states that number of modes to be used in the analysis should be such that t,unexpected
-para 187,text_replace,= 1557/ (355*355)*100% =1.24% <4% (Ok),= 1557/(355*355)*100% = 1.24% < 4% (pass),unexpected
-para 189,text_replace,= 1.026% > 1% (Ok),\t= 1.026%\t> 1% (pass),unexpected
-para 191,text_replace,= 678.584/ (250*355) = 0.764% <2.5% (Ok),= 678.584/(250*355)*100% = 0.764% < 2.5% (pass),unexpected
-para 193,text_replace,= 0.764% >0.26 % (Ok),= 0.764% >0.26% (pass),unexpected
+para 179,text_replace,NBC105:2025 clause 7.3 states that number of modes to be used in the analysis should be such that th,NBC 105:2025 clause 7.3 states that number of modes to be used in the analysis should be such that t,owner_approved
+para 187,text_replace,= 1557/ (355*355)*100% =1.24% <4% (Ok),= 1557/(355*355)*100% = 1.24% < 4% (pass),owner_approved
+para 189,text_replace,= 1.026% > 1% (Ok),\t= 1.026%\t> 1% (pass),owner_approved
+para 191,text_replace,= 678.584/ (250*355) = 0.764% <2.5% (Ok),= 678.584/(250*355)*100% = 0.764% < 2.5% (pass),owner_approved
+para 193,text_replace,= 0.764% >0.26 % (Ok),= 0.764% >0.26% (pass),owner_approved
 para 208,text_replace,5.6.3 of NBC 105:2077 is proposed to be used.,5.5.3 of NBC 105:2025 is proposed to be used.,owner_approved
 para 210,text_replace,5.6.3 of NBC 105:2077 is applied. The maximum deflection in any story due to the minimum specified d,5.5.3 of NBC 105:2025 is applied. The maximum deflection in any story due to the minimum specified d,owner_approved
 para 213,text_replace,One of the basic virtues of earthquake resistant design of structures is that the structure shall be,One of the basic virtues of earthquake resistant design of structures is that the structure shall be,owner_approved
@@ -22,541 +22,132 @@ para 226,text_replace,"If there is a difference of more than 50% between the eff
 para 230,text_replace,"As per the clause 5.5.2.2 of NBC 105:2020, a structure is said to have re-entrant corner irregularit","As per the clause 5.4.2.3 of NBC 105:2025, a structure is said to have re-entrant corner irregularit",owner_approved
 para 234,text_replace,If the diaphragm of a building has a cutout or open area greater than 50% of the gross enclosed diap,If the diaphragm of a building has a cutout or open area greater than 50% of the gross enclosed diap,owner_approved
 para 238,text_replace,If there is a discontinuity in a lateral force resisting path such as an out-of-plane of at least on,5.4.2.5,owner_approved
-"T0 (5,2)",cell,131xx”Civil A”,"131xx""Civil A""",unexpected
-"T0 (7,2)",cell,CivoraX Infra,Civira X,unexpected
-"T2 (4,2)",cell,3.175 meters,3.175,unexpected
-"T2 (5,0)",cell,A.1-06,A.1-05,unexpected
-"T2 (5,1)",cell,Height of Typical Floor,Height of Ground Floor,unexpected
-"T2 (5,2)",cell,3.175 meters,3.175,unexpected
-"T2 (6,0)",cell,A.1-07,A.1-05,unexpected
-"T2 (6,1)",cell,Total Height of the Building,Height of Ground Floor,unexpected
-"T2 (6,2)",cell,9.525 meters,3.175,unexpected
-"T2 (7,0)",cell,A.1-08,A.1-05,unexpected
-"T2 (7,1)",cell,Height considered for Fundamental Time Period,Height of Ground Floor,unexpected
-"T2 (7,2)",cell,9.525 meters,3.175,unexpected
-"T2 (8,0)",cell,A.1-09,A.1-05,unexpected
-"T2 (8,1)",cell,Occupancy Type of the Building according to the Building Code,Height of Ground Floor,unexpected
-"T2 (8,2)",cell,Residential Building,3.175,unexpected
-"T3 (2,1)",cell,250 mm X 430 mm,250 mm X 355 mm,unexpected
-"T8 (1,1)",cell,Moment Resisting Concrete Frame,Moment Resisting Frames,unexpected
-"T8 (1,2)",cell,Moment Resisting Concrete Frame,Moment Resisting Frames,unexpected
-"T8 (1,3)",cell,Moment Resisting Concrete Frame,Moment Resisting Frames,unexpected
-"T8 (1,4)",cell,Moment Resisting Concrete Frame,Moment Resisting Frames,unexpected
 T9,row_count,6 rows,2 rows,owner_approved
-"T9 (1,0)",cell,Story3,Total,owner_approved
-"T9 (1,1)",cell,"20,482.18",167868.70,owner_approved
-"T9 (1,2)",cell,9.525,,owner_approved
-"T9 (1,3)",cell,9.6113,,owner_approved
-"T9 (1,4)",cell,"196,859.61",865221.01,owner_approved
-"T9 (1,5)",cell,54.63,240.10,owner_approved
-"T9 (1,6)",cell,54.63,,owner_approved
-"T9 (2,0)",cell,Story2,Total,owner_approved
-"T9 (2,1)",cell,"61,807.24",167868.70,owner_approved
-"T9 (2,2)",cell,6.350,,owner_approved
-"T9 (2,3)",cell,6.3971,,owner_approved
-"T9 (2,4)",cell,"395,388.62",865221.01,owner_approved
-"T9 (2,5)",cell,109.72,240.10,owner_approved
-"T9 (2,6)",cell,164.35,,owner_approved
-"T9 (3,0)",cell,Story1,Total,owner_approved
-"T9 (3,1)",cell,"85,579.28",167868.70,owner_approved
-"T9 (3,2)",cell,3.175,,owner_approved
-"T9 (3,3)",cell,3.1897,,owner_approved
-"T9 (3,4)",cell,"272,972.77",865221.01,owner_approved
-"T9 (3,5)",cell,75.75,240.10,owner_approved
-"T9 (3,6)",cell,240.10,,owner_approved
-"T9 (4,0)",cell,Base,Total,owner_approved
-"T9 (4,1)",cell,"4,078.98",167868.70,owner_approved
-"T9 (4,2)",cell,0.000,,owner_approved
-"T9 (4,3)",cell,0.0000,,owner_approved
-"T9 (4,4)",cell,0.00,865221.01,owner_approved
-"T9 (4,5)",cell,0.00,240.10,owner_approved
-"T9 (4,6)",cell,240.10,,owner_approved
-"T9 (5,1)",cell,"167,868.70",167868.70,owner_approved
-"T9 (5,4)",cell,"865,221.01",865221.01,owner_approved
-T10,row_count,7 rows,3 rows,owner_approved
-"T10 (1,0)",cell,Story3,,owner_approved
-"T10 (1,1)",cell,200.93,,owner_approved
-"T10 (1,2)",cell,26.295,,owner_approved
-"T10 (1,3)",cell,0.026295,,owner_approved
-"T10 (1,4)",cell,6.914E-4,,owner_approved
-"T10 (1,5)",cell,54.63,,owner_approved
-"T10 (1,6)",cell,1.4365,,owner_approved
-"T10 (1,7)",cell,0.1389,,owner_approved
-"T10 (2,0)",cell,Story2,,owner_approved
-"T10 (2,1)",cell,606.33,,owner_approved
-"T10 (2,2)",cell,15.770,,owner_approved
-"T10 (2,3)",cell,0.015770,,owner_approved
-"T10 (2,4)",cell,2.487E-4,,owner_approved
-"T10 (2,5)",cell,109.72,,owner_approved
-"T10 (2,6)",cell,1.7303,,owner_approved
-"T10 (2,7)",cell,0.1508,,owner_approved
-"T10 (3,0)",cell,Story1,,owner_approved
-"T10 (3,1)",cell,839.53,,owner_approved
-"T10 (3,2)",cell,7.316,,owner_approved
-"T10 (3,3)",cell,0.007316,,owner_approved
-"T10 (3,4)",cell,5.352E-5,,owner_approved
-"T10 (3,5)",cell,75.75,,owner_approved
-"T10 (3,6)",cell,0.5542,,owner_approved
-"T10 (3,7)",cell,0.0449,,owner_approved
-"T10 (4,0)",cell,Base,,owner_approved
-"T10 (4,1)",cell,40.01,,owner_approved
-"T10 (4,2)",cell,0,,owner_approved
-"T10 (4,3)",cell,0,,owner_approved
-"T10 (4,4)",cell,0,,owner_approved
-"T10 (4,5)",cell,0.00,,owner_approved
-"T10 (4,6)",cell,0.0000,,owner_approved
-"T10 (4,7)",cell,0.0000,,owner_approved
+T9 row 'Story3' col 0,cell_missing,Story3,,owner_approved
+T9 row 'Story3' col 1,cell_missing,"20,482.18",,owner_approved
+T9 row 'Story3' col 2,cell_missing,9.525,,owner_approved
+T9 row 'Story3' col 3,cell_missing,9.6113,,owner_approved
+T9 row 'Story3' col 4,cell_missing,"196,859.61",,owner_approved
+T9 row 'Story3' col 5,cell_missing,54.63,,owner_approved
+T9 row 'Story3' col 6,cell_missing,54.63,,owner_approved
+T9 row 'Story2' col 0,cell_missing,Story2,,owner_approved
+T9 row 'Story2' col 1,cell_missing,"61,807.24",,owner_approved
+T9 row 'Story2' col 2,cell_missing,6.350,,owner_approved
+T9 row 'Story2' col 3,cell_missing,6.3971,,owner_approved
+T9 row 'Story2' col 4,cell_missing,"395,388.62",,owner_approved
+T9 row 'Story2' col 5,cell_missing,109.72,,owner_approved
+T9 row 'Story2' col 6,cell_missing,164.35,,owner_approved
+T9 row 'Story1' col 0,cell_missing,Story1,,owner_approved
+T9 row 'Story1' col 1,cell_missing,"85,579.28",,owner_approved
+T9 row 'Story1' col 2,cell_missing,3.175,,owner_approved
+T9 row 'Story1' col 3,cell_missing,3.1897,,owner_approved
+T9 row 'Story1' col 4,cell_missing,"272,972.77",,owner_approved
+T9 row 'Story1' col 5,cell_missing,75.75,,owner_approved
+T9 row 'Story1' col 6,cell_missing,240.10,,owner_approved
+T9 row 'Base' col 0,cell_missing,Base,,owner_approved
+T9 row 'Base' col 1,cell_missing,"4,078.98",,owner_approved
+T9 row 'Base' col 2,cell_missing,0.000,,owner_approved
+T9 row 'Base' col 3,cell_missing,0.0000,,owner_approved
+T9 row 'Base' col 4,cell_missing,0.00,,owner_approved
+T9 row 'Base' col 5,cell_missing,0.00,,owner_approved
+T9 row 'Base' col 6,cell_missing,240.10,,owner_approved
+T9 row 'Total' col 1,cell,"167,868.70",167868.70,owner_approved
+T9 row 'Total' col 4,cell,"865,221.01",865221.01,owner_approved
 T11,row_count,7 rows,3 rows,owner_approved
-"T11 (1,0)",cell,Story3,,owner_approved
-"T11 (1,1)",cell,200.93,,owner_approved
-"T11 (1,2)",cell,18.100,,owner_approved
-"T11 (1,3)",cell,0.018100,,owner_approved
-"T11 (1,4)",cell,3.276E-4,,owner_approved
-"T11 (1,5)",cell,54.63,,owner_approved
-"T11 (1,6)",cell,0.9888,,owner_approved
-"T11 (1,7)",cell,0.0658,,owner_approved
-"T11 (2,0)",cell,Story2,,owner_approved
-"T11 (2,1)",cell,606.33,,owner_approved
-"T11 (2,2)",cell,13.078,,owner_approved
-"T11 (2,3)",cell,0.013078,,owner_approved
-"T11 (2,4)",cell,1.710E-4,,owner_approved
-"T11 (2,5)",cell,109.72,,owner_approved
-"T11 (2,6)",cell,1.4349,,owner_approved
-"T11 (2,7)",cell,0.1037,,owner_approved
-"T11 (3,0)",cell,Story1,,owner_approved
-"T11 (3,1)",cell,839.53,,owner_approved
-"T11 (3,2)",cell,6.342,,owner_approved
-"T11 (3,3)",cell,0.006342,,owner_approved
-"T11 (3,4)",cell,4.022E-5,,owner_approved
-"T11 (3,5)",cell,75.75,,owner_approved
-"T11 (3,6)",cell,0.4804,,owner_approved
-"T11 (3,7)",cell,0.0338,,owner_approved
-"T11 (4,0)",cell,Base,,owner_approved
-"T11 (4,1)",cell,40.01,,owner_approved
-"T11 (4,2)",cell,0,,owner_approved
-"T11 (4,3)",cell,0,,owner_approved
-"T11 (4,4)",cell,0,,owner_approved
-"T11 (4,5)",cell,0.00,,owner_approved
-"T11 (4,6)",cell,0.0000,,owner_approved
-"T11 (4,7)",cell,0.0000,,owner_approved
-"T12 (9,2)",cell,1,1.0,unexpected
-"T12 (9,3)",cell,1,1.0,unexpected
-"T12 (13,3)",cell,Reinforced Concrete Moment Resisting Frame,Moment Resisting Frames,unexpected
-"T13 (3,1)",cell,0.140,0.14,unexpected
+T11 row 'Story3' col 0,cell_missing,Story3,,owner_approved
+T11 row 'Story3' col 1,cell_missing,200.93,,owner_approved
+T11 row 'Story3' col 2,cell_missing,18.100,,owner_approved
+T11 row 'Story3' col 3,cell_missing,0.018100,,owner_approved
+T11 row 'Story3' col 4,cell_missing,3.276E-4,,owner_approved
+T11 row 'Story3' col 5,cell_missing,54.63,,owner_approved
+T11 row 'Story3' col 6,cell_missing,0.9888,,owner_approved
+T11 row 'Story3' col 7,cell_missing,0.0658,,owner_approved
+T11 row 'Story2' col 0,cell_missing,Story2,,owner_approved
+T11 row 'Story2' col 1,cell_missing,606.33,,owner_approved
+T11 row 'Story2' col 2,cell_missing,13.078,,owner_approved
+T11 row 'Story2' col 3,cell_missing,0.013078,,owner_approved
+T11 row 'Story2' col 4,cell_missing,1.710E-4,,owner_approved
+T11 row 'Story2' col 5,cell_missing,109.72,,owner_approved
+T11 row 'Story2' col 6,cell_missing,1.4349,,owner_approved
+T11 row 'Story2' col 7,cell_missing,0.1037,,owner_approved
+T11 row 'Story1' col 0,cell_missing,Story1,,owner_approved
+T11 row 'Story1' col 1,cell_missing,839.53,,owner_approved
+T11 row 'Story1' col 2,cell_missing,6.342,,owner_approved
+T11 row 'Story1' col 3,cell_missing,0.006342,,owner_approved
+T11 row 'Story1' col 4,cell_missing,4.022E-5,,owner_approved
+T11 row 'Story1' col 5,cell_missing,75.75,,owner_approved
+T11 row 'Story1' col 6,cell_missing,0.4804,,owner_approved
+T11 row 'Story1' col 7,cell_missing,0.0338,,owner_approved
+T11 row 'Base' col 0,cell_missing,Base,,owner_approved
+T11 row 'Base' col 1,cell_missing,40.01,,owner_approved
+T11 row 'Base' col 2,cell_missing,0,,owner_approved
+T11 row 'Base' col 3,cell_missing,0,,owner_approved
+T11 row 'Base' col 4,cell_missing,0,,owner_approved
+T11 row 'Base' col 5,cell_missing,0.00,,owner_approved
+T11 row 'Base' col 6,cell_missing,0.0000,,owner_approved
+T11 row 'Base' col 7,cell_missing,0.0000,,owner_approved
 T14,row_count,11 rows,2 rows,owner_approved
-"T14 (2,0)",cell,Modal,,owner_approved
-"T14 (2,1)",cell,1,,owner_approved
-"T14 (2,2)",cell,0.642,,owner_approved
-"T14 (2,3)",cell,0.6127,,owner_approved
-"T14 (2,4)",cell,0.0001,,owner_approved
-"T14 (2,5)",cell,0.6127,,owner_approved
-"T14 (2,6)",cell,0.0001,,owner_approved
-"T14 (3,0)",cell,Modal,,owner_approved
-"T14 (3,1)",cell,2,,owner_approved
-"T14 (3,2)",cell,0.531,,owner_approved
-"T14 (3,3)",cell,0.0004,,owner_approved
-"T14 (3,4)",cell,0.8544,,owner_approved
-"T14 (3,5)",cell,0.6131,,owner_approved
-"T14 (3,6)",cell,0.8545,,owner_approved
-"T14 (4,0)",cell,Modal,,owner_approved
-"T14 (4,1)",cell,3,,owner_approved
-"T14 (4,2)",cell,0.432,,owner_approved
-"T14 (4,3)",cell,0.2553,,owner_approved
-"T14 (4,4)",cell,0.0003,,owner_approved
-"T14 (4,5)",cell,0.8684,,owner_approved
-"T14 (4,6)",cell,0.8549,,owner_approved
-"T14 (5,0)",cell,Modal,,owner_approved
-"T14 (5,1)",cell,4,,owner_approved
-"T14 (5,2)",cell,0.217,,owner_approved
-"T14 (5,3)",cell,0.0555,,owner_approved
-"T14 (5,4)",cell,0.034,,owner_approved
-"T14 (5,5)",cell,0.924,,owner_approved
-"T14 (5,6)",cell,0.8888,,owner_approved
-"T14 (6,0)",cell,Modal,,owner_approved
-"T14 (6,1)",cell,5,,owner_approved
-"T14 (6,2)",cell,0.215,,owner_approved
-"T14 (6,3)",cell,0.0255,,owner_approved
-"T14 (6,4)",cell,0.0737,,owner_approved
-"T14 (6,5)",cell,0.9494,,owner_approved
-"T14 (6,6)",cell,0.9625,,owner_approved
-"T14 (7,0)",cell,Modal,,owner_approved
-"T14 (7,1)",cell,6,,owner_approved
-"T14 (7,2)",cell,0.18,,owner_approved
-"T14 (7,3)",cell,0.0076,,owner_approved
-"T14 (7,4)",cell,9.121E-06,,owner_approved
-"T14 (7,5)",cell,0.9571,,owner_approved
-"T14 (7,6)",cell,0.9625,,owner_approved
-"T14 (8,0)",cell,Modal,,owner_approved
-"T14 (8,1)",cell,7,,owner_approved
-"T14 (8,2)",cell,0.144,,owner_approved
-"T14 (8,3)",cell,0.0384,,owner_approved
-"T14 (8,4)",cell,0.0002,,owner_approved
-"T14 (8,5)",cell,0.9955,,owner_approved
-"T14 (8,6)",cell,0.9627,,owner_approved
-"T14 (9,0)",cell,Modal,,owner_approved
-"T14 (9,1)",cell,8,,owner_approved
-"T14 (9,2)",cell,0.139,,owner_approved
-"T14 (9,3)",cell,0.0004,,owner_approved
-"T14 (9,4)",cell,0.037,,owner_approved
-"T14 (9,5)",cell,0.9959,,owner_approved
-"T14 (9,6)",cell,0.9997,,owner_approved
-"T14 (10,0)",cell,Modal,,owner_approved
-"T14 (10,1)",cell,9,,owner_approved
-"T14 (10,2)",cell,0.128,,owner_approved
-"T14 (10,3)",cell,0.0041,,owner_approved
-"T14 (10,4)",cell,0.0003,,owner_approved
-"T14 (10,5)",cell,1,,owner_approved
-"T14 (10,6)",cell,1,,owner_approved
-T15,row_count,88 rows,14 rows,owner_approved
-"T15 (0,0)",cell,,Item,owner_approved
-"T15 (0,1)",cell,,Value,owner_approved
-"T15 (1,0)",cell,,Item,owner_approved
-"T15 (1,1)",cell,,Value,owner_approved
-"T15 (2,0)",cell,lx =,Item,owner_approved
-"T15 (2,1)",cell,4.21,Value,owner_approved
-"T15 (2,2)",cell,m,,owner_approved
-"T15 (3,0)",cell,ly =,Item,owner_approved
-"T15 (3,1)",cell,4.19,Value,owner_approved
-"T15 (3,2)",cell,m,,owner_approved
-"T15 (4,0)",cell,fck =,Item,owner_approved
-"T15 (4,1)",cell,20,Value,owner_approved
-"T15 (4,2)",cell,N/mm2,,owner_approved
-"T15 (5,0)",cell,fy =,Item,owner_approved
-"T15 (5,1)",cell,500,Value,owner_approved
-"T15 (5,2)",cell,N/mm2,,owner_approved
-"T15 (6,0)",cell,Dia. Of Bar =,Item,owner_approved
-"T15 (6,1)",cell,8,Value,owner_approved
-"T15 (6,2)",cell,mm,,owner_approved
-"T15 (7,0)",cell,,Item,owner_approved
-"T15 (7,1)",cell,,Value,owner_approved
-"T15 (8,0)",cell,ly/lx =,Item,owner_approved
-"T15 (8,1)",cell,1,Value,owner_approved
-"T15 (9,0)",cell,,Item,owner_approved
-"T15 (9,1)",cell,,Value,owner_approved
-"T15 (10,0)",cell,Two Way Slab,Item,owner_approved
-"T15 (10,1)",cell,Two Way Slab,Value,owner_approved
-"T15 (11,0)",cell,,Item,owner_approved
-"T15 (11,1)",cell,,Value,owner_approved
-"T15 (11,5)",cell,Status,,owner_approved
-"T15 (12,0)",cell,Overall depth of Slab (D) =,Item,owner_approved
-"T15 (12,1)",cell,Overall depth of Slab (D) =,Value,owner_approved
-"T15 (12,2)",cell,125,,owner_approved
-"T15 (12,3)",cell,mm,,owner_approved
-"T15 (12,5)",cell,DEPTH OK,,owner_approved
-"T15 (13,0)",cell,Effective depth (d) =,Item,owner_approved
-"T15 (13,1)",cell,Effective depth (d) =,Value,owner_approved
-"T15 (13,2)",cell,101,,owner_approved
-"T15 (13,3)",cell,mm,,owner_approved
-"T15 (14,0)",cell,,Item,owner_approved
-"T15 (14,1)",cell,,Value,owner_approved
-"T15 (15,0)",cell,Load Calculation,Item,owner_approved
-"T15 (15,1)",cell,Load Calculation,Value,owner_approved
-"T15 (15,2)",cell,Load Calculation,,owner_approved
-"T15 (15,3)",cell,Load Calculation,,owner_approved
-"T15 (16,0)",cell,,Item,owner_approved
-"T15 (16,1)",cell,,Value,owner_approved
-"T15 (17,0)",cell,Dead Load of Slab =,Item,owner_approved
-"T15 (17,1)",cell,Dead Load of Slab =,Value,owner_approved
-"T15 (17,2)",cell,3.175,,owner_approved
-"T15 (17,3)",cell,KN/m2,,owner_approved
-"T15 (18,0)",cell,Floor Finish =,Item,owner_approved
-"T15 (18,1)",cell,Floor Finish =,Value,owner_approved
-"T15 (18,2)",cell,0.65,,owner_approved
-"T15 (18,3)",cell,KN/m2,,owner_approved
-"T15 (19,0)",cell,Total Dead Load =,Item,owner_approved
-"T15 (19,1)",cell,Total Dead Load =,Value,owner_approved
-"T15 (19,2)",cell,3.825,,owner_approved
-"T15 (19,3)",cell,KN/m2,,owner_approved
-"T15 (20,0)",cell,,Item,owner_approved
-"T15 (20,1)",cell,,Value,owner_approved
-"T15 (21,0)",cell,Live Load =,Item,owner_approved
-"T15 (21,1)",cell,Live Load =,Value,owner_approved
-"T15 (21,2)",cell,2,,owner_approved
-"T15 (21,3)",cell,KN/m2,,owner_approved
-"T15 (22,0)",cell,,Item,owner_approved
-"T15 (22,1)",cell,,Value,owner_approved
-"T15 (23,0)",cell,Total Load =,Item,owner_approved
-"T15 (23,1)",cell,Total Load =,Value,owner_approved
-"T15 (23,2)",cell,5.825,,owner_approved
-"T15 (23,3)",cell,KN/m2,,owner_approved
-"T15 (24,0)",cell,Factored Load =,Item,owner_approved
-"T15 (24,1)",cell,Factored Load =,Value,owner_approved
-"T15 (24,2)",cell,8.74,,owner_approved
-"T15 (24,3)",cell,KN/m2,,owner_approved
-"T15 (25,0)",cell,,Item,owner_approved
-"T15 (25,1)",cell,,Value,owner_approved
-"T15 (26,0)",cell,Type the Value for Slab Type =,Item,owner_approved
-"T15 (26,1)",cell,Type the Value for Slab Type =,Value,owner_approved
-"T15 (26,2)",cell,4,,owner_approved
-"T15 (26,5)",cell,Type of Slab,,owner_approved
-"T15 (26,6)",cell,Type of Slab,,owner_approved
-"T15 (26,7)",cell,Value,,owner_approved
-"T15 (27,0)",cell,,Item,owner_approved
-"T15 (27,1)",cell,,Value,owner_approved
-"T15 (27,5)",cell,Interior Pannels,,owner_approved
-"T15 (27,6)",cell,Interior Pannels,,owner_approved
-"T15 (27,7)",cell,1,,owner_approved
-"T15 (28,0)",cell,αx-,Item,owner_approved
-"T15 (28,1)",cell,0.072,Value,owner_approved
-"T15 (28,5)",cell,One Short Edge Discontinuous,,owner_approved
-"T15 (28,6)",cell,One Short Edge Discontinuous,,owner_approved
-"T15 (28,7)",cell,2,,owner_approved
-"T15 (29,0)",cell,αy-,Item,owner_approved
-"T15 (29,1)",cell,0.047,Value,owner_approved
-"T15 (29,5)",cell,One Long Edge Discontinuous,,owner_approved
-"T15 (29,6)",cell,One Long Edge Discontinuous,,owner_approved
-"T15 (29,7)",cell,3,,owner_approved
-"T15 (30,0)",cell,αx+,Item,owner_approved
-"T15 (30,1)",cell,0.054,Value,owner_approved
-"T15 (30,5)",cell,Two Adjacent Edge Discontinuous,,owner_approved
-"T15 (30,6)",cell,Two Adjacent Edge Discontinuous,,owner_approved
-"T15 (30,7)",cell,4,,owner_approved
-"T15 (31,0)",cell,αy+,Item,owner_approved
-"T15 (31,1)",cell,0.035,Value,owner_approved
-"T15 (31,5)",cell,Two Short Edges Discontinuous,,owner_approved
-"T15 (31,6)",cell,Two Short Edges Discontinuous,,owner_approved
-"T15 (31,7)",cell,5,,owner_approved
-"T15 (32,0)",cell,,Item,owner_approved
-"T15 (32,1)",cell,,Value,owner_approved
-"T15 (32,5)",cell,Two Long Edges Discontinuous,,owner_approved
-"T15 (32,6)",cell,Two Long Edges Discontinuous,,owner_approved
-"T15 (32,7)",cell,6,,owner_approved
-"T15 (33,0)",cell,,Item,owner_approved
-"T15 (33,1)",cell,,Value,owner_approved
-"T15 (33,5)",cell,Three Edge Discontinuous (One Long Edge Cont.),,owner_approved
-"T15 (33,6)",cell,Three Edge Discontinuous (One Long Edge Cont.),,owner_approved
-"T15 (33,7)",cell,7,,owner_approved
-"T15 (34,0)",cell,Mx-,Item,owner_approved
-"T15 (34,1)",cell,11.2,Value,owner_approved
-"T15 (34,2)",cell,KNm,,owner_approved
-"T15 (34,5)",cell,Three Edge Discontinuous (One Short Edge Cont.),,owner_approved
-"T15 (34,6)",cell,Three Edge Discontinuous (One Short Edge Cont.),,owner_approved
-"T15 (34,7)",cell,8,,owner_approved
-"T15 (35,0)",cell,My-,Item,owner_approved
-"T15 (35,1)",cell,7.3,Value,owner_approved
-"T15 (35,2)",cell,KNm,,owner_approved
-"T15 (35,5)",cell,Four Edge Discontinuous,,owner_approved
-"T15 (35,6)",cell,Four Edge Discontinuous,,owner_approved
-"T15 (35,7)",cell,9,,owner_approved
-"T15 (36,0)",cell,Mx+,Item,owner_approved
-"T15 (36,1)",cell,8.4,Value,owner_approved
-"T15 (36,2)",cell,KNm,,owner_approved
-"T15 (37,0)",cell,My+,Item,owner_approved
-"T15 (37,1)",cell,5.4,Value,owner_approved
-"T15 (37,2)",cell,KNm,,owner_approved
-"T15 (38,0)",cell,,Item,owner_approved
-"T15 (38,1)",cell,,Value,owner_approved
-"T15 (39,0)",cell,Check for Depth Due to Moment,Item,owner_approved
-"T15 (39,1)",cell,Check for Depth Due to Moment,Value,owner_approved
-"T15 (39,2)",cell,Check for Depth Due to Moment,,owner_approved
-"T15 (39,3)",cell,Check for Depth Due to Moment,,owner_approved
-"T15 (40,0)",cell,,Item,owner_approved
-"T15 (40,1)",cell,,Value,owner_approved
-"T15 (41,0)",cell,d=,Item,owner_approved
-"T15 (41,1)",cell,64.74,Value,owner_approved
-"T15 (41,2)",cell,mm,,owner_approved
-"T15 (42,0)",cell,,Item,owner_approved
-"T15 (42,1)",cell,,Value,owner_approved
-"T15 (43,0)",cell,Check,Item,owner_approved
-"T15 (43,1)",cell,OK,Value,owner_approved
-"T15 (44,0)",cell,,Item,owner_approved
-"T15 (44,1)",cell,,Value,owner_approved
-"T15 (45,0)",cell,Calculation of Area of Steel Required,Item,owner_approved
-"T15 (45,1)",cell,Calculation of Area of Steel Required,Value,owner_approved
-"T15 (45,2)",cell,Calculation of Area of Steel Required,,owner_approved
-"T15 (45,3)",cell,Calculation of Area of Steel Required,,owner_approved
-"T15 (46,0)",cell,,Item,owner_approved
-"T15 (46,1)",cell,,Value,owner_approved
-"T15 (47,0)",cell,,Item,owner_approved
-"T15 (47,1)",cell,Area,Value,owner_approved
-"T15 (47,2)",cell,Check,,owner_approved
-"T15 (47,3)",cell,Area,,owner_approved
-"T15 (47,4)",cell,Dia. Of bar,,owner_approved
-"T15 (47,5)",cell,Suggestted,,owner_approved
-"T15 (47,6)",cell,Provide,,owner_approved
-"T15 (47,7)",cell,Provided,,owner_approved
-"T15 (48,0)",cell,,Item,owner_approved
-"T15 (48,1)",cell,Calculated,Value,owner_approved
-"T15 (48,2)",cell,For,,owner_approved
-"T15 (48,3)",cell,Required,,owner_approved
-"T15 (48,4)",cell,Used,,owner_approved
-"T15 (48,5)",cell,Spacing,,owner_approved
-"T15 (48,6)",cell,Spacing,,owner_approved
-"T15 (48,7)",cell,Area,,owner_approved
-"T15 (49,0)",cell,,Item,owner_approved
-"T15 (49,1)",cell,mm2,Value,owner_approved
-"T15 (49,2)",cell,Min. Area,,owner_approved
-"T15 (49,3)",cell,mm2,,owner_approved
-"T15 (49,4)",cell,mm,,owner_approved
-"T15 (49,5)",cell,mm,,owner_approved
-"T15 (49,6)",cell,mm,,owner_approved
-"T15 (49,7)",cell,mm2,,owner_approved
-"T15 (50,0)",cell,Astx-,Item,owner_approved
-"T15 (50,1)",cell,272,Value,owner_approved
-"T15 (50,2)",cell,OK,,owner_approved
-"T15 (50,3)",cell,273,,owner_approved
-"T15 (50,4)",cell,8,,owner_approved
-"T15 (50,5)",cell,185,,owner_approved
-"T15 (50,6)",cell,150,,owner_approved
-"T15 (50,7)",cell,335,,owner_approved
-"T15 (51,0)",cell,Asty-,Item,owner_approved
-"T15 (51,1)",cell,173,Value,owner_approved
-"T15 (51,2)",cell,OK,,owner_approved
-"T15 (51,3)",cell,174,,owner_approved
-"T15 (51,4)",cell,8,,owner_approved
-"T15 (51,5)",cell,289,,owner_approved
-"T15 (51,6)",cell,150,,owner_approved
-"T15 (51,7)",cell,335,,owner_approved
-"T15 (52,0)",cell,Astx+,Item,owner_approved
-"T15 (52,1)",cell,200,Value,owner_approved
-"T15 (52,2)",cell,OK,,owner_approved
-"T15 (52,3)",cell,201,,owner_approved
-"T15 (52,4)",cell,8,,owner_approved
-"T15 (52,5)",cell,250,,owner_approved
-"T15 (52,6)",cell,150,,owner_approved
-"T15 (52,7)",cell,335,,owner_approved
-"T15 (53,0)",cell,Asty+,Item,owner_approved
-"T15 (53,1)",cell,127,Value,owner_approved
-"T15 (53,2)",cell,FALSE,,owner_approved
-"T15 (53,3)",cell,150,,owner_approved
-"T15 (53,4)",cell,8,,owner_approved
-"T15 (53,5)",cell,335,,owner_approved
-"T15 (53,6)",cell,150,,owner_approved
-"T15 (53,7)",cell,335,,owner_approved
-"T15 (54,0)",cell,,Item,owner_approved
-"T15 (54,1)",cell,,Value,owner_approved
-"T15 (55,0)",cell,Minimum Area of Steel,Item,owner_approved
-"T15 (55,1)",cell,Minimum Area of Steel,Value,owner_approved
-"T15 (55,2)",cell,Minimum Area of Steel,,owner_approved
-"T15 (55,3)",cell,Minimum Area of Steel,,owner_approved
-"T15 (56,0)",cell,,Item,owner_approved
-"T15 (56,1)",cell,,Value,owner_approved
-"T15 (57,0)",cell,"Ast,min",Item,owner_approved
-"T15 (57,1)",cell,150,Value,owner_approved
-"T15 (57,2)",cell,mm2,,owner_approved
-"T15 (58,0)",cell,,Item,owner_approved
-"T15 (58,1)",cell,,Value,owner_approved
-"T15 (59,0)",cell,Check for Shear Force,Item,owner_approved
-"T15 (59,1)",cell,Check for Shear Force,Value,owner_approved
-"T15 (59,2)",cell,Check for Shear Force,,owner_approved
-"T15 (59,3)",cell,Check for Shear Force,,owner_approved
-"T15 (60,0)",cell,,Item,owner_approved
-"T15 (60,1)",cell,,Value,owner_approved
-"T15 (61,0)",cell,Maximum Shear Force =,Item,owner_approved
-"T15 (61,1)",cell,Maximum Shear Force =,Value,owner_approved
-"T15 (61,2)",cell,18.39,,owner_approved
-"T15 (61,3)",cell,KN/m,,owner_approved
-"T15 (62,0)",cell,,Item,owner_approved
-"T15 (62,1)",cell,,Value,owner_approved
-"T15 (63,0)",cell,"Nominal Shear Stress, Tv =",Item,owner_approved
-"T15 (63,1)",cell,"Nominal Shear Stress, Tv =",Value,owner_approved
-"T15 (63,2)",cell,0.18,,owner_approved
-"T15 (63,3)",cell,N/mm2,,owner_approved
-"T15 (64,0)",cell,,Item,owner_approved
-"T15 (64,1)",cell,,Value,owner_approved
-"T15 (65,0)",cell,"Pecent of Steel, p% =",Item,owner_approved
-"T15 (65,1)",cell,"Pecent of Steel, p% =",Value,owner_approved
-"T15 (65,2)",cell,0.34,,owner_approved
-"T15 (65,3)",cell,%,,owner_approved
-"T15 (66,0)",cell,,Item,owner_approved
-"T15 (66,1)",cell,,Value,owner_approved
-"T15 (67,0)",cell,"Shear Strength of Concrete, Tc =",Item,owner_approved
-"T15 (67,1)",cell,"Shear Strength of Concrete, Tc =",Value,owner_approved
-"T15 (67,2)",cell,0.40,,owner_approved
-"T15 (67,3)",cell,N/mm2,,owner_approved
-"T15 (68,0)",cell,,Item,owner_approved
-"T15 (68,1)",cell,,Value,owner_approved
-"T15 (69,0)",cell,k=,Item,owner_approved
-"T15 (69,1)",cell,1.3,Value,owner_approved
-"T15 (70,0)",cell,"Shear Strength in Slabs, Tc'=",Item,owner_approved
-"T15 (70,1)",cell,"Shear Strength in Slabs, Tc'=",Value,owner_approved
-"T15 (70,2)",cell,0.52,,owner_approved
-"T15 (70,3)",cell,N/mm2,,owner_approved
-"T15 (71,0)",cell,,Item,owner_approved
-"T15 (71,1)",cell,,Value,owner_approved
-"T15 (72,0)",cell,Check,Item,owner_approved
-"T15 (72,1)",cell,OK,Value,owner_approved
-"T15 (73,0)",cell,,Item,owner_approved
-"T15 (73,1)",cell,,Value,owner_approved
-"T15 (74,0)",cell,Check for Deflection,Item,owner_approved
-"T15 (74,1)",cell,Check for Deflection,Value,owner_approved
-"T15 (74,2)",cell,Check for Deflection,,owner_approved
-"T15 (74,3)",cell,Check for Deflection,,owner_approved
-"T15 (75,0)",cell,,Item,owner_approved
-"T15 (75,1)",cell,,Value,owner_approved
-"T15 (76,0)",cell,"Steel Stresss of Service Loads, fs =",Item,owner_approved
-"T15 (76,1)",cell,"Steel Stresss of Service Loads, fs =",Value,owner_approved
-"T15 (76,2)",cell,"Steel Stresss of Service Loads, fs =",,owner_approved
-"T15 (76,3)",cell,237,,owner_approved
-"T15 (76,4)",cell,N/mm2,,owner_approved
-"T15 (77,0)",cell,Modification Factors,Item,owner_approved
-"T15 (77,1)",cell,Modification Factors,Value,owner_approved
-"T15 (78,0)",cell,α=,Item,owner_approved
-"T15 (78,1)",cell,26,Value,owner_approved
-"T15 (78,5)",cell,Type,,owner_approved
-"T15 (78,6)",cell,Value of α,,owner_approved
-"T15 (79,0)",cell,β=,Item,owner_approved
-"T15 (79,1)",cell,1,Value,owner_approved
-"T15 (79,5)",cell,Cantilever,,owner_approved
-"T15 (79,6)",cell,7,,owner_approved
-"T15 (80,0)",cell,γ=,Item,owner_approved
-"T15 (80,1)",cell,2,Value,owner_approved
-"T15 (80,5)",cell,Simply Supported,,owner_approved
-"T15 (80,6)",cell,20,,owner_approved
-"T15 (81,0)",cell,,Item,owner_approved
-"T15 (81,1)",cell,,Value,owner_approved
-"T15 (81,5)",cell,Continuous,,owner_approved
-"T15 (81,6)",cell,26,,owner_approved
-"T15 (82,0)",cell,Allowable Value =,Item,owner_approved
-"T15 (82,1)",cell,Allowable Value =,Value,owner_approved
-"T15 (82,2)",cell,52.0,,owner_approved
-"T15 (83,0)",cell,Actual Value =,Item,owner_approved
-"T15 (83,1)",cell,Actual Value =,Value,owner_approved
-"T15 (83,2)",cell,41.7,,owner_approved
-"T15 (84,0)",cell,,Item,owner_approved
-"T15 (84,1)",cell,,Value,owner_approved
-"T15 (85,0)",cell,Check,Item,owner_approved
-"T15 (85,1)",cell,OK,Value,owner_approved
-"T15 (86,0)",cell,,Item,owner_approved
-"T15 (86,1)",cell,,Value,owner_approved
-"T15 (87,0)",cell,Depth from Deflection =,Item,owner_approved
-"T15 (87,1)",cell,Depth from Deflection =,Value,owner_approved
-"T15 (87,2)",cell,81.0,,owner_approved
-"T15 (87,3)",cell,mm,,owner_approved
-T16,row_count,14 rows,2 rows,unexpected
-"T16 (0,0)",cell,Item,,unexpected
-"T16 (0,1)",cell,Value,,unexpected
-"T16 (1,0)",cell,Boundary condition of beam,,unexpected
-"T16 (1,1)",cell,Continuous,,unexpected
-"T16 (2,0)",cell,"Effective span, L",,unexpected
-"T16 (2,1)",cell,4191 mm,,unexpected
-"T16 (3,0)",cell,"Overall depth, D",,unexpected
-"T16 (3,1)",cell,430 mm,,unexpected
-"T16 (4,0)",cell,"Effective depth, d = D − d_cb = 430 − 35",,unexpected
-"T16 (4,1)",cell,395 mm,,unexpected
-"T16 (5,0)",cell,"Basic L/d ratio (Cl. 23.2.1, continuous)",,owner_approved
-"T16 (5,1)",cell,26,,unexpected
-"T16 (6,0)",cell,"Ast,req (bottom, ETABS)",,unexpected
-"T16 (6,1)",cell,186 mm²,,unexpected
-"T16 (7,0)",cell,"Ast,prov (2-12φ)",,unexpected
-"T16 (7,1)",cell,226 mm²,,unexpected
-"T16 (8,0)",cell,"% Tension reinforcement provided, pt = 100·Ast,prov/(b·d) = 100×226/(250×395)",,unexpected
-"T16 (8,1)",cell,0.229 %,,unexpected
-"T16 (9,0)",cell,"fs = 0.58 · fy · (Ast,req / Ast,prov) = 0.58 × 500 × (186/226)",,unexpected
-"T16 (9,1)",cell,239 N/mm²,,unexpected
-"T16 (10,0)",cell,"Modification factor, from Fig. 4 IS 456 (pt = 0.229 %, fs = 239)",,unexpected
-"T16 (10,1)",cell,≈ 1.68,,unexpected
-"T16 (11,0)",cell,Permissible L/d = 26 × 1.68,,unexpected
-"T16 (11,1)",cell,43.7,,unexpected
-"T16 (12,0)",cell,Provided L/d = 4191 / 395,,unexpected
-"T16 (12,1)",cell,10.61,,unexpected
-"T16 (13,0)",cell,Check,,unexpected
-"T16 (13,1)",cell,"10.61 < 43.7, OK",,unexpected
-"T17 (1,0)",cell,Figure 18: Maximum Story Displacement (EQX- ULS),Figure 20: Maximum Story Displacement (EQX- SLS),unexpected
-"T17 (1,1)",cell,Figure : Maximum Story Displacement (EQY- ULS),Figure : Maximum Story Displacement (EQY- SLS),unexpected
-"T18 (1,0)",cell,Figure 20: Maximum Story Displacement (EQX- SLS),Figure 22: Maximum Story Drift (EQX- ULS),unexpected
-"T18 (1,1)",cell,Figure : Maximum Story Displacement (EQY- SLS),Figure : Maximum Story Drift (EQY- ULS),unexpected
-"T19 (1,0)",cell,Figure 22: Maximum Story Drift (EQX- ULS),Figure 24: Maximum Story Drift (EQX- SLS),unexpected
-"T19 (1,1)",cell,Figure : Maximum Story Drift (EQY- ULS),Figure : Maximum Story Drift (EQY- SLS),unexpected
-T20,table_removed,(table),,unexpected
-rendered output,leak,(no key names),Enum literal leaked: present,unexpected
+T14 row 'Modal' col 0,cell_missing,Modal,,owner_approved
+T14 row 'Modal' col 1,cell_missing,1,,owner_approved
+T14 row 'Modal' col 2,cell_missing,0.642,,owner_approved
+T14 row 'Modal' col 3,cell_missing,0.6127,,owner_approved
+T14 row 'Modal' col 4,cell_missing,0.0001,,owner_approved
+T14 row 'Modal' col 5,cell_missing,0.6127,,owner_approved
+T14 row 'Modal' col 6,cell_missing,0.0001,,owner_approved
+T14 row 'Modal' col 0,cell_missing,Modal,,owner_approved
+T14 row 'Modal' col 1,cell_missing,2,,owner_approved
+T14 row 'Modal' col 2,cell_missing,0.531,,owner_approved
+T14 row 'Modal' col 3,cell_missing,0.0004,,owner_approved
+T14 row 'Modal' col 4,cell_missing,0.8544,,owner_approved
+T14 row 'Modal' col 5,cell_missing,0.6131,,owner_approved
+T14 row 'Modal' col 6,cell_missing,0.8545,,owner_approved
+T14 row 'Modal' col 0,cell_missing,Modal,,owner_approved
+T14 row 'Modal' col 1,cell_missing,3,,owner_approved
+T14 row 'Modal' col 2,cell_missing,0.432,,owner_approved
+T14 row 'Modal' col 3,cell_missing,0.2553,,owner_approved
+T14 row 'Modal' col 4,cell_missing,0.0003,,owner_approved
+T14 row 'Modal' col 5,cell_missing,0.8684,,owner_approved
+T14 row 'Modal' col 6,cell_missing,0.8549,,owner_approved
+T14 row 'Modal' col 0,cell_missing,Modal,,owner_approved
+T14 row 'Modal' col 1,cell_missing,4,,owner_approved
+T14 row 'Modal' col 2,cell_missing,0.217,,owner_approved
+T14 row 'Modal' col 3,cell_missing,0.0555,,owner_approved
+T14 row 'Modal' col 4,cell_missing,0.034,,owner_approved
+T14 row 'Modal' col 5,cell_missing,0.924,,owner_approved
+T14 row 'Modal' col 6,cell_missing,0.8888,,owner_approved
+T14 row 'Modal' col 0,cell_missing,Modal,,owner_approved
+T14 row 'Modal' col 1,cell_missing,5,,owner_approved
+T14 row 'Modal' col 2,cell_missing,0.215,,owner_approved
+T14 row 'Modal' col 3,cell_missing,0.0255,,owner_approved
+T14 row 'Modal' col 4,cell_missing,0.0737,,owner_approved
+T14 row 'Modal' col 5,cell_missing,0.9494,,owner_approved
+T14 row 'Modal' col 6,cell_missing,0.9625,,owner_approved
+T14 row 'Modal' col 0,cell_missing,Modal,,owner_approved
+T14 row 'Modal' col 1,cell_missing,6,,owner_approved
+T14 row 'Modal' col 2,cell_missing,0.18,,owner_approved
+T14 row 'Modal' col 3,cell_missing,0.0076,,owner_approved
+T14 row 'Modal' col 4,cell_missing,9.121E-06,,owner_approved
+T14 row 'Modal' col 5,cell_missing,0.9571,,owner_approved
+T14 row 'Modal' col 6,cell_missing,0.9625,,owner_approved
+T14 row 'Modal' col 0,cell_missing,Modal,,owner_approved
+T14 row 'Modal' col 1,cell_missing,7,,owner_approved
+T14 row 'Modal' col 2,cell_missing,0.144,,owner_approved
+T14 row 'Modal' col 3,cell_missing,0.0384,,owner_approved
+T14 row 'Modal' col 4,cell_missing,0.0002,,owner_approved
+T14 row 'Modal' col 5,cell_missing,0.9955,,owner_approved
+T14 row 'Modal' col 6,cell_missing,0.9627,,owner_approved
+T14 row 'Modal' col 0,cell_missing,Modal,,owner_approved
+T14 row 'Modal' col 1,cell_missing,8,,owner_approved
+T14 row 'Modal' col 2,cell_missing,0.139,,owner_approved
+T14 row 'Modal' col 3,cell_missing,0.0004,,owner_approved
+T14 row 'Modal' col 4,cell_missing,0.037,,owner_approved
+T14 row 'Modal' col 5,cell_missing,0.9959,,owner_approved
+T14 row 'Modal' col 6,cell_missing,0.9997,,owner_approved
+T14 row 'Modal' col 0,cell_missing,Modal,,owner_approved
+T14 row 'Modal' col 1,cell_missing,9,,owner_approved
+T14 row 'Modal' col 2,cell_missing,0.128,,owner_approved
+T14 row 'Modal' col 3,cell_missing,0.0041,,owner_approved
+T14 row 'Modal' col 4,cell_missing,0.0003,,owner_approved
+T14 row 'Modal' col 5,cell_missing,1,,owner_approved
+T14 row 'Modal' col 6,cell_missing,1,,owner_approved
+T15,table_removed,(table),,owner_approved

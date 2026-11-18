@@ -32,10 +32,10 @@ Total replacements: **217**.
 | 26 | paragraph idx=395 (sentence template) | As Empirical time period ({{ modal.empirical_period_s }} sec) is lesser than the Rayleigh time perio | `As Empirical time period ({{ modal.empirical_period_s }} sec) is lesser than the Rayleigh time perio` |
 | 27 | paragraph idx=397 | Ch(t)=Spectral Shape factor as per cl.4.1.2 Z= Seismic Zoning Factor as per 4.1.4 I=Importance facto | `{{ codes.clauses.spectral_shape_factor }}` |
 | 28 | paragraph idx=413 | As per Clause 3.2.1 of NBC 105:2025, the Equivalent Static Method may be used for all serviceability | `{{ codes.clauses.equivalent_static_method }}` |
-| 29 | paragraph idx=413 (sentence template) | As per {{ codes.clauses.equivalent_static_method }} of {{ codes.edition }}, the Equivalent Static Me | `As per Clause {{ codes.clauses.equivalent_static_method }} of {{ codes.edition }}, the Equivalent St` |
+| 29 | paragraph idx=413 (sentence template) | As per Clause {{ codes.clauses.equivalent_static_method }} of {{ codes.edition }}, the Equivalent St | `As per Clause {{ codes.clauses.equivalent_static_method }} of {{ codes.edition }}, the Equivalent St` |
 | 30 | paragraph idx=418 | When lateral load resisting elements are oriented along mutually orthogonal horizontal directions, t | `{{ codes.clauses.load_combinations }}` |
 | 31 | paragraph idx=430 | NBC105:2025 clause 7.3 states that number of modes to be used in the analysis should be such that th | `{{ codes.clauses.modal_mass_participation }}` |
-| 32 | paragraph idx=430 (sentence template) | {{ codes.edition }} {{ codes.clauses.modal_mass_participation }} states that number of modes to be u | `{{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that number of modes ` |
+| 32 | paragraph idx=430 (sentence template) | {{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that number of modes  | `{{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that number of modes ` |
 | 33 | paragraph idx=430 (sentence template) | {{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that number of modes  | `{{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that number of modes ` |
 | 34 | paragraph idx=450 (sentence template) | = 1557/ (355*355)*100% =1.24% <4% (Ok) | `= {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{ design.column.` |
 | 35 | paragraph idx=450 (sentence template) | = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{ design.column. | `= {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{ design.column.` |
@@ -61,14 +61,14 @@ Total replacements: **217**.
 | 55 | paragraph idx=535 (sentence template) | {{ codes.clauses.serviceability_drift }} of {{ codes.edition }} is applied. The maximum deflection i | `{{ codes.clauses.serviceability_drift }} of {{ codes.edition }} is applied. The maximum deflection i` |
 | 56 | paragraph idx=591 | One of the basic virtues of earthquake resistant design of structures is that the structure shall be | `{{ codes.clauses.irregularity_general }}` |
 | 57 | paragraph idx=593 | As per the clause 5.5.2.1 of NBC 105:2020, torsion irregularity is considered to exist when the maxi | `{{ codes.clauses.torsional_irregularity }}` |
-| 58 | paragraph idx=593 (sentence template) | As per the {{ codes.clauses.torsional_irregularity }} of {{ codes.edition }}, torsion irregularity i | `As per the clause {{ codes.clauses.torsional_irregularity }} of {{ codes.edition }}, torsion irregul` |
+| 58 | paragraph idx=593 (sentence template) | As per the clause {{ codes.clauses.torsional_irregularity }} of {{ codes.edition }}, torsion irregul | `As per the clause {{ codes.clauses.torsional_irregularity }} of {{ codes.edition }}, torsion irregul` |
 | 59 | paragraph idx=603 | As per the clause 5.5.1.2, a soft story is the one whose stiffness of the lateral force resisting sy | `{{ codes.clauses.soft_storey }}` |
-| 60 | paragraph idx=603 (sentence template) | As per the {{ codes.clauses.soft_storey }}, a soft story is the one whose stiffness of the lateral f | `As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition }}, a soft story is the one wh` |
+| 60 | paragraph idx=603 (sentence template) | As per the clause {{ codes.clauses.soft_storey }}, a soft story is the one whose stiffness of the la | `As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition }}, a soft story is the one wh` |
 | 61 | paragraph idx=603 (sentence template) | As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition }}, a soft story is the one wh | `As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition }}, a soft story is the one wh` |
 | 62 | paragraph idx=617 | If there is a difference of more than 50% between the effective masses of two consecutive storeys, t | `{{ codes.clauses.mass_irregularity }}` |
 | 63 | paragraph idx=617 (sentence template) | If there is a difference of more than 50% between the effective masses of two consecutive storeys, t | `If there is a difference of more than {{ codes.limits.mass_irregularity_diff_pct }}% between the eff` |
 | 64 | paragraph idx=624 | As per the clause 5.5.2.2 of NBC 105:2020, a structure is said to have re-entrant corner irregularit | `{{ codes.clauses.reentrant_corner }}` |
-| 65 | paragraph idx=624 (sentence template) | As per the {{ codes.clauses.reentrant_corner }} of {{ codes.edition }}, a structure is said to have  | `As per the clause {{ codes.clauses.reentrant_corner }} of {{ codes.edition }}, a structure is said t` |
+| 65 | paragraph idx=624 (sentence template) | As per the clause {{ codes.clauses.reentrant_corner }} of {{ codes.edition }}, a structure is said t | `As per the clause {{ codes.clauses.reentrant_corner }} of {{ codes.edition }}, a structure is said t` |
 | 66 | paragraph idx=632 | If the diaphragm of a building has a cutout or open area greater than 50% of the gross enclosed diap | `{{ codes.clauses.diaphragm_discontinuity }}` |
 | 67 | paragraph idx=632 (sentence template) | If the diaphragm of a building has a cutout or open area greater than 50% of the gross enclosed diap | `If the diaphragm of a building has a cutout or open area greater than {{ codes.limits.diaphragm_open` |
 | 68 | paragraph idx=632 (sentence template) | If the diaphragm of a building has a cutout or open area greater than {{ codes.limits.diaphragm_open | `If the diaphragm of a building has a cutout or open area greater than {{ codes.limits.diaphragm_open` |
@@ -144,7 +144,7 @@ Total replacements: **217**.
 | 138 | table T0 cell (4,2) | Mr. Sachin KC | `{{ client.designer_name }}` |
 | 139 | table T0 cell (5,2) | 131xx”Civil A” | `{{ client.designer_nec_reg }}` |
 | 140 | table T0 cell (6,2) | 9841xxxxxxx | `{{ client.designer_contact }}` |
-| 141 | table T0 cell (7,2) | CivoraX Infra | `{{ client.consultant_name }}` |
+| 141 | table T0 cell (7,2) | CivoraX Infra | `{{ client.consultant_firm }}` |
 | 142 | table T0 cell (8,2) | Xxxx | `{{ client.municipality_reg }}` |
 | 143 | table T0 cell (9,2) | 2026/xx/xx | `{{ client.application_date }}` |
 | 144 | table T2 cell (0,2) | Damak | `{{ building.location }}` |
@@ -155,7 +155,7 @@ Total replacements: **217**.
 | 149 | table T2 cell (5,2) | 3.175 meters | `{{ building.height_typical_floor_m }}` |
 | 150 | table T2 cell (6,2) | 9.525 meters | `{{ building.total_height_m }}` |
 | 151 | table T2 cell (7,2) | 9.525 meters | `{{ building.height_period_m }}` |
-| 152 | table T2 cell (8,2) | Residential Building | `{{ building.occupancy_class }}` |
+| 152 | table T2 cell (8,2) | Residential Building | `{{ building.occupancy_class_building }}` |
 | 153 | table T3 cell (1,1) | 355 mm X 355 mm | `{{ table.elements.col_desc }}` |
 | 154 | table T3 cell (1,2) | M20 | `{{ materials.concrete_grade_used }}` |
 | 155 | table T3 cell (2,1) | 250 mm X 430 mm | `{{ table.elements.beam_desc }}` |
@@ -170,8 +170,8 @@ Total replacements: **217**.
 | 164 | table T4 cell (0,2) | Moment Resisting Frames | `{{ structural.system_type }}` |
 | 165 | table T4 cell (1,2) | Combined Footing | `{{ foundation.type }}` |
 | 166 | table T4 cell (2,2) | Conventional | `{{ slab.type }}` |
-| 167 | table T8 cell (0,5) | 9.525 | `{{ building.total_height_m }}` |
-| 168 | table T8 cell (1,1) | Moment Resisting Concrete Frame | `{{ structural.system_type }}` |
+| 167 | table T8 cell (0,5) | 9.525 | `{{ building.total_height_numeric }}` |
+| 168 | table T8 cell (1,1) | Moment Resisting Concrete Frame | `{{ structural.system_type_concrete }}` |
 | 169 | table T8 cell (2,1) | 0.075 | `{{ seismic.time_coefficient_kt }}` |
 | 170 | table T8 cell (3,4) | 0.407 | `{{ modal.empirical_period_unamplified_s }}` |
 | 171 | table T8 cell (5,3) | 0.508 | `{{ modal.empirical_period_s }}` |
@@ -188,7 +188,7 @@ Total replacements: **217**.
 | 182 | table T12 cell (9,2) | 1 | `{{ seismic.importance_factor_i }}` |
 | 183 | table T12 cell (10,3) | 0.875 | `{{ seismic.elastic_site_spectra_c }}` |
 | 184 | table T12 cell (11,3) | 0.175 | `{{ seismic.elastic_site_spectra_cs }}` |
-| 185 | table T12 cell (13,3) | Reinforced Concrete Moment Resisting Frame | `{{ structural.system_type }}` |
+| 185 | table T12 cell (13,3) | Reinforced Concrete Moment Resisting Frame | `{{ structural.system_type_full }}` |
 | 186 | table T12 cell (14,3) | 4 | `{{ seismic.response_modification_factor_rmu }}` |
 | 187 | table T13 cell (0,1) | 1.5 | `{{ design.overstrength_ultimate }}` |
 | 188 | table T13 cell (1,1) | 1.25 | `{{ design.overstrength_serviceability }}` |
@@ -210,7 +210,7 @@ Total replacements: **217**.
 | 204 | table T6 cell (11,1) | 3.175 | `{{ building.story_height_m }}` |
 | 205 | table T15 | [88×8 slab design table] | `{{ figure.design.slab_sheet }} (image placeholder)` |
 | 206 | hard-coded clause in paragraph | Ch(t)=Spectral Shape factor as per cl.{{ codes.clauses.spectral_shape_factor }}  | `Ch(t)=Spectral Shape factor as per cl.{{ codes.clauses.spectral_shape_factor }} ` |
-| 207 | hard-coded clause in paragraph | For Parallel System (Cl. 3.6.1) | `For Parallel System ({{ codes.clauses.load_combinations }})` |
+| 207 | hard-coded clause in paragraph | For Parallel System (Cl. 3.6.1) | `For Parallel System (Cl. {{ codes.clauses.load_combinations }})` |
 | 208 | table T9 footer | [row 5] | `placeholders: ['totals.wi_kg', 'totals.wi_hik', 'totals.fi']` |
 | 209 | table T9 (loop) | [6 rows → 5 rows] | `for + template + endfor + 1 footer(s)` |
 | 210 | table T10 footer | [row 5] | `placeholders: ['totals.fi', 'totals.fi_di_x', 'totals.wi_di2_x']` |

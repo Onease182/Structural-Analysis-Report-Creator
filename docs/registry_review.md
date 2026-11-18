@@ -2,15 +2,15 @@
 
 **Review gate:** this curated registry is owned by the structural engineer. Do not generate a production master template until the six unresolved NBC 105:2025 clause mappings in `docs/needs_my_decision.md` are answered.
 
-Curated entries: **220**.
-Types: bool: 1, image: 56, number: 65, table: 21, text: 77.
-Sources: computed: 72, e2k: 10, etabs_api: 52, excel: 86.
+Curated entries: **224**.
+Types: bool: 1, image: 56, number: 65, table: 21, text: 81.
+Sources: computed: 72, e2k: 10, etabs_api: 54, excel: 88.
 
 ## Counts per group
 
 - `analysis`: 5
-- `building`: 17
-- `client`: 7
+- `building`: 18
+- `client`: 8
 - `codes`: 30
 - `design`: 20
 - `figure`: 56
@@ -21,7 +21,7 @@ Sources: computed: 72, e2k: 10, etabs_api: 52, excel: 86.
 - `project`: 2
 - `seismic`: 17
 - `slab`: 1
-- `structural`: 1
+- `structural`: 3
 - `table`: 40
 - `totals`: 7
 
@@ -29,8 +29,8 @@ Sources: computed: 72, e2k: 10, etabs_api: 52, excel: 86.
 
 - `computed`: 72
 - `e2k`: 10
-- `etabs_api`: 52
-- `excel`: 86
+- `etabs_api`: 54
+- `excel`: 88
 
 ## Key rename map
 

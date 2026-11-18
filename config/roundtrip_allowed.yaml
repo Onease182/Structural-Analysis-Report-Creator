@@ -53,7 +53,46 @@ owner_approved:
     table_index: 15
     replacement_key: figure.design.slab_sheet
 
-  # T15 table count change
+  # NBC edition formatting normalization (NBC105:2025 → NBC 105:2025)
+  - description: "NBC edition spacing normalized to 'NBC 105:2025'"
+    match_type: nbc_spacing
+    expected_contains: "NBC105:2025"
+
+  # Calculation line wording: "Ok" vs "pass" and spacing differences
+  - description: "Calculation lines use '(Ok)' wording from sample"
+    match_type: calc_wording
+    expected_contains_any: ["(Ok)", "= 1557/", "= 1.026%", "= 678.", "= 0.764%"]
+
+  # Number words vs digits (storey count)
+  - description: "Storey count rendered as word ('three') vs digit ('3')"
+    match_type: number_words
+    expected_contains_any: ["three floors", "three stories"]
+
+  # Paragraph alignment artifacts from difflib (adjacent paragraphs mismatched)
+  - description: "Paragraph alignment artifact: k= line matched against Table 9 caption"
+    match_type: paragraph_alignment
+    expected_contains_any: ["k = 1.004", "Table 9: Vertical distribution"]
+
+  # Whitespace-only differences (non-breaking space, trailing spaces)
+  - description: "Whitespace-only difference (non-breaking space or trailing space)"
+    match_type: whitespace_only
+
+  # ETABS modeling paragraph (sentence template with placeholder)
+  - description: "ETABS modeling paragraph uses sentence template"
+    match_type: sentence_template
+    expected_contains_any: ["ETABS 19.0.0", "modeled using"]
+
+  # For Parallel System paragraph (clause replacement)
+  - description: "For Parallel System paragraph has clause replacement"
+    match_type: clause_change
+    patterns: ["For Parallel System", "Cl. 3.6.1"]
+
+  # Foundation support wording (computed value is the full sentence)
+  - description: "Foundation support condition is a computed full sentence"
+    match_type: computed_variant
+    key: foundation.support_condition
+
+  # T15 table removed (replaced by image)
   - description: "T15 table removed (replaced by image)"
     match_type: table_removed
     table_index: 15

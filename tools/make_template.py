@@ -634,18 +634,21 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
             sample_clause = entry.get("sample_clause", "")
             target = entry.get("target_clause_2025", "")
             if sample_clause:
-                # Try replacing "Cl." + sample_clause (no space) and "Cl. " + sample_clause
-                for prefix in [f"Cl.{sample_clause}", f"Cl. {sample_clause}",
-                               f"clause {sample_clause}", f"Clause {sample_clause}"]:
+                # Convention: the value holds everything AFTER the word "clause".
+                # The word "clause" stays as fixed text in the template.
+                # Only replace "Cl.NUMBER" and "Cl. NUMBER" (because "Cl." would
+                # duplicate if the value also contains "Cl."). For "clause NUMBER",
+                # only replace the NUMBER, keeping "clause" as fixed text.
+                replaced = False
+                for prefix in [f"Cl.{sample_clause}", f"Cl. {sample_clause}"]:
                     if prefix in old_text:
                         replace_text_in_paragraph(p_element, prefix, f"{{{{ {key} }}}}")
+                        replaced = True
                         break
-                else:
-                    # Fall back to replacing just the sample clause number
-                    if sample_clause in old_text:
-                        replace_text_in_paragraph(
-                            p_element, sample_clause, f"{{{{ {key} }}}}"
-                        )
+                if not replaced and sample_clause in old_text:
+                    replace_text_in_paragraph(
+                        p_element, sample_clause, f"{{{{ {key} }}}}"
+                    )
                 # Also replace NBC edition
                 full_text = get_paragraph_text(p_element)
                 if re.search(r"NBC\s*105\s*:\s*\d{4}", full_text):
@@ -769,7 +772,7 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         (0, 4, 2): "client.designer_name",
         (0, 5, 2): "client.designer_nec_reg",
         (0, 6, 2): "client.designer_contact",
-        (0, 7, 2): "client.consultant_name",
+        (0, 7, 2): "client.consultant_firm",
         (0, 8, 2): "client.municipality_reg",
         (0, 9, 2): "client.application_date",
         # T2 (Building general info) — derived from row label in col 1
@@ -781,7 +784,7 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         (2, 5, 2): "building.height_typical_floor_m",
         (2, 6, 2): "building.total_height_m",
         (2, 7, 2): "building.height_period_m",
-        (2, 8, 2): "building.occupancy_class",
+        (2, 8, 2): "building.occupancy_class_building",
         # T3 (Element sizes) — col 1 = description, col 2 = grade
         (3, 1, 1): "table.elements.col_desc",
         (3, 1, 2): "materials.concrete_grade_used",
@@ -799,8 +802,8 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         (4, 1, 2): "foundation.type",
         (4, 2, 2): "slab.type",
         # T8 (Empirical period)
-        (8, 0, 5): "building.total_height_m",
-        (8, 1, 1): "structural.system_type",
+        (8, 0, 5): "building.total_height_numeric",
+        (8, 1, 1): "structural.system_type_concrete",
         (8, 2, 1): "seismic.time_coefficient_kt",
         (8, 3, 4): "modal.empirical_period_unamplified_s",
         (8, 5, 3): "modal.empirical_period_s",
@@ -818,7 +821,7 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         (12, 9, 2): "seismic.importance_factor_i",
         (12, 10, 3): "seismic.elastic_site_spectra_c",
         (12, 11, 3): "seismic.elastic_site_spectra_cs",
-        (12, 13, 3): "structural.system_type",
+        (12, 13, 3): "structural.system_type_full",
         (12, 14, 3): "seismic.response_modification_factor_rmu",
         # T13 (Overstrength factors)
         (13, 0, 1): "design.overstrength_ultimate",
@@ -896,8 +899,8 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
     PARA_CLAUSE_REPLACEMENTS = [
         ("4.1.4", "{{ codes.clauses.seismic_zoning_factor }}"),
         ("4.1.5", "{{ codes.clauses.importance_factor }}"),
-        ("(Cl. 3.6.1)", "({{ codes.clauses.load_combinations }})"),
-        ("Cl. 3.6.1", "{{ codes.clauses.load_combinations }}"),
+        ("(Cl. 3.6.1)", "(Cl. {{ codes.clauses.load_combinations }})"),
+        # Don't replace bare "Cl. 3.6.1" — it's already handled by the "(Cl. ...)" form above.
     ]
     for child in body_children:
         tag = child.tag.split("}")[-1]

@@ -3718,6 +3718,28 @@ items:
   example: null
   figure_origin: user_supplied
   generator: null
+- key: client.consultant_firm
+  description: Consulting firm name (full form, for table T0)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: CivoraX Infra
+- key: building.occupancy_class_building
+  description: Occupancy type with 'Building' suffix (T2 row 8)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: Residential Building
 - key: client.designer_name
   description: Name of the structural designer
   type: text
@@ -3855,6 +3877,30 @@ items:
   inventory_item_index: null
   example: 9.525
   etabs_table_or_e2k_section: $STORYDATA
+- key: structural.system_type_concrete
+  description: Structural system type as 'Moment Resisting Concrete Frame' (T8 wording)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: etabs_api
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: Moment Resisting Concrete Frame
+  etabs_table_or_e2k_section: Frame Section Assignments + Connectivity
+- key: structural.system_type_full
+  description: Full structural system type (T12 wording)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: etabs_api
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: Reinforced Concrete Moment Resisting Frame
+  etabs_table_or_e2k_section: Frame Section Assignments + Connectivity
 - key: table.elements.foundation_desc
   description: Foundation description
   type: text
