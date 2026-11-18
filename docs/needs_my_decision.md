@@ -53,6 +53,29 @@ These keys mapped to whole caption paragraphs. Per the owner's Task 3 requiremen
 - `modal.rayleigh_period_y_uls` — was: "Table 11: Rayleigh time period, Y-direction (EQY-ULS)"
 - `project.empirical_period_intro` — was: "Table 8: Fundamental Time Period Based on Empirical Formula"
 
+## Irregular tables needing owner decision (Task 2)
+
+T6 (Load Assessment, 39×6) and T15 (Slab Design, 88×8) are too irregular
+for a simple `{%tr for %}` loop. Choose one option per table:
+
+### T6 (Load Assessment)
+- Merged cells, mixed structure (wall loads, floor finish, live loads,
+  load cases, mass sources all in one table).
+- **Option A**: docxtpl Subdoc — build the table as a separate DOCX
+  fragment and insert via Subdoc.
+- **Option B**: Code-built table — build programmatically using
+  python-docx, reusing the sample's cell formatting.
+- **Option C**: Split into multiple tables — break into separate tables
+  (wall loads, live loads, load cases, mass sources) each with its own loop.
+
+### T15 (Slab Design, 88×8)
+- ETABS slab design output with blank headers. 88 rows of raw ETABS data.
+- **Option A**: Code-built table — build programmatically from ETABS CSV data.
+- **Option B**: Keep as image — replace the table with a screenshot of the
+  ETABS slab design output.
+- **Option C**: Skip entirely — omit the slab design table if the data is
+  not available.
+
 ## Classification policy
 
 The tool classifies headings and general method/boilerplate as `FIXED`, project facts as `VARIABLE`, data-driven tables as `TABLE`, replacement figures as `IMAGE`, derived results as `COMPUTED`, and condition-specific content as `CONDITIONAL`. Review all non-FIXED items before using the registry to drive report generation.

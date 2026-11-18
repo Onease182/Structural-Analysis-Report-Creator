@@ -3444,3 +3444,155 @@ items:
   inventory_item_index: 210
   example: M20
   etabs_table_or_e2k_section: Material Properties (concrete)
+- key: client.owner_name
+  description: Name of the building owner
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: Mr. Chatra Bahadur Ramtel
+- key: design.overstrength_serviceability
+  description: Serviceability overstrength factor
+  type: number
+  unit: null
+  format:
+    decimals: 2
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: '1.25'
+  etabs_table_or_e2k_section: null
+- key: table.elements.col_desc
+  description: Column section description (e.g. 355 mm X 355 mm)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: etabs_api
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 355 mm X 355 mm
+  etabs_table_or_e2k_section: Frame Section Assignments
+- key: table.elements.beam_desc
+  description: Beam section description
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: etabs_api
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 250 mm X 355 mm
+  etabs_table_or_e2k_section: Frame Section Assignments
+- key: table.elements.slab_desc
+  description: Slab section description
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: etabs_api
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 125 mm
+  etabs_table_or_e2k_section: Shell Section Assignments
+- key: table.elements.wall_desc
+  description: Wall section description
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 230 mm
+- key: table.elements.stair_desc
+  description: Staircase section description
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: 150 mm
+- key: table.design.beam_boundary
+  description: Boundary condition of beam (e.g. Continuous)
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: Continuous
+- key: seismic.alpha
+  description: Alpha factor (spectral acceleration coefficient)
+  type: number
+  unit: null
+  format:
+    decimals: 2
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: '2.5'
+  etabs_table_or_e2k_section: null
+- key: seismic.spectral_shape_factor_cht
+  description: Spectral shape factor Ch(t)
+  type: number
+  unit: null
+  format:
+    decimals: 2
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: '2.50'
+  etabs_table_or_e2k_section: null
+- key: seismic.elastic_site_spectra_c
+  description: Elastic site spectra for horizontal loading C(t)
+  type: number
+  unit: null
+  format:
+    decimals: 3
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: '0.875'
+  etabs_table_or_e2k_section: null
+- key: seismic.elastic_site_spectra_cs
+  description: Elastic site spectra for serviceability limit state Cs
+  type: number
+  unit: null
+  format:
+    decimals: 3
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: '0.175'
+  etabs_table_or_e2k_section: null
+- key: loads.slab_dead_load
+  description: Calculated dead load of slab (kN/m2)
+  type: number
+  unit: kN/m2
+  format:
+    decimals: 3
+  source: computed
+  required: true
+  condition: null
+  inventory_item_index: null
+  example: '3.175'
+  etabs_table_or_e2k_section: null

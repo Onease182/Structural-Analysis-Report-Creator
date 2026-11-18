@@ -1,6 +1,6 @@
 # Template Replacement Log
 
-Total replacements: **142**.
+Total replacements: **179**.
 
 | # | Location | Old text (preview) | Placeholder |
 |---|----------|-------------------|-------------|
@@ -138,11 +138,48 @@ Total replacements: **142**.
 | 132 | image idx=676 | [image #676] | `{{ figure.elements.rebar_story1 }}` |
 | 133 | image idx=683 | [image #683] | `{{ figure.elements.rebar_story2 }}` |
 | 134 | image idx=688 | [image #688] | `{{ figure.elements.rebar_story3 }}` |
-| 135 | table idx=288 | [table table.loads.load_assessment] | `{%tr for r in rows %}...{%tr endfor %}` |
-| 136 | table idx=329 | [table table.loads.live_load_intensity] | `{%tr for r in rows %}...{%tr endfor %}` |
-| 137 | table idx=383 | [table table.seismic.vertical_force_dist] | `{%tr for r in rows %}...{%tr endfor %}` |
-| 138 | table idx=390 | [table table.modal.rayleigh_x] | `{%tr for r in rows %}...{%tr endfor %}` |
-| 139 | table idx=393 | [table table.modal.rayleigh_y] | `{%tr for r in rows %}...{%tr endfor %}` |
-| 140 | table idx=434 | [table table.modal.periods_mass_part] | `{%tr for r in rows %}...{%tr endfor %}` |
-| 141 | table idx=461 | [table table.design.slab_design_output] | `{%tr for r in rows %}...{%tr endfor %}` |
-| 142 | paragraphs idx=370..379 | Design of Staircases block | `{%p if building.has_staircase %}...{%p endif %}` |
+| 135 | table T0 cell (1,2) | Mr. Chatra Bahadur Ramtel | `{{ client.owner_name }}` |
+| 136 | table T0 cell (2,2) | Damak | `{{ building.location }}` |
+| 137 | table T0 cell (3,2) | Residential | `{{ building.occupancy }}` |
+| 138 | table T0 cell (4,2) | Mr. Sachin KC | `{{ building.storeys_above_grade }}` |
+| 139 | table T2 cell (0,2) | Damak | `{{ building.location }}` |
+| 140 | table T2 cell (1,2) | 3 | `{{ building.storeys_above_grade }}` |
+| 141 | table T2 cell (2,2) | 3 | `{{ building.occupancy }}` |
+| 142 | table T2 cell (3,2) | 0 | `{{ building.story_height_m }}` |
+| 143 | table T2 cell (4,2) | 3.175 meters | `{{ building.span_x_m }}` |
+| 144 | table T2 cell (5,2) | 3.175 meters | `{{ building.span_y_m }}` |
+| 145 | table T2 cell (6,2) | 9.525 meters | `{{ building.primary_frame_material }}` |
+| 146 | table T2 cell (7,2) | 9.525 meters | `{{ building.infill_wall_material }}` |
+| 147 | table T3 cell (1,1) | 355 mm X 355 mm | `{{ table.elements.col_desc }}` |
+| 148 | table T3 cell (1,2) | M20 | `{{ materials.concrete_grade_used }}` |
+| 149 | table T3 cell (2,1) | 250 mm X 430 mm | `{{ table.elements.beam_desc }}` |
+| 150 | table T3 cell (2,2) | M20 | `{{ materials.concrete_grade_used }}` |
+| 151 | table T3 cell (3,1) | 150 mm | `{{ table.elements.slab_desc }}` |
+| 152 | table T3 cell (3,2) | M20 | `{{ materials.concrete_grade_used }}` |
+| 153 | table T3 cell (4,1) | 125 mm | `{{ table.elements.wall_desc }}` |
+| 154 | table T3 cell (5,1) | Combined Footing | `{{ table.elements.stair_desc }}` |
+| 155 | table T4 cell (0,2) | Moment Resisting Frames | `{{ structural.system_type }}` |
+| 156 | table T4 cell (1,2) | Combined Footing | `{{ foundation.type }}` |
+| 157 | table T4 cell (2,2) | Conventional | `{{ slab.type }}` |
+| 158 | table T8 cell (0,5) | 9.525 | `{{ building.total_height_m }}` |
+| 159 | table T8 cell (5,3) | 0.508 | `{{ modal.empirical_period_s }}` |
+| 160 | table T12 cell (0,2) | 0.508 | `{{ modal.empirical_period_s }}` |
+| 161 | table T12 cell (5,1) | 2.5 | `{{ seismic.alpha }}` |
+| 162 | table T12 cell (5,3) | 1.004 | `{{ seismic.distribution_exponent_k }}` |
+| 163 | table T12 cell (6,2) | 2.50 | `{{ seismic.spectral_shape_factor_cht }}` |
+| 164 | table T12 cell (7,1) | Damak | `{{ building.location }}` |
+| 165 | table T12 cell (7,3) | 0.35 | `{{ seismic.zone_factor_z }}` |
+| 166 | table T12 cell (10,3) | 0.875 | `{{ seismic.elastic_site_spectra_c }}` |
+| 167 | table T12 cell (11,3) | 0.175 | `{{ seismic.elastic_site_spectra_cs }}` |
+| 168 | table T12 cell (13,3) | Reinforced Concrete Moment Resisting Frame | `{{ structural.system_type }}` |
+| 169 | table T12 cell (14,3) | 4 | `{{ seismic.response_modification_factor_rmu }}` |
+| 170 | table T13 cell (0,1) | 1.5 | `{{ design.overstrength_ultimate }}` |
+| 171 | table T13 cell (1,1) | 1.25 | `{{ design.overstrength_serviceability }}` |
+| 172 | table T16 cell (1,1) | Continuous | `{{ table.design.beam_boundary }}` |
+| 173 | table T6 cell (11,1) | 3.175 | `{{ building.story_height_m }}` |
+| 174 | table T15 cell (17,2) | 3.175 | `{{ loads.slab_dead_load }}` |
+| 175 | table T9 (loop) | [6 rows → 4 rows] | `{%tr for r in rows %}...template...{%tr endfor %}` |
+| 176 | table T10 (loop) | [7 rows → 4 rows] | `{%tr for r in rows %}...template...{%tr endfor %}` |
+| 177 | table T11 (loop) | [7 rows → 4 rows] | `{%tr for r in rows %}...template...{%tr endfor %}` |
+| 178 | table T14 (loop) | [11 rows → 5 rows] | `{%tr for r in rows %}...template...{%tr endfor %}` |
+| 179 | paragraphs idx=370..379 | Design of Staircases block | `{%p if building.has_staircase %}...{%p endif %}` |

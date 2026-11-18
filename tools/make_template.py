@@ -729,31 +729,183 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         if replaced:
             logger.log(f"image idx={idx}", old_text, f"{{{{ {key} }}}}")
 
-    # --- Process table entries (data-driven tables get row templates) ---
-    data_driven_tables = {
-        "table.loads.load_assessment",
-        "table.loads.live_load_intensity",
-        "table.seismic.vertical_force_dist",
-        "table.modal.rayleigh_x",
-        "table.modal.rayleigh_y",
-        "table.modal.periods_mass_part",
-        "table.design.slab_design_output",
+    # --- Process table cell placeholders ---
+    # For tables classified as "cell-placeholders" in docs/table_plan.md,
+    # replace specific cells containing sample data with {{ key }}.
+    # The mapping is (table_index_in_doc, row, col) -> registry key.
+    TABLE_CELL_MAP: dict[tuple[int, int, int], str] = {
+        # T0 (Client details) — table index 0 in document.tables
+        (0, 1, 2): "client.owner_name",          # "Mr. Chatra Bahadur Ramtel"
+        (0, 2, 2): "building.location",          # "Damak"
+        (0, 3, 2): "building.occupancy",         # "Residential"
+        (0, 4, 2): "building.storeys_above_grade",  # "3"
+        # T2 (Building general info) — table index 2
+        (2, 0, 2): "building.location",          # "Damak"
+        (2, 1, 2): "building.storeys_above_grade",  # "3"
+        (2, 2, 2): "building.occupancy",         # "Residential"
+        (2, 3, 2): "building.story_height_m",    # "3.175"
+        (2, 4, 2): "building.span_x_m",          # span
+        (2, 5, 2): "building.span_y_m",          # span
+        (2, 6, 2): "building.primary_frame_material",  # "Reinforced Concrete"
+        (2, 7, 2): "building.infill_wall_material",    # "Brick"
+        # T3 (Element sizes) — table index 3
+        (3, 1, 1): "table.elements.col_desc",    # "355 mm X 355 mm"
+        (3, 1, 2): "materials.concrete_grade_used",  # "M20"
+        (3, 2, 1): "table.elements.beam_desc",   # beam size
+        (3, 2, 2): "materials.concrete_grade_used",
+        (3, 3, 1): "table.elements.slab_desc",   # slab thickness
+        (3, 3, 2): "materials.concrete_grade_used",
+        (3, 4, 1): "table.elements.wall_desc",   # wall thickness
+        (3, 5, 1): "table.elements.stair_desc",  # staircase
+        # T4 (Structural system & foundation) — table index 4
+        (4, 0, 2): "structural.system_type",     # "Moment Resisting Frames"
+        (4, 1, 2): "foundation.type",            # "Combined Footing"
+        (4, 2, 2): "slab.type",                  # "Conventional"
+        # T8 (Empirical period) — table index 8
+        (8, 0, 5): "building.total_height_m",    # "9.525"
+        (8, 5, 3): "modal.empirical_period_s",   # "0.508"
+        # T12 (Seismic design parameters) — table index 12
+        (12, 0, 2): "modal.empirical_period_s",  # "0.508"
+        (12, 5, 1): "seismic.alpha",              # "2.5"
+        (12, 5, 3): "seismic.distribution_exponent_k",  # "1.004"
+        (12, 6, 2): "seismic.spectral_shape_factor_cht",  # "2.50"
+        (12, 7, 1): "building.location",          # "Damak"
+        (12, 7, 3): "seismic.zone_factor_z",     # "0.35"
+        (12, 10, 3): "seismic.elastic_site_spectra_c",   # "0.875"
+        (12, 11, 3): "seismic.elastic_site_spectra_cs",  # "0.175"
+        (12, 13, 3): "structural.system_type",    # "Reinforced Concrete..."
+        (12, 14, 3): "seismic.response_modification_factor_rmu",  # "4"
+        # T13 (Overstrength factors) — table index 13
+        (13, 0, 1): "design.overstrength_ultimate",  # "1.5"
+        (13, 1, 1): "design.overstrength_serviceability",  # "1.25"
+        # T16 (Beam deflection check) — table index 16
+        (16, 1, 1): "table.design.beam_boundary",    # "Continuous"
+        # T6 (Load assessment) — irregular table, but this specific cell
+        # has the story height which is a known variable.
+        (6, 11, 1): "building.story_height_m",       # "3.175"
+        # T15 (Slab design) — irregular table; this cell has the slab dead
+        # load which is a calculated value.
+        (15, 17, 2): "loads.slab_dead_load",          # "3.175"
     }
-    for entry in entries:
-        if entry["type"] != "table":
+
+    # Apply cell placeholders
+    for (tbl_idx, row_idx, col_idx), key in TABLE_CELL_MAP.items():
+        if tbl_idx < len(doc.tables):
+            tbl = doc.tables[tbl_idx]
+            if row_idx < len(tbl.rows) and col_idx < len(tbl.rows[row_idx].cells):
+                cell = tbl.rows[row_idx].cells[col_idx]
+                old_cell_text = cell.text.strip()
+                if old_cell_text and "{{" not in old_cell_text:
+                    # Replace cell text with placeholder
+                    for p in cell.paragraphs:
+                        for run in p.runs:
+                            run.text = ""
+                    if cell.paragraphs:
+                        p = cell.paragraphs[0]
+                        if p.runs:
+                            p.runs[0].text = f"{{{{ {key} }}}}"
+                        else:
+                            p.add_run(f"{{{{ {key} }}}}")
+                    logger.log(
+                        f"table T{tbl_idx} cell ({row_idx},{col_idx})",
+                        old_cell_text[:60],
+                        f"{{{{ {key} }}}}",
+                    )
+
+    # --- Process table entries (data-driven tables get row templates) ---
+    # Data-driven loop tables: T9, T10, T11, T14
+    # For each: keep header row(s), create ONE template row with
+    # {{ r.column }} in each cell, remove extra data rows, add
+    # {%tr for r in rows %} and {%tr endfor %} tags.
+    LOOP_TABLE_COLUMNS: dict[int, list[str]] = {
+        # T9: Vertical force distribution (6 cols after header, 1 header row)
+        9: ["level", "wi", "hi", "hik", "wi_hik", "fi", "shear"],
+        # T10: Rayleigh X (8 cols, 1 header row)
+        10: ["level", "wi", "di_mm", "di_m", "di2", "fi", "fi_di", "wi_di2"],
+        # T11: Rayleigh Y (8 cols, 1 header row)
+        11: ["level", "wi", "di_mm", "di_m", "di2", "fi", "fi_di", "wi_di2"],
+        # T14: Modal periods (7 cols, 2 header rows: names + units)
+        14: ["case", "mode", "period", "ux", "uy", "sum_ux", "sum_uy"],
+    }
+    # Number of header rows to keep outside the loop
+    LOOP_TABLE_HEADER_ROWS: dict[int, int] = {
+        9: 1, 10: 1, 11: 1, 14: 2,
+    }
+
+    for tbl_idx, col_names in LOOP_TABLE_COLUMNS.items():
+        if tbl_idx >= len(doc.tables):
             continue
-        key = entry["key"]
-        if key not in data_driven_tables:
+        tbl = doc.tables[tbl_idx]
+        tbl_element = tbl._tbl
+        rows = tbl_element.findall(f"{{{W_NS}}}tr")
+        n_header = LOOP_TABLE_HEADER_ROWS.get(tbl_idx, 1)
+        if len(rows) <= n_header:
             continue
-        idx = entry.get("inventory_item_index")
-        if idx is None or idx not in idx_to_child:
-            continue
-        child_idx, item_type = idx_to_child[idx]
-        if item_type != "table":
-            continue
-        tbl_element = body_children[child_idx]
-        add_table_row_template(tbl_element, {})
-        logger.log(f"table idx={idx}", f"[table {key}]", "{%tr for r in rows %}...{%tr endfor %}")
+
+        # Structure: header row(s) + for-row + template-row + endfor-row
+        # The for-row and endfor-row are new rows containing only the tag.
+
+        # Step 1: Modify the first data row to be the TEMPLATE row.
+        template_row = rows[n_header]
+        cells = template_row.findall(f"{{{W_NS}}}tc")
+        for ci, cell in enumerate(cells):
+            if ci < len(col_names):
+                col_name = col_names[ci]
+                paras = cell.findall(f"{{{W_NS}}}p")
+                if paras:
+                    p = paras[0]
+                    for r in p.findall(f"{{{W_NS}}}r"):
+                        p.remove(r)
+                    new_r = etree.SubElement(p, f"{{{W_NS}}}r")
+                    new_t = etree.SubElement(new_r, f"{{{W_NS}}}t")
+                    new_t.text = f"{{{{ r.{col_name} }}}}"
+                    new_t.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+                    for extra_p in paras[1:]:
+                        cell.remove(extra_p)
+
+        # Step 2: Create a for-row BEFORE the template row.
+        for_row = etree.SubElement(tbl_element, f"{{{W_NS}}}tr")
+        for_cell = etree.SubElement(for_row, f"{{{W_NS}}}tc")
+        for_p = etree.SubElement(for_cell, f"{{{W_NS}}}p")
+        for_r = etree.SubElement(for_p, f"{{{W_NS}}}r")
+        for_t = etree.SubElement(for_r, f"{{{W_NS}}}t")
+        for_t.text = "{%tr for r in rows %}"
+        for_t.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+        # Move the for-row BEFORE the template row
+        tbl_element.remove(for_row)
+        template_row.addprevious(for_row)
+
+        # Step 3: Create an endfor-row AFTER the template row.
+        endfor_row = etree.SubElement(tbl_element, f"{{{W_NS}}}tr")
+        endfor_cell = etree.SubElement(endfor_row, f"{{{W_NS}}}tc")
+        endfor_p = etree.SubElement(endfor_cell, f"{{{W_NS}}}p")
+        endfor_r = etree.SubElement(endfor_p, f"{{{W_NS}}}r")
+        endfor_t = etree.SubElement(endfor_r, f"{{{W_NS}}}t")
+        endfor_t.text = "{%tr endfor %}"
+        endfor_t.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+        # Move the endfor-row AFTER the template row
+        tbl_element.remove(endfor_row)
+        template_row.addnext(endfor_row)
+
+        # Step 4: Remove extra data rows (keep only header + for + template + endfor)
+        # The rows after the template row (and before the endfor row) are extra.
+        # Actually, the endfor row is now right after the template row.
+        # Remove all original data rows except the template row.
+        all_rows = tbl_element.findall(f"{{{W_NS}}}tr")
+        # Find the template row's position
+        template_idx = None
+        for i, r in enumerate(all_rows):
+            if r is template_row:
+                template_idx = i
+                break
+        if template_idx is not None:
+            # Remove rows after the endfor row (original extra data rows)
+            endfor_idx = template_idx + 1  # endfor row is right after template
+            for r in all_rows[endfor_idx + 1:]:
+                tbl_element.remove(r)
+
+        logger.log(f"table T{tbl_idx} (loop)", f"[{len(rows)} rows → {n_header + 3} rows]",
+                   "{%tr for r in rows %}...template...{%tr endfor %}")
 
     # --- Process staircase conditional ---
     # Find the staircase HEADING paragraph (not the TOC entry).
