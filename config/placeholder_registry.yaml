@@ -663,7 +663,11 @@ items:
   sentence_template: The building was modeled using the {{ foundation.modeling_software }} software. {{
     foundation.modeling_software }} is a specialized program designed specifically for the analysis and
     design of building systems. It offers a user-friendly interface and advanced features, making it both
-    powerful and accessible for structural engineers.
+    sophisticated and easy to use. The software provides intuitive modeling capabilities, powerful analytical
+    tools, efficient design procedures, robust numerical methods, and supports various international design
+    codes. With its ability to handle complex structures and nonlinear behaviors, {{ foundation.modeling_software
+    }} is widely preferred by structural engineers in the building industry. For the design of foundation,
+    manual calculation was done.
 - key: project.brick_specs
   description: Standard rectangular bricks are used, which are well burnt, hand-formed or machine-made,
     and possess a crushing strength of at least 3.5 N/mm². The preferred brick size is 250 x 100 x 75
@@ -1846,8 +1850,8 @@ items:
   condition: null
   inventory_item_index: 450
   example: '1557'
-  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{
-    design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct }}% < {{ design.column.max_limit_pct
+  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/ ({{ design.column.max_section_width_mm
+    }}*{{ design.column.max_section_depth_mm }})*100% ={{ design.column.max_provided_pct }}% <{{ design.column.max_limit_pct
     }}% ({{ design.column.max_status }})
   inventory_item_indices:
   - 450
@@ -1948,7 +1952,7 @@ items:
   condition: null
   inventory_item_index: 454
   example: '1.026'
-  sentence_template: \t= {{ design.column.min_provided_pct }}%\t> {{ design.column.min_limit_pct }}% ({{
+  sentence_template: = {{ design.column.min_provided_pct }}% > {{ design.column.min_limit_pct }}% ({{
     design.column.min_status }})
   inventory_item_indices:
   - 454
@@ -1996,9 +2000,9 @@ items:
   condition: null
   inventory_item_index: 456
   example: '678.584'
-  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm }}*{{
-    design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct }}% < {{ design.beam.max_limit_pct
-    }}% ({{ design.beam.maximum_reinforcement.status }})
+  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/ ({{ design.beam.max_section_width_mm }}*{{
+    design.beam.max_section_depth_mm }}) = {{ design.beam.max_provided_pct }}% <{{ design.beam.max_limit_pct
+    }}% ({{ design.beam.max_status }})
   inventory_item_indices:
   - 456
   etabs_table_or_e2k_section: null
@@ -2098,7 +2102,7 @@ items:
   condition: null
   inventory_item_index: 458
   example: '0.764'
-  sentence_template: = {{ design.beam.min_provided_pct }}% >{{ design.beam.min_limit_pct }}% ({{ design.beam.minimum_reinforcement.status
+  sentence_template: = {{ design.beam.min_provided_pct }}% >{{ design.beam.min_limit_pct }} % ({{ design.beam.min_status
     }})
   inventory_item_indices:
   - 458

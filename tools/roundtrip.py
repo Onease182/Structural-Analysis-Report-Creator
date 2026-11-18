@@ -147,6 +147,10 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
         elif key == "foundation.support_condition":
             _set(key, "the foundation is assumed to be fixed.")
         elif key == "codes.edition":
+            # The sample uses "NBC105:2025" (no space) in para 291 and
+            # "NBC 105:2025" (with space) in other paragraphs. The template
+            # uses {{ codes.edition }} everywhere.
+            # This is a sample inconsistency — proposed for owner approval.
             _set(key, "NBC 105:2025")
         elif key == "building.occupancy":
             # Old key — use the IS 875 sentence
@@ -157,7 +161,16 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
             # The paragraph says "Civira X" while the table says "CivoraX Infra"
             _set(key, "Civira X")  # paragraph text
         elif key == "building.storeys_above_grade":
-            _set(key, 3)  # numeric value for table cells
+            # The sentence template uses the word form ("three") but table
+            # cells need the digit form ("3"). We set the word form here
+            # and override to digit for table cells below.
+            _set(key, "three")
+        elif key == "building.num_storeys_analysed":
+            _set(key, 3)
+        elif key == "seismic.importance_factor_i":
+            _set(key, "1.0")  # Sample uses "1.0" not "1"
+        elif key == "foundation.modeling_software":
+            _set(key, "ETABS 19.0.0")
         elif etype == "number":
             _set(key, entry.get("example") if entry.get("example") is not None else 1)
         else:
@@ -176,7 +189,7 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
         (0, 7, 2): "client.consultant_firm", (0, 8, 2): "client.municipality_reg",
         (0, 9, 2): "client.application_date",
         # T2
-        (2, 0, 2): "building.location", (2, 1, 2): "building.storeys_above_grade",
+        (2, 0, 2): "building.location", (2, 1, 2): "building.storeys_count_numeric",
         (2, 2, 2): "building.num_storeys_analysed", (2, 3, 2): "building.num_basements",
         (2, 4, 2): "building.height_ground_floor_m", (2, 5, 2): "building.height_typical_floor_m",
         (2, 6, 2): "building.total_height_m", (2, 7, 2): "building.height_period_m",
@@ -200,7 +213,7 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
         (12, 5, 1): "seismic.alpha", (12, 5, 3): "seismic.distribution_exponent_k",
         (12, 6, 2): "seismic.spectral_shape_factor_cht",
         (12, 7, 1): "building.location", (12, 7, 3): "seismic.zone_factor_z",
-        (12, 8, 2): "seismic.structural_type", (12, 9, 2): "seismic.importance_factor_i",
+        (12, 8, 2): "seismic.structural_type", (12, 9, 2): "seismic.importance_factor_i_table",
         (12, 10, 3): "seismic.elastic_site_spectra_c", (12, 11, 3): "seismic.elastic_site_spectra_cs",
         (12, 13, 3): "structural.system_type_full", (12, 14, 3): "seismic.response_modification_factor_rmu",
         # T13
@@ -248,8 +261,37 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
     _set("building.height_period_m", "9.525 meters")
     # T8 uses numeric value without " meters" suffix
     _set("building.total_height_numeric", "9.525")
+    # T2 cell needs numeric storey count (not word form)
+    _set("building.storeys_count_numeric", "3")
     # T16 check result: escape "<" as "&lt;" to prevent XML stripping
     _set("table.design.beam_check_result", "10.61 &lt; 43.7, OK")
+    # Calc line values — exact sample values
+    _set("design.column.max_rebar_area_mm2", "1557")
+    _set("design.column.max_section_width_mm", "355")
+    _set("design.column.max_section_depth_mm", "355")
+    _set("design.column.max_provided_pct", "1.24")
+    _set("design.column.max_limit_pct", "4")
+    _set("design.column.max_status", "Ok")
+    _set("design.column.min_provided_pct", "1.026")
+    _set("design.column.min_limit_pct", "1")
+    _set("design.column.min_status", "Ok")
+    _set("design.beam.max_rebar_area_mm2", "678.584")
+    _set("design.beam.max_section_width_mm", "250")
+    _set("design.beam.max_section_depth_mm", "355")
+    _set("design.beam.max_provided_pct", "0.764")
+    _set("design.beam.max_limit_pct", "2.5")
+    _set("design.beam.max_status", "Ok")
+    _set("design.beam.min_provided_pct", "0.764")
+    _set("design.beam.min_limit_pct", "0.26")
+    _set("design.beam.min_status", "Ok")
+    _set("design.beam.maximum_reinforcement.status", "Ok")
+    _set("design.beam.minimum_reinforcement.status", "Ok")
+    # Override importance factor for sentence (sample uses "1.0" in paragraph
+    # but "1" in table T12 cell 9,2 — sample inconsistency)
+    _set("seismic.importance_factor_i", "1.0")
+    _set("seismic.importance_factor_i_table", "1")
+    # ETABS modeling software
+    _set("foundation.modeling_software", "ETABS 19.0.0")
 
     _set("building.has_staircase", True)
 

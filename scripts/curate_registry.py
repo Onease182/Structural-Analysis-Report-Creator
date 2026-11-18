@@ -530,7 +530,16 @@ EXTRA_SENTENCE_TEMPLATES: dict[str, str] = {
     "modal.base_shear_etabs":
         "Base shear from ETABS {{ modal.base_shear_etabs }} kN.",
     "foundation.modeling_software":
-        "The building was modeled using the {{ foundation.modeling_software }} software. {{ foundation.modeling_software }} is a specialized program designed specifically for the analysis and design of building systems. It offers a user-friendly interface and advanced features, making it both powerful and accessible for structural engineers.",
+        "The building was modeled using the {{ foundation.modeling_software }} software. {{ foundation.modeling_software }} is a specialized program designed specifically for the analysis and design of building systems. It offers a user-friendly interface and advanced features, making it both sophisticated and easy to use. The software provides intuitive modeling capabilities, powerful analytical tools, efficient design procedures, robust numerical methods, and supports various international design codes. With its ability to handle complex structures and nonlinear behaviors, {{ foundation.modeling_software }} is widely preferred by structural engineers in the building industry. For the design of foundation, manual calculation was done.",
+    # Calc line templates — exact sample wording and spacing
+    "design.column.max_rebar_area_mm2":
+        "= {{ design.column.max_rebar_area_mm2 }}/ ({{ design.column.max_section_width_mm }}*{{ design.column.max_section_depth_mm }})*100% ={{ design.column.max_provided_pct }}% <{{ design.column.max_limit_pct }}% ({{ design.column.max_status }})",
+    "design.column.min_provided_pct":
+        "= {{ design.column.min_provided_pct }}% > {{ design.column.min_limit_pct }}% ({{ design.column.min_status }})",
+    "design.beam.max_rebar_area_mm2":
+        "= {{ design.beam.max_rebar_area_mm2 }}/ ({{ design.beam.max_section_width_mm }}*{{ design.beam.max_section_depth_mm }}) = {{ design.beam.max_provided_pct }}% <{{ design.beam.max_limit_pct }}% ({{ design.beam.max_status }})",
+    "design.beam.min_provided_pct":
+        "= {{ design.beam.min_provided_pct }}% >{{ design.beam.min_limit_pct }} % ({{ design.beam.min_status }})",
 }
 
 
@@ -711,10 +720,28 @@ SUPPLEMENTARY_ENTRIES: list[dict[str, Any]] = [
 # When a sentence template is added (EXTRA_SENTENCE_TEMPLATES), update the
 # entry's example to be just the variable value (not the whole sentence).
 SENTENCE_TEMPLATE_EXAMPLE_UPDATES: dict[str, Any] = {
-    "materials.as_building_is_less_than_12_m": "M20",  # The concrete grade
-    "materials.rebar_grade_used": "Fe500",  # The rebar grade
-    "modal.base_shear_etabs": "240.02",  # The base shear value in kN
-    "foundation.modeling_software": "ETABS 19.0.0",  # The software version
+    "materials.as_building_is_less_than_12_m": "M20",
+    "materials.rebar_grade_used": "Fe500",
+    "modal.base_shear_etabs": "240.02",
+    "foundation.modeling_software": "ETABS 19.0.0",
+    "design.column.max_rebar_area_mm2": "1557",
+    "design.column.max_section_width_mm": "355",
+    "design.column.max_section_depth_mm": "355",
+    "design.column.max_provided_pct": "1.24",
+    "design.column.max_limit_pct": "4",
+    "design.column.max_status": "Ok",
+    "design.column.min_provided_pct": "1.026",
+    "design.column.min_limit_pct": "1",
+    "design.column.min_status": "Ok",
+    "design.beam.max_rebar_area_mm2": "678.584",
+    "design.beam.max_section_width_mm": "250",
+    "design.beam.max_section_depth_mm": "355",
+    "design.beam.max_provided_pct": "0.764",
+    "design.beam.max_limit_pct": "2.5",
+    "design.beam.max_status": "Ok",
+    "design.beam.min_provided_pct": "0.764",
+    "design.beam.min_limit_pct": "0.26",
+    "design.beam.min_status": "Ok",
 }
 
 
@@ -765,8 +792,9 @@ def curate_entries(items: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], l
                     item["sentence_template"], old_k, new_k
                 )
 
-        # Add extra sentence templates for items that don't have one.
-        if new_key in EXTRA_SENTENCE_TEMPLATES and not item.get("sentence_template"):
+        # Add extra sentence templates — always override the generated ones
+        # because the generated templates have wrong spacing and wording.
+        if new_key in EXTRA_SENTENCE_TEMPLATES:
             item["sentence_template"] = EXTRA_SENTENCE_TEMPLATES[new_key]
             # Update the example to be just the variable value
             if new_key in SENTENCE_TEMPLATE_EXAMPLE_UPDATES:

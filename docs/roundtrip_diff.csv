@@ -1,27 +1,18 @@
 location,kind,expected,actual,classification
-para 76,text_replace,The building has three floors made of reinforced concrete frames and filled with,The building has 3 floors made of reinforced concrete frames and filled with,owner_approved
 para 92,text_replace,"According to NBC105:2020, The material should be taken as per Cl.2.1.","According to NBC 105:2025, The material should be taken as per Annex A, Cl. 2.1.",owner_approved
-para 116,text_replace,The building was modeled using the ETABS 19.0.0 software. ETABS 19.0.0 is a specialized program desi,The building was modeled using the ETABS 19.0.0 software. ETABS 19.0.0 is a specialized program desi,owner_approved
-para 160,text_replace,Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025 Cl. 6.3),Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025 6.3),owner_approved
-para 161,text_replace,"k = 1.004 (T = 0.508 s); Cd = 0.1458; V = Cd·W, W taken above Base. Z = 0.35, soil C, I = 1.0, Rμ = ",Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025 6.3),owner_approved
-para 161,text_replace,,"k = 1.004 (T = 0.508 s); Cd = 0.1458; V = Cd·W, W taken above Base. Z = 0.35, soil C, I = 1, Rμ = 4,",owner_approved
 para 169,text_replace,"As per Clause 3.2.1 of NBC 105:2025, the Equivalent Static Method may be used for all serviceability","As per Clause 3.2.1 of NBC 105:2025, the Equivalent Static Method may be used for all serviceability",owner_approved
 para 171,text_replace,"When lateral load resisting elements are oriented along mutually orthogonal horizontal directions, t","When lateral load resisting elements are oriented along mutually orthogonal horizontal directions, t",owner_approved
-para 179,text_replace,NBC105:2025 clause 7.3 states that number of modes to be used in the analysis should be such that th,NBC 105:2025 clause 7.3 states that number of modes to be used in the analysis should be such that t,owner_approved
-para 187,text_replace,= 1557/ (355*355)*100% =1.24% <4% (Ok),= 1557/(355*355)*100% = 1.24% < 4% (pass),owner_approved
-para 189,text_replace,= 1.026% > 1% (Ok),\t= 1.026%\t> 1% (pass),owner_approved
-para 191,text_replace,= 678.584/ (250*355) = 0.764% <2.5% (Ok),= 678.584/(250*355)*100% = 0.764% < 2.5% (pass),owner_approved
-para 193,text_replace,= 0.764% >0.26 % (Ok),= 0.764% >0.26% (pass),owner_approved
+para 179,text_replace,NBC105:2025 clause 7.3 states that number of modes to be used in the analysis should be such that th,NBC 105:2025 clause 7.3 states that number of modes to be used in the analysis should be such that t,unexpected
 para 208,text_replace,5.6.3 of NBC 105:2077 is proposed to be used.,5.5.3 of NBC 105:2025 is proposed to be used.,owner_approved
 para 210,text_replace,5.6.3 of NBC 105:2077 is applied. The maximum deflection in any story due to the minimum specified d,5.5.3 of NBC 105:2025 is applied. The maximum deflection in any story due to the minimum specified d,owner_approved
 para 213,text_replace,One of the basic virtues of earthquake resistant design of structures is that the structure shall be,One of the basic virtues of earthquake resistant design of structures is that the structure shall be,owner_approved
 para 215,text_replace,"As per the clause 5.5.2.1 of NBC 105:2020, torsion irregularity is considered to exist when the maxi","As per the clause 5.4.2.1 of NBC 105:2025, torsion irregularity is considered to exist when the maxi",owner_approved
 para 218,text_replace,"As per the clause 5.5.1.2, a soft story is the one whose stiffness of the lateral force resisting sy","As per the clause 5.4.1.2 of NBC 105:2025, a soft story is the one whose stiffness of the lateral fo",owner_approved
-para 222,text_replace,"As per the clause 5.5.1.4 of NBC 105:2020, if there is an in-plane offset of a vertical seismic forc",5.4.1.4,owner_approved
+para 222,text_replace,"As per the clause 5.5.1.4 of NBC 105:2020, if there is an in-plane offset of a vertical seismic forc","As per the clause 5.4.1.4 of NBC 105:2025, if there is an in-plane offset of a vertical seismic forc",owner_approved
 para 226,text_replace,"If there is a difference of more than 50% between the effective masses of two consecutive storeys, t","If there is a difference of more than 50% between the effective masses of two consecutive storeys, t",owner_approved
 para 230,text_replace,"As per the clause 5.5.2.2 of NBC 105:2020, a structure is said to have re-entrant corner irregularit","As per the clause 5.4.2.3 of NBC 105:2025, a structure is said to have re-entrant corner irregularit",owner_approved
 para 234,text_replace,If the diaphragm of a building has a cutout or open area greater than 50% of the gross enclosed diap,If the diaphragm of a building has a cutout or open area greater than 50% of the gross enclosed diap,owner_approved
-para 238,text_replace,If there is a discontinuity in a lateral force resisting path such as an out-of-plane of at least on,5.4.2.5,owner_approved
+para 238,text_replace,If there is a discontinuity in a lateral force resisting path such as an out-of-plane of at least on,If there is a discontinuity in a lateral force resisting path such as an out-of-plane of at least on,owner_approved
 T9,row_count,6 rows,2 rows,owner_approved
 T9 row 'Story3' col 0,cell_missing,Story3,,owner_approved
 T9 row 'Story3' col 1,cell_missing,"20,482.18",,owner_approved

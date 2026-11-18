@@ -83,7 +83,7 @@ def paragraph_text(p: etree._Element) -> str:
         if local_name(node.tag) == "t":
             parts.append(node.text or "")
         elif local_name(node.tag) == "tab":
-            parts.append("\\t")
+            parts.append("\t")
         else:
             parts.append("\\n")
     return clean_text("".join(parts))

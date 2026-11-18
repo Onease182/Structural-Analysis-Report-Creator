@@ -1,9 +1,9 @@
 # Owner-approved differences for the round-trip comparison.
-# Any difference matching a rule here is classified as "owner_approved"
-# in docs/roundtrip_diff.csv. All other differences are "unexpected".
+# Only rules explicitly approved by the owner are listed here.
+# Do NOT add rules without owner approval.
 
 owner_approved:
-  # Restyled conclusion headings (Heading 4 → Body Text)
+  # Restyled conclusion headings (Heading 4 → Body Text) — owner-approved
   - description: "In-plane discontinuity conclusion restyled to Body Text"
     match_type: heading_restyle
     text_contains: "No in-plane discontinuity is present"
@@ -16,7 +16,7 @@ owner_approved:
     original_style: "Heading 4"
     new_style: "Body Text"
 
-  # Computed variant paragraphs (whole-paragraph replacement)
+  # Computed variant paragraphs (whole-paragraph replacement) — owner-approved
   - description: "Soft storey conclusion is a computed variant"
     match_type: computed_variant
     key: analysis.soft_storey_result
@@ -25,94 +25,42 @@ owner_approved:
     match_type: computed_variant
     key: analysis.reentrant_corner_result
 
-  - description: "Foundation support condition is computed"
-    match_type: computed_variant
-    key: foundation.support_condition
-
-  # NBC 105:2025 clause changes
-  - description: "Clause references updated to NBC 105:2025 values"
-    match_type: clause_change
-    patterns:
-      - "5.5.1.2"  # → 5.4.1.2
-      - "5.5.1.4"  # → 5.4.1.4
-      - "5.5.1.5"  # → 5.4.1.5
-      - "5.5.2.2"  # → 5.4.2.3
-      - "5.5.2.3"  # → 5.4.2.4
-      - "5.5.2.4"  # → 5.4.2.5
-      - "2.1"      # → Annex A, Cl. 2.1
-      - "3.6.1"    # → 3.6.1 (owner-mapped)
-      - "5.5"      # → 5.4
-      - "5.5.2.1"  # → 5.4.2.1
-      - "5.6.3"    # → 5.5.3
-      - "NBC 105:2020"
-      - "NBC 105:2077"
-
-  # T15 replaced with image placeholder
+  # T15 replaced with image placeholder — owner-approved
   - description: "T15 slab design table replaced with image placeholder"
     match_type: table_replaced_with_image
     table_index: 15
     replacement_key: figure.design.slab_sheet
 
-  # NBC edition formatting normalization (NBC105:2025 → NBC 105:2025)
-  - description: "NBC edition spacing normalized to 'NBC 105:2025'"
-    match_type: nbc_spacing
-    expected_contains: "NBC105:2025"
-
-  # Calculation line wording: "Ok" vs "pass" and spacing differences
-  - description: "Calculation lines use '(Ok)' wording from sample"
-    match_type: calc_wording
-    expected_contains_any: ["(Ok)", "= 1557/", "= 1.026%", "= 678.", "= 0.764%"]
-
-  # Number words vs digits (storey count)
-  - description: "Storey count rendered as word ('three') vs digit ('3')"
-    match_type: number_words
-    expected_contains_any: ["three floors", "three stories"]
-
-  # Paragraph alignment artifacts from difflib (adjacent paragraphs mismatched)
-  - description: "Paragraph alignment artifact: k= line matched against Table 9 caption"
-    match_type: paragraph_alignment
-    expected_contains_any: ["k = 1.004", "Table 9: Vertical distribution"]
-
-  # Whitespace-only differences (non-breaking space, trailing spaces)
-  - description: "Whitespace-only difference (non-breaking space or trailing space)"
-    match_type: whitespace_only
-
-  # ETABS modeling paragraph (sentence template with placeholder)
-  - description: "ETABS modeling paragraph uses sentence template"
-    match_type: sentence_template
-    expected_contains_any: ["ETABS 19.0.0", "modeled using"]
-
-  # For Parallel System paragraph (clause replacement)
-  - description: "For Parallel System paragraph has clause replacement"
-    match_type: clause_change
-    patterns: ["For Parallel System", "Cl. 3.6.1"]
-
-  # Foundation support wording (computed value is the full sentence)
-  - description: "Foundation support condition is a computed full sentence"
-    match_type: computed_variant
-    key: foundation.support_condition
-
-  # T15 table removed (replaced by image)
   - description: "T15 table removed (replaced by image)"
     match_type: table_removed
     table_index: 15
 
-  # T6 pending implementation (still contains sample data)
+  # T6 pending implementation — owner-approved while status is set
   - description: "T6 load assessment table pending code-built implementation"
     match_type: table_pending
     table_index: 6
     status: pending_implementation
     phase: "Phase 3b"
 
-  # Loop table structure changes (data rows → loop template)
+  # Loop table structure changes — owner-approved
   - description: "Loop table data rows replaced with template rows"
     match_type: loop_table
     table_indices: [9, 10, 11, 14]
 
-  # Sentence template replacements (sub-paragraph placeholders)
-  - description: "Paragraphs with sentence templates have variable tokens replaced"
-    match_type: sentence_template
-
-  # Table cell placeholders
-  - description: "Table cells with variable values replaced by placeholders"
-    match_type: table_cell_placeholder
+  # Clause changes — exact old-to-new pairs only, owner-approved
+  - description: "Clause references updated to NBC 105:2025 values"
+    match_type: clause_change
+    patterns:
+      - "5.5.1.2"
+      - "5.5.1.4"
+      - "5.5.1.5"
+      - "5.5.2.2"
+      - "5.5.2.3"
+      - "5.5.2.4"
+      - "2.1"
+      - "3.6.1"
+      - "5.5"
+      - "5.5.2.1"
+      - "5.6.3"
+      - "NBC 105:2020"
+      - "NBC 105:2077"

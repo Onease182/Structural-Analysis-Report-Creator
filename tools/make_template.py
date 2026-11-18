@@ -275,13 +275,24 @@ def substitute_caption_fragments(p_element, logger, idx: int) -> None:
     # We check against the OWNER_CLAUSE_MAP and CURRENT_CLAUSE_KEYS from
     # inventory_template. For simplicity, we check common patterns.
     for clause_pattern in [
-        (r"Cl\.\s*6\.3", "codes.clauses.vertical_force_dist"),
-        (r"Cl\.\s*2\.1", "codes.clauses.material_properties"),
+        (r"Cl\.\s*6\.3", "Cl. {{ codes.clauses.vertical_force_dist }}"),
+        (r"Cl\.\s*2\.1", "Cl. {{ codes.clauses.material_properties }}"),
     ]:
         m = re.search(clause_pattern[0], text, re.I)
         if m:
-            text = text.replace(m.group(0), f"{{{{ {clause_pattern[1]} }}}}")
+            text = text.replace(m.group(0), clause_pattern[1])
             modified = True
+
+    # Also handle bare clause numbers in captions that don't have "Cl." prefix
+    # but already have the NBC edition replaced
+    if "{{ codes.edition }}" in text and "codes.clauses." not in text:
+        for clause_num, clause_key in [
+            ("6.3", "codes.clauses.vertical_force_dist"),
+            ("2.1", "codes.clauses.material_properties"),
+        ]:
+            if clause_num in text:
+                text = text.replace(clause_num, f"{{{{ {clause_key} }}}}")
+                modified = True
 
     if modified:
         replace_paragraph_text_with_placeholder(p_element, text)
@@ -566,6 +577,7 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
 
     logger = ReplacementLogger()
     body_children = list(body)
+    paragraph_idx_applied: set[int] = set()  # Track which paragraphs got a sentence_template
 
     # --- Process text entries (paragraphs with placeholders) ---
     # Keys that map to whole caption paragraphs and should NOT be replaced
@@ -594,25 +606,31 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         p_element = body_children[child_idx]
         old_text = get_paragraph_text(p_element)
 
-        # Skip caption paragraphs — they are handled separately by
-        # substitute_caption_fragments() to preserve style/SEQ/label.
+        # Skip caption paragraphs
         if is_caption(p_element):
             continue
 
-        # PRIORITY 1: If the entry has a sentence_template, use it to replace
-        # the entire paragraph text. This is checked BEFORE the "skip if
-        # already processed" check because multiple entries may share the
-        # same paragraph (e.g. a clause citation + a structure height split).
-        # The sentence_template is the authoritative replacement; it
-        # overwrites any previous partial substitution.
+        # PRIORITY 1: Apply sentence_template if:
+        # - The template has multiple keys (not just "{{ key }}")
+        # - The paragraph has NOT already been processed by a sentence_template
+        #   from a previous entry (tracked by paragraph_idx_applied set)
+        # - OR the paragraph has {{ }} from a clause citation but NOT from a
+        #   sentence_template (tracked by paragraph_idx_applied)
         sentence_template = entry.get("sentence_template")
         if sentence_template and "{{" in sentence_template:
-            replace_paragraph_text_with_placeholder(p_element, sentence_template)
-            logger.log(f"paragraph idx={idx} (sentence template)", old_text[:100], sentence_template[:100])
-            continue
+            stripped_tmpl = sentence_template.strip()
+            is_whole_para = stripped_tmpl == f"{{{{ {key} }}}}"
+            already_has_template = child_idx in paragraph_idx_applied
+            if not is_whole_para and not already_has_template:
+                replace_paragraph_text_with_placeholder(p_element, sentence_template)
+                logger.log(f"paragraph idx={idx} (sentence template)", old_text[:100], sentence_template[:100])
+                paragraph_idx_applied.add(child_idx)
+                continue
 
-        # Skip if already processed (e.g., by a sentence template from a
-        # previous entry sharing this paragraph).
+        # Skip if already processed by a sentence_template
+        if child_idx in paragraph_idx_applied:
+            continue
+        # Skip if already has {{ from a previous non-template entry (clause citation)
         if "{{" in old_text:
             continue
 
@@ -777,7 +795,7 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         (0, 9, 2): "client.application_date",
         # T2 (Building general info) — derived from row label in col 1
         (2, 0, 2): "building.location",
-        (2, 1, 2): "building.storeys_above_grade",
+        (2, 1, 2): "building.storeys_count_numeric",
         (2, 2, 2): "building.num_storeys_analysed",
         (2, 3, 2): "building.num_basements",
         (2, 4, 2): "building.height_ground_floor_m",
@@ -818,7 +836,7 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         (12, 7, 1): "building.location",
         (12, 7, 3): "seismic.zone_factor_z",
         (12, 8, 2): "seismic.structural_type",
-        (12, 9, 2): "seismic.importance_factor_i",
+        (12, 9, 2): "seismic.importance_factor_i_table",
         (12, 10, 3): "seismic.elastic_site_spectra_c",
         (12, 11, 3): "seismic.elastic_site_spectra_cs",
         (12, 13, 3): "structural.system_type_full",
