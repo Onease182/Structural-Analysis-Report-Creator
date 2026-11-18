@@ -1,6 +1,6 @@
 # Template Replacement Log
 
-Total replacements: **179**.
+Total replacements: **185**.
 
 | # | Location | Old text (preview) | Placeholder |
 |---|----------|-------------------|-------------|
@@ -32,10 +32,10 @@ Total replacements: **179**.
 | 26 | paragraph idx=395 (sentence template) | As Empirical time period ({{ modal.empirical_period_s }} sec) is lesser than the Rayleigh time perio | `As Empirical time period ({{ modal.empirical_period_s }} sec) is lesser than the Rayleigh time perio` |
 | 27 | paragraph idx=397 | Ch(t)=Spectral Shape factor as per cl.4.1.2 Z= Seismic Zoning Factor as per 4.1.4 I=Importance facto | `{{ codes.clauses.spectral_shape_factor }}` |
 | 28 | paragraph idx=413 | As per Clause 3.2.1 of NBC 105:2025, the Equivalent Static Method may be used for all serviceability | `{{ codes.clauses.equivalent_static_method }}` |
-| 29 | paragraph idx=413 (sentence template) | As per Clause {{ codes.clauses.equivalent_static_method }} of {{ codes.edition }}, the Equivalent St | `As per Clause {{ codes.clauses.equivalent_static_method }} of {{ codes.edition }}, the Equivalent St` |
+| 29 | paragraph idx=413 (sentence template) | As per {{ codes.clauses.equivalent_static_method }} of {{ codes.edition }}, the Equivalent Static Me | `As per Clause {{ codes.clauses.equivalent_static_method }} of {{ codes.edition }}, the Equivalent St` |
 | 30 | paragraph idx=418 | When lateral load resisting elements are oriented along mutually orthogonal horizontal directions, t | `{{ codes.clauses.load_combinations }}` |
 | 31 | paragraph idx=430 | NBC105:2025 clause 7.3 states that number of modes to be used in the analysis should be such that th | `{{ codes.clauses.modal_mass_participation }}` |
-| 32 | paragraph idx=430 (sentence template) | {{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that number of modes  | `{{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that number of modes ` |
+| 32 | paragraph idx=430 (sentence template) | {{ codes.edition }} {{ codes.clauses.modal_mass_participation }} states that number of modes to be u | `{{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that number of modes ` |
 | 33 | paragraph idx=430 (sentence template) | {{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that number of modes  | `{{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that number of modes ` |
 | 34 | paragraph idx=450 (sentence template) | = 1557/ (355*355)*100% =1.24% <4% (Ok) | `= {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{ design.column.` |
 | 35 | paragraph idx=450 (sentence template) | = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{ design.column. | `= {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{ design.column.` |
@@ -61,14 +61,14 @@ Total replacements: **179**.
 | 55 | paragraph idx=535 (sentence template) | {{ codes.clauses.serviceability_drift }} of {{ codes.edition }} is applied. The maximum deflection i | `{{ codes.clauses.serviceability_drift }} of {{ codes.edition }} is applied. The maximum deflection i` |
 | 56 | paragraph idx=591 | One of the basic virtues of earthquake resistant design of structures is that the structure shall be | `{{ codes.clauses.irregularity_general }}` |
 | 57 | paragraph idx=593 | As per the clause 5.5.2.1 of NBC 105:2020, torsion irregularity is considered to exist when the maxi | `{{ codes.clauses.torsional_irregularity }}` |
-| 58 | paragraph idx=593 (sentence template) | As per the clause {{ codes.clauses.torsional_irregularity }} of {{ codes.edition }}, torsion irregul | `As per the clause {{ codes.clauses.torsional_irregularity }} of {{ codes.edition }}, torsion irregul` |
+| 58 | paragraph idx=593 (sentence template) | As per the {{ codes.clauses.torsional_irregularity }} of {{ codes.edition }}, torsion irregularity i | `As per the clause {{ codes.clauses.torsional_irregularity }} of {{ codes.edition }}, torsion irregul` |
 | 59 | paragraph idx=603 | As per the clause 5.5.1.2, a soft story is the one whose stiffness of the lateral force resisting sy | `{{ codes.clauses.soft_storey }}` |
-| 60 | paragraph idx=603 (sentence template) | As per the clause {{ codes.clauses.soft_storey }}, a soft story is the one whose stiffness of the la | `As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition }}, a soft story is the one wh` |
+| 60 | paragraph idx=603 (sentence template) | As per the {{ codes.clauses.soft_storey }}, a soft story is the one whose stiffness of the lateral f | `As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition }}, a soft story is the one wh` |
 | 61 | paragraph idx=603 (sentence template) | As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition }}, a soft story is the one wh | `As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition }}, a soft story is the one wh` |
 | 62 | paragraph idx=617 | If there is a difference of more than 50% between the effective masses of two consecutive storeys, t | `{{ codes.clauses.mass_irregularity }}` |
 | 63 | paragraph idx=617 (sentence template) | If there is a difference of more than 50% between the effective masses of two consecutive storeys, t | `If there is a difference of more than {{ codes.limits.mass_irregularity_diff_pct }}% between the eff` |
 | 64 | paragraph idx=624 | As per the clause 5.5.2.2 of NBC 105:2020, a structure is said to have re-entrant corner irregularit | `{{ codes.clauses.reentrant_corner }}` |
-| 65 | paragraph idx=624 (sentence template) | As per the clause {{ codes.clauses.reentrant_corner }} of {{ codes.edition }}, a structure is said t | `As per the clause {{ codes.clauses.reentrant_corner }} of {{ codes.edition }}, a structure is said t` |
+| 65 | paragraph idx=624 (sentence template) | As per the {{ codes.clauses.reentrant_corner }} of {{ codes.edition }}, a structure is said to have  | `As per the clause {{ codes.clauses.reentrant_corner }} of {{ codes.edition }}, a structure is said t` |
 | 66 | paragraph idx=632 | If the diaphragm of a building has a cutout or open area greater than 50% of the gross enclosed diap | `{{ codes.clauses.diaphragm_discontinuity }}` |
 | 67 | paragraph idx=632 (sentence template) | If the diaphragm of a building has a cutout or open area greater than 50% of the gross enclosed diap | `If the diaphragm of a building has a cutout or open area greater than {{ codes.limits.diaphragm_open` |
 | 68 | paragraph idx=632 (sentence template) | If the diaphragm of a building has a cutout or open area greater than {{ codes.limits.diaphragm_open | `If the diaphragm of a building has a cutout or open area greater than {{ codes.limits.diaphragm_open` |
@@ -178,8 +178,14 @@ Total replacements: **179**.
 | 172 | table T16 cell (1,1) | Continuous | `{{ table.design.beam_boundary }}` |
 | 173 | table T6 cell (11,1) | 3.175 | `{{ building.story_height_m }}` |
 | 174 | table T15 cell (17,2) | 3.175 | `{{ loads.slab_dead_load }}` |
-| 175 | table T9 (loop) | [6 rows → 4 rows] | `{%tr for r in rows %}...template...{%tr endfor %}` |
-| 176 | table T10 (loop) | [7 rows → 4 rows] | `{%tr for r in rows %}...template...{%tr endfor %}` |
-| 177 | table T11 (loop) | [7 rows → 4 rows] | `{%tr for r in rows %}...template...{%tr endfor %}` |
-| 178 | table T14 (loop) | [11 rows → 5 rows] | `{%tr for r in rows %}...template...{%tr endfor %}` |
-| 179 | paragraphs idx=370..379 | Design of Staircases block | `{%p if building.has_staircase %}...{%p endif %}` |
+| 175 | table T15 | [88×8 slab design table] | `{{ figure.design.slab_sheet }} (image placeholder)` |
+| 176 | table T9 footer | [row 5] | `placeholders: ['totals.wi_kg', 'totals.wi_hik', 'totals.fi']` |
+| 177 | table T9 (loop) | [6 rows → 5 rows] | `for + template + endfor + 1 footer(s)` |
+| 178 | table T10 footer | [row 5] | `placeholders: ['totals.fi', 'totals.fi_di_x', 'totals.wi_di2_x']` |
+| 179 | table T10 footer | [row 6] | `placeholders: ['modal.rayleigh_period_x_s']` |
+| 180 | table T10 (loop) | [7 rows → 6 rows] | `for + template + endfor + 2 footer(s)` |
+| 181 | table T11 footer | [row 5] | `placeholders: ['totals.fi', 'totals.fi_di_y', 'totals.wi_di2_y']` |
+| 182 | table T11 footer | [row 6] | `placeholders: ['modal.rayleigh_period_y_s']` |
+| 183 | table T11 (loop) | [7 rows → 6 rows] | `for + template + endfor + 2 footer(s)` |
+| 184 | table T14 (loop) | [11 rows → 5 rows] | `for + template + endfor + 0 footer(s)` |
+| 185 | paragraphs idx=370..379 | Design of Staircases block | `{%p if building.has_staircase %}...{%p endif %}` |

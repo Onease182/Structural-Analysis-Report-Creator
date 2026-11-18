@@ -2,9 +2,9 @@
 
 **Review gate:** this curated registry is owned by the structural engineer. Do not generate a production master template until the six unresolved NBC 105:2025 clause mappings in `docs/needs_my_decision.md` are answered.
 
-Curated entries: **177**.
-Types: bool: 1, image: 55, number: 46, table: 21, text: 54.
-Sources: computed: 47, e2k: 6, etabs_api: 51, excel: 73.
+Curated entries: **187**.
+Types: bool: 1, image: 56, number: 55, table: 21, text: 54.
+Sources: computed: 56, e2k: 6, etabs_api: 51, excel: 74.
 
 ## Counts per group
 
@@ -13,23 +13,24 @@ Sources: computed: 47, e2k: 6, etabs_api: 51, excel: 73.
 - `client`: 2
 - `codes`: 30
 - `design`: 20
-- `figure`: 55
+- `figure`: 56
 - `foundation`: 4
 - `loads`: 1
 - `materials`: 3
-- `modal`: 5
+- `modal`: 7
 - `project`: 2
 - `seismic`: 11
 - `slab`: 1
 - `structural`: 1
 - `table`: 27
+- `totals`: 7
 
 ## Counts per source
 
-- `computed`: 47
+- `computed`: 56
 - `e2k`: 6
 - `etabs_api`: 51
-- `excel`: 73
+- `excel`: 74
 
 ## Key rename map
 
@@ -76,7 +77,7 @@ Three keys kept as real-input VARIABLE:
 
 - `etabs_screenshot`: 24
 - `generated`: 21
-- `user_supplied`: 10
+- `user_supplied`: 11
 
 Placeholder figures `figure.project.placeholder_a..d` renamed based on their surrounding headings:
 - placeholder_a/b (in "Design of Columns" section) → `figure.elements.columns_design`, `figure.elements.columns_design_b`

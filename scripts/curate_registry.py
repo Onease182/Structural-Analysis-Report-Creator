@@ -653,6 +653,18 @@ SUPPLEMENTARY_ENTRIES: list[dict[str, Any]] = [
         "inventory_item_index": None, "example": "3.175",
         "etabs_table_or_e2k_section": None,
     },
+    # Totals for loop table footers
+    {"key": "totals.wi_kg", "description": "Total weight Wi (kg)", "type": "number", "unit": "kg", "format": {"decimals": 2}, "source": "computed", "required": True, "condition": None, "inventory_item_index": None, "example": "167868.70", "etabs_table_or_e2k_section": None},
+    {"key": "totals.wi_hik", "description": "Total Wi·hi^k", "type": "number", "unit": None, "format": {"decimals": 2}, "source": "computed", "required": True, "condition": None, "inventory_item_index": None, "example": "865221.01", "etabs_table_or_e2k_section": None},
+    {"key": "totals.fi", "description": "Total ULS Fi (kN)", "type": "number", "unit": "kN", "format": {"decimals": 2}, "source": "computed", "required": True, "condition": None, "inventory_item_index": None, "example": "240.10", "etabs_table_or_e2k_section": None},
+    {"key": "totals.fi_di_x", "description": "Total Fi·di (X-direction)", "type": "number", "unit": None, "format": {"decimals": 3}, "source": "computed", "required": True, "condition": None, "inventory_item_index": None, "example": "3.721", "etabs_table_or_e2k_section": None},
+    {"key": "totals.wi_di2_x", "description": "Total Wi·di² (X-direction)", "type": "number", "unit": None, "format": {"decimals": 4}, "source": "computed", "required": True, "condition": None, "inventory_item_index": None, "example": "0.3347", "etabs_table_or_e2k_section": None},
+    {"key": "totals.fi_di_y", "description": "Total Fi·di (Y-direction)", "type": "number", "unit": None, "format": {"decimals": 3}, "source": "computed", "required": True, "condition": None, "inventory_item_index": None, "example": "2.904", "etabs_table_or_e2k_section": None},
+    {"key": "totals.wi_di2_y", "description": "Total Wi·di² (Y-direction)", "type": "number", "unit": None, "format": {"decimals": 4}, "source": "computed", "required": True, "condition": None, "inventory_item_index": None, "example": "0.2033", "etabs_table_or_e2k_section": None},
+    {"key": "modal.rayleigh_period_x_s", "description": "Rayleigh time period X-direction result (s)", "type": "number", "unit": "s", "format": {"decimals": 3}, "source": "computed", "required": True, "condition": None, "inventory_item_index": None, "example": "0.602", "etabs_table_or_e2k_section": None},
+    {"key": "modal.rayleigh_period_y_s", "description": "Rayleigh time period Y-direction result (s)", "type": "number", "unit": "s", "format": {"decimals": 3}, "source": "computed", "required": True, "condition": None, "inventory_item_index": None, "example": "0.531", "etabs_table_or_e2k_section": None},
+    # T15 slab design as image placeholder
+    {"key": "figure.design.slab_sheet", "description": "Slab design sheet image (user-supplied ETABS screenshot)", "type": "image", "unit": None, "format": {"decimals": None}, "source": "excel", "required": False, "condition": "User-supplied ETABS slab design screenshot", "inventory_item_index": None, "example": None, "figure_origin": "user_supplied", "generator": None},
 ]
 
 # When a sentence template is added (EXTRA_SENTENCE_TEMPLATES), update the

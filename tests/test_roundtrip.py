@@ -158,8 +158,12 @@ class RoundTripTextComparisonTests(unittest.TestCase):
     def test_table_count_matches(self) -> None:
         sample_doc = Document(str(SAMPLE))
         rendered_doc = Document(str(self.rendered_path))
-        self.assertEqual(len(sample_doc.tables), len(rendered_doc.tables),
-                         f"Table count: sample={len(sample_doc.tables)}, rendered={len(rendered_doc.tables)}")
+        # T15 was replaced with an image placeholder per owner decision
+        expected_diff = 1
+        diff = abs(len(sample_doc.tables) - len(rendered_doc.tables))
+        self.assertEqual(diff, expected_diff,
+                         f"Table count diff: sample={len(sample_doc.tables)}, "
+                         f"rendered={len(rendered_doc.tables)}, expected diff={expected_diff}")
 
     def test_image_count_matches(self) -> None:
         WP_NS = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"

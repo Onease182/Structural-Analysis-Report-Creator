@@ -610,23 +610,33 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
             replace_paragraph_text_with_placeholder(p_element, f"{{{{ {key} }}}}")
             logger.log(f"paragraph idx={idx}", old_text, f"{{{{ {key} }}}}")
         elif key.startswith("codes.clauses."):
-            # Clause citation: replace the sample clause with {{ key }}
+            # Clause citation: replace the sample clause with {{ key }}.
+            # Try "Cl." + sample_clause first (e.g., "Cl.2.1") to avoid
+            # double "Cl." when the value also contains "Cl.".
             sample_clause = entry.get("sample_clause", "")
             target = entry.get("target_clause_2025", "")
-            if sample_clause and sample_clause in old_text:
-                replaced = replace_text_in_paragraph(
-                    p_element, sample_clause, f"{{{{ {key} }}}}"
-                )
-                if replaced:
-                    # Also replace NBC edition
-                    full_text = get_paragraph_text(p_element)
-                    if re.search(r"NBC\s*105\s*:\s*\d{4}", full_text):
+            if sample_clause:
+                # Try replacing "Cl." + sample_clause (no space) and "Cl. " + sample_clause
+                for prefix in [f"Cl.{sample_clause}", f"Cl. {sample_clause}",
+                               f"clause {sample_clause}", f"Clause {sample_clause}"]:
+                    if prefix in old_text:
+                        replace_text_in_paragraph(p_element, prefix, f"{{{{ {key} }}}}")
+                        break
+                else:
+                    # Fall back to replacing just the sample clause number
+                    if sample_clause in old_text:
                         replace_text_in_paragraph(
-                            p_element,
-                            re.search(r"NBC\s*105\s*:\s*\d{4}", full_text).group(0),
-                            "{{ codes.edition }}",
+                            p_element, sample_clause, f"{{{{ {key} }}}}"
                         )
-                    logger.log(f"paragraph idx={idx}", old_text, f"{{{{ {key} }}}}")
+                # Also replace NBC edition
+                full_text = get_paragraph_text(p_element)
+                if re.search(r"NBC\s*105\s*:\s*\d{4}", full_text):
+                    replace_text_in_paragraph(
+                        p_element,
+                        re.search(r"NBC\s*105\s*:\s*\d{4}", full_text).group(0),
+                        "{{ codes.edition }}",
+                    )
+                logger.log(f"paragraph idx={idx}", old_text, f"{{{{ {key} }}}}")
         elif entry.get("source") == "computed" and entry.get("type") == "text":
             # Computed text without sentence template: replace entire paragraph
             replace_paragraph_text_with_placeholder(p_element, f"{{{{ {key} }}}}")
@@ -812,24 +822,88 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
                         f"{{{{ {key} }}}}",
                     )
 
+    # --- T15: Replace slab design table with image placeholder ---
+    # Per owner decision: T15 (slab design, 88×8) → image placeholder
+    # figure.design.slab_sheet (user_supplied).
+    if len(doc.tables) > 15:
+        tbl15 = doc.tables[15]
+        tbl15_element = tbl15._tbl
+        # Get the paragraph before the table (caption)
+        prev = tbl15_element.getprevious()
+        # Replace the table with a paragraph containing the image placeholder
+        replacement_p = etree.Element(f"{{{W_NS}}}p")
+        replacement_r = etree.SubElement(replacement_p, f"{{{W_NS}}}r")
+        replacement_t = etree.SubElement(replacement_r, f"{{{W_NS}}}t")
+        replacement_t.text = "{{ figure.design.slab_sheet }}"
+        replacement_t.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+        tbl15_element.addprevious(replacement_p)
+        tbl15_element.getparent().remove(tbl15_element)
+        logger.log("table T15", "[88×8 slab design table]",
+                   "{{ figure.design.slab_sheet }} (image placeholder)")
+
+    # --- Fix hard-coded clause references in table cells ---
+    # Replace "4.1.4" → {{ codes.clauses.seismic_zoning_factor }}
+    # Replace "4.1.5" → {{ codes.clauses.importance_factor }}
+    # Replace "(Cl. 3.6.1)" → ({{ codes.clauses.load_combinations }})
+    HARD_CODED_CLAUSES = {
+        "4.1.4": "codes.clauses.seismic_zoning_factor",
+        "4.1.5": "codes.clauses.importance_factor",
+        "(Cl. 3.6.1)": "({{ codes.clauses.load_combinations }})",
+        "Cl. 3.6.1": "{{ codes.clauses.load_combinations }}",
+    }
+    for tbl in doc.tables:
+        for row in tbl.rows:
+            for cell in row.cells:
+                cell_text = cell.text
+                modified = False
+                new_text = cell_text
+                for old_val, replacement in HARD_CODED_CLAUSES.items():
+                    if old_val in new_text and "{{" not in new_text:
+                        if old_val.startswith("("):
+                            new_text = new_text.replace(old_val, replacement)
+                        else:
+                            new_text = new_text.replace(old_val, f"{{{{ {replacement} }}}}")
+                        modified = True
+                if modified:
+                    for p in cell.paragraphs:
+                        for run in p.runs:
+                            run.text = ""
+                    if cell.paragraphs:
+                        p = cell.paragraphs[0]
+                        if p.runs:
+                            p.runs[0].text = new_text
+                        else:
+                            p.add_run(new_text)
+                    logger.log("hard-coded clause in table cell", cell_text[:60], new_text[:60])
+
     # --- Process table entries (data-driven tables get row templates) ---
     # Data-driven loop tables: T9, T10, T11, T14
-    # For each: keep header row(s), create ONE template row with
-    # {{ r.column }} in each cell, remove extra data rows, add
-    # {%tr for r in rows %} and {%tr endfor %} tags.
+    # Structure: header row(s) + for-row + template-row + endfor-row + footer row(s)
+    # Footer rows (Total, Rayleigh result) are restored with placeholders.
     LOOP_TABLE_COLUMNS: dict[int, list[str]] = {
-        # T9: Vertical force distribution (6 cols after header, 1 header row)
         9: ["level", "wi", "hi", "hik", "wi_hik", "fi", "shear"],
-        # T10: Rayleigh X (8 cols, 1 header row)
         10: ["level", "wi", "di_mm", "di_m", "di2", "fi", "fi_di", "wi_di2"],
-        # T11: Rayleigh Y (8 cols, 1 header row)
         11: ["level", "wi", "di_mm", "di_m", "di2", "fi", "fi_di", "wi_di2"],
-        # T14: Modal periods (7 cols, 2 header rows: names + units)
         14: ["case", "mode", "period", "ux", "uy", "sum_ux", "sum_uy"],
     }
-    # Number of header rows to keep outside the loop
     LOOP_TABLE_HEADER_ROWS: dict[int, int] = {
         9: 1, 10: 1, 11: 1, 14: 2,
+    }
+    # Footer rows: (table_index, row_index_in_original, placeholder_map)
+    # placeholder_map: {col_index: registry_key}
+    LOOP_TABLE_FOOTERS: dict[int, list[dict]] = {
+        9: [
+            {"row_idx": 5, "cells": {1: "totals.wi_kg", 4: "totals.wi_hik", 5: "totals.fi"}, "label_col": 0, "label": "Total"},
+        ],
+        10: [
+            {"row_idx": 5, "cells": {5: "totals.fi", 6: "totals.fi_di_x", 7: "totals.wi_di2_x"}, "label_col": 0, "label": "Total"},
+            {"row_idx": 6, "cells": {7: "modal.rayleigh_period_x_s"}, "label": "Rayleigh time period, T ="},
+        ],
+        11: [
+            {"row_idx": 5, "cells": {5: "totals.fi", 6: "totals.fi_di_y", 7: "totals.wi_di2_y"}, "label_col": 0, "label": "Total"},
+            {"row_idx": 6, "cells": {7: "modal.rayleigh_period_y_s"}, "label": "Rayleigh time period, T ="},
+        ],
+        14: [],  # No footer rows for modal periods table
     }
 
     for tbl_idx, col_names in LOOP_TABLE_COLUMNS.items():
@@ -842,8 +916,14 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         if len(rows) <= n_header:
             continue
 
-        # Structure: header row(s) + for-row + template-row + endfor-row
-        # The for-row and endfor-row are new rows containing only the tag.
+        # Save footer rows BEFORE modifying
+        footers = LOOP_TABLE_FOOTERS.get(tbl_idx, [])
+        saved_footer_rows = []
+        for fdef in footers:
+            ridx = fdef["row_idx"]
+            if ridx < len(rows):
+                # Deep-copy the footer row to preserve formatting
+                saved_footer_rows.append((fdef, rows[ridx]))
 
         # Step 1: Modify the first data row to be the TEMPLATE row.
         template_row = rows[n_header]
@@ -863,49 +943,118 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
                     for extra_p in paras[1:]:
                         cell.remove(extra_p)
 
-        # Step 2: Create a for-row BEFORE the template row.
-        for_row = etree.SubElement(tbl_element, f"{{{W_NS}}}tr")
+        # Step 2: Create for-row BEFORE the template row.
+        for_row = etree.Element(f"{{{W_NS}}}tr")
         for_cell = etree.SubElement(for_row, f"{{{W_NS}}}tc")
         for_p = etree.SubElement(for_cell, f"{{{W_NS}}}p")
         for_r = etree.SubElement(for_p, f"{{{W_NS}}}r")
         for_t = etree.SubElement(for_r, f"{{{W_NS}}}t")
         for_t.text = "{%tr for r in rows %}"
         for_t.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
-        # Move the for-row BEFORE the template row
-        tbl_element.remove(for_row)
         template_row.addprevious(for_row)
 
-        # Step 3: Create an endfor-row AFTER the template row.
-        endfor_row = etree.SubElement(tbl_element, f"{{{W_NS}}}tr")
+        # Step 3: Create endfor-row AFTER the template row.
+        endfor_row = etree.Element(f"{{{W_NS}}}tr")
         endfor_cell = etree.SubElement(endfor_row, f"{{{W_NS}}}tc")
         endfor_p = etree.SubElement(endfor_cell, f"{{{W_NS}}}p")
         endfor_r = etree.SubElement(endfor_p, f"{{{W_NS}}}r")
         endfor_t = etree.SubElement(endfor_r, f"{{{W_NS}}}t")
         endfor_t.text = "{%tr endfor %}"
         endfor_t.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
-        # Move the endfor-row AFTER the template row
-        tbl_element.remove(endfor_row)
         template_row.addnext(endfor_row)
 
-        # Step 4: Remove extra data rows (keep only header + for + template + endfor)
-        # The rows after the template row (and before the endfor row) are extra.
-        # Actually, the endfor row is now right after the template row.
-        # Remove all original data rows except the template row.
+        # Step 4: Restore footer rows with placeholders.
+        insert_after = endfor_row
+        for fdef, orig_row in saved_footer_rows:
+            # Deep-copy the original footer row
+            footer_row = copy.deepcopy(orig_row)
+            # Replace specified cells with placeholders
+            footer_cells = footer_row.findall(f"{{{W_NS}}}tc")
+            for col_idx, key in fdef.get("cells", {}).items():
+                if col_idx < len(footer_cells):
+                    cell = footer_cells[col_idx]
+                    paras = cell.findall(f"{{{W_NS}}}p")
+                    if paras:
+                        p = paras[0]
+                        for r in p.findall(f"{{{W_NS}}}r"):
+                            p.remove(r)
+                        new_r = etree.SubElement(p, f"{{{W_NS}}}r")
+                        new_t = etree.SubElement(new_r, f"{{{W_NS}}}t")
+                        new_t.text = f"{{{{ {key} }}}}"
+                        new_t.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+            # Set label cell if specified
+            label_col = fdef.get("label_col")
+            label_text = fdef.get("label")
+            if label_col is not None and label_text and label_col < len(footer_cells):
+                cell = footer_cells[label_col]
+                paras = cell.findall(f"{{{W_NS}}}p")
+                if paras:
+                    p = paras[0]
+                    for r in p.findall(f"{{{W_NS}}}r"):
+                        p.remove(r)
+                    new_r = etree.SubElement(p, f"{{{W_NS}}}r")
+                    new_t = etree.SubElement(new_r, f"{{{W_NS}}}t")
+                    new_t.text = label_text
+                    new_t.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+            insert_after.addnext(footer_row)
+            insert_after = footer_row
+            logger.log(f"table T{tbl_idx} footer", f"[row {fdef['row_idx']}]",
+                       f"placeholders: {list(fdef.get('cells',{}).values())}")
+
+        # Step 5: Remove ALL original extra rows (data rows + original footer rows)
+        # We've already deep-copied footer rows and inserted them.
+        # Remove everything after the template row except our inserted rows.
         all_rows = tbl_element.findall(f"{{{W_NS}}}tr")
-        # Find the template row's position
-        template_idx = None
+        # Find template row position
+        template_pos = None
         for i, r in enumerate(all_rows):
             if r is template_row:
-                template_idx = i
+                template_pos = i
                 break
-        if template_idx is not None:
-            # Remove rows after the endfor row (original extra data rows)
-            endfor_idx = template_idx + 1  # endfor row is right after template
-            for r in all_rows[endfor_idx + 1:]:
+        if template_pos is not None:
+            # Remove original rows that come after our inserted structure
+            # Our structure: header(0..n_header-1), for_row(n_header), template(n_header+1),
+            # endfor(n_header+2), footers(n_header+3..)
+            # Original rows after template_pos+1 that are NOT our inserted rows
+            our_rows = {for_row, template_row, endfor_row}
+            our_rows.update(fr for _, fr in saved_footer_rows)  # original refs, not copies
+            # Actually, we need to remove original data/footer rows, not our copies
+            for r in list(all_rows):
+                if r in our_rows:
+                    continue
+                # Check if it's one of our inserted footer copies
+                is_our_footer = False
+                for fr in tbl_element.findall(f"{{{W_NS}}}tr"):
+                    pass  # Can't easily check identity of copies
+                # Simple approach: remove all original rows after template that are
+                # not the for_row, endfor_row, or our footer copies.
+                # Since we inserted copies AFTER endfor_row, and original rows are
+                # still in the tree, we need to remove originals.
+                pass
+
+            # Simpler: just remove all rows that are original data/footer rows.
+            # The original data rows start at index n_header+1 (after template).
+            # The original footer rows are at their original indices.
+            # We've already copied footers. Remove all original non-header rows
+            # except the template_row.
+            rows_to_remove = []
+            for i, r in enumerate(all_rows):
+                if i < n_header:
+                    continue  # Keep header rows
+                if r is template_row:
+                    continue  # Keep template row
+                if r is for_row or r is endfor_row:
+                    continue  # Keep our inserted rows
+                # Check if it's one of our footer copies (they're new elements)
+                # Original rows have the same identity as in `rows` list
+                if r in rows:
+                    rows_to_remove.append(r)
+            for r in rows_to_remove:
                 tbl_element.remove(r)
 
-        logger.log(f"table T{tbl_idx} (loop)", f"[{len(rows)} rows → {n_header + 3} rows]",
-                   "{%tr for r in rows %}...template...{%tr endfor %}")
+        n_footers = len(saved_footer_rows)
+        logger.log(f"table T{tbl_idx} (loop)", f"[{len(rows)} rows → {n_header + 3 + n_footers} rows]",
+                   f"for + template + endfor + {n_footers} footer(s)")
 
     # --- Process staircase conditional ---
     # Find the staircase HEADING paragraph (not the TOC entry).
