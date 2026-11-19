@@ -1,0 +1,105 @@
+$ ETABS Ninety Day Free License
+$ For Educational Use Only
+
+$ STORYDATA
+Story   StoryHt  Elevation  MasterStory  SimilarTo
+Story3  3.175    9.525      -            -
+Story2  3.175    6.350      -            -
+Story1  3.175    3.175      -            -
+Base    0        0          -            -
+
+$ GRIDS
+Grid Line  XOrd  YOrd  BubbleLoc
+A          0     0     Right
+B          4.216 0     Right
+C          8.432 0     Right
+1          0     0     Up
+2          0     10.058 Up
+3          0     6.350  Up
+
+$ POINTCOORD
+Point  X        Y        Z
+1      0        0        0
+2      4.216    0        0
+3      0        10.058   0
+4      4.216    10.058   0
+5      0        0        3.175
+6      4.216    0        3.175
+7      0        10.058   3.175
+8      4.216    10.058   3.175
+
+$ FRAMEOBJ
+Frame  Type  Sec  Story  J1  J2  Jt
+1      Column  C355x355  Story1  1  5  -
+2      Column  C355x355  Story1  2  6  -
+3      Beam    B250x430   Story1  5  6  -
+4      Column  C355x355  Story2  5  7  -
+5      Beam    B250x430   Story2  7  8  -
+
+$ AREAOBJ
+Area  Type  Sec  Story  J1  J2  J3  J4
+1     Floor  SL125  Story1  5  6  8  7
+
+$ FRAMESECTIONS
+Section    Type  Material  t3   t2   Area
+C355x355   Concrete  M20  355  355  126025
+B250x430   Concrete  M20  250  430  107500
+
+$ AREASECTIONS
+Section  Type  Material  Thickness
+SL125    Slab  M20       125
+
+$ MATERIALS
+Material  Type  E          U    Fc
+M20       Concrete  22360  0.2  20
+Fe500     Rebar    200000  0.3  500
+
+$ PROPMODIFIERS
+Frame  Type      Modifier  Value
+1      Flexural  M11       0.35
+1      Flexural  M22       0.35
+3      Flexural  M11       0.35
+3      Flexural  M22       0.35
+
+$ DIAPHRAGMS
+Diaphragm  Story  Type
+D1         Story1  Rigid
+D1         Story2  Rigid
+D1         Story3  Rigid
+
+$ POINTRESTRAINTS
+Point  Story  U1  U2  U3  R1  R2  R3
+1      Base   Yes Yes Yes Yes Yes Yes
+2      Base   Yes Yes Yes Yes Yes Yes
+3      Base   Yes Yes Yes Yes Yes Yes
+4      Base   Yes Yes Yes Yes Yes Yes
+
+$ LOADPATTS
+LoadPat  Type     SelfWt  Wt  Mult
+DEAD    Dead     Yes     0   1
+LIVE    Live     No      0   1
+ROOFLIVE Live    No      0   1
+EQX     Quake    No      0   1
+EQY     Quake    No      0   1
+WALL    Dead     No      0   1
+FINISH  Dead     No      0   1
+
+$ LOADCOMBOS
+Combo  Type
+ULS1   1.2DEAD+1.5LIVE+1.0EQX
+ULS2   1.2DEAD+1.5LIVE+1.0EQY
+SLS1   1.0DEAD+1.0LIVE+1.0EQX
+SLS2   1.0DEAD+1.0LIVE+1.0EQY
+
+$ MASSSOURCE
+Source  Type   Mult  LoadPat
+1       Loads  1     DEAD
+1       Loads  1     LIVE
+
+$ STIFFNESS
+Frame  Type      ULS    SLS
+Beam   Flexural  0.35   0.70
+Column Flexural  0.70   0.90
+
+$ UNPARSED_SECTION
+Some unknown data that should be kept raw
