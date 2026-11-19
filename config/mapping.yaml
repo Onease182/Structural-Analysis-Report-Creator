@@ -1,0 +1,139 @@
+# Mapping from registry keys to their data sources and computation rules.
+# Used by src/context_builder.py to build projects/<name>/context.json.
+
+# Sources: etabs_csv, e2k, excel, computed
+# Each key specifies where the value comes from and how it's computed.
+
+sources:
+  # Building geometry — from .e2k
+  building.storeys_above_grade:
+    source: e2k
+    e2k_section: "$STORYDATA"
+    method: "count stories above Base"
+  building.num_storeys_analysed:
+    source: e2k
+    e2k_section: "$STORYDATA"
+    method: "count stories above Base (same as storeys_above_grade if no basements)"
+  building.num_basements:
+    source: e2k
+    e2k_section: "$STORYDATA"
+    method: "count stories at or below elevation 0"
+  building.story_height_m:
+    source: e2k
+    e2k_section: "$STORYDATA"
+    method: "StoryHt of first above-grade story"
+  building.height_ground_floor_m:
+    source: e2k
+    e2k_section: "$STORYDATA"
+    method: "StoryHt of Story1"
+  building.height_typical_floor_m:
+    source: e2k
+    e2k_section: "$STORYDATA"
+    method: "StoryHt of typical story"
+  building.total_height_m:
+    source: e2k
+    e2k_section: "$STORYDATA"
+    method: "sum of StoryHt for all above-grade stories"
+  building.height_period_m:
+    source: e2k
+    e2k_section: "$STORYDATA"
+    method: "elevation of highest story"
+  building.primary_frame_material:
+    source: etabs_csv
+    etabs_table: "Material Properties"
+    method: "dominant frame material"
+  building.infill_wall_material:
+    source: excel
+    method: "user input"
+  building.span_x_m:
+    source: e2k
+    e2k_section: "$GRIDS"
+    method: "max X grid distance"
+  building.span_y_m:
+    source: e2k
+    e2k_section: "$GRIDS"
+    method: "max Y grid distance"
+
+  # Materials — from ETABS
+  materials.concrete_grade_used:
+    source: etabs_csv
+    etabs_table: "Material Properties"
+    method: "concrete grade from Fc value"
+  materials.rebar_grade_used:
+    source: etabs_csv
+    etabs_table: "Material Properties"
+    method: "rebar grade from Fy value"
+
+  # Seismic parameters — computed
+  seismic.zone_factor_z:
+    source: excel
+    method: "user input (NBC 105:2025 Table 4.1.4)"
+  seismic.importance_factor_i:
+    source: excel
+    method: "user input (NBC 105:2025 Cl. 4.1.5)"
+  seismic.soil_class:
+    source: excel
+    method: "user input"
+  seismic.response_modification_factor_rmu:
+    source: computed
+    method: "from structural system type per NBC 105:2025 Table 5-2"
+  seismic.distribution_exponent_k:
+    source: computed
+    method: "k = 1.0 for T <= 0.5s, k = 2.0 for T > 2.5s, linear interpolation"
+  seismic.design_period_used_s:
+    source: computed
+    method: "min(empirical, Rayleigh) per NBC 105:2025"
+  seismic.spectral_coefficient_cd:
+    source: computed
+    method: "Cd = Ch(t) * Z * I / Rmu"
+
+  # Modal — from ETABS
+  modal.modes_included_count:
+    source: etabs_csv
+    etabs_table: "Modal Participating Mass Ratios"
+    method: "count modes until sum UX + UY >= 90%"
+  modal.empirical_period_s:
+    source: computed
+    method: "T = Ct * H^(3/4) for RC frames"
+  modal.rayleigh_period_s:
+    source: computed
+    method: "T = 2*pi*sqrt(sum(W*di^2)/(g*sum(Fi*di)))"
+
+  # Design — computed
+  design.overstrength_ultimate:
+    source: computed
+    method: "from structural system type per NBC 105:2025"
+  design.overstrength_serviceability:
+    source: computed
+    method: "from structural system type per NBC 105:2025"
+
+  # Foundation
+  foundation.type:
+    source: computed
+    method: "from column loads, qa, and boundary answer"
+  foundation.support_condition:
+    source: computed
+    method: "from foundation.type and foundation.soil_class"
+
+  # Codes — from excel/registry
+  codes.edition:
+    source: excel
+    method: "NBC 105:2025"
+
+  # Analysis results — computed
+  analysis.soft_storey_result:
+    source: computed
+    method: "check story stiffness ratios"
+  analysis.in_plane_discontinuity_result:
+    source: computed
+    method: "check frame connectivity"
+  analysis.mass_irregularity_result:
+    source: computed
+    method: "check effective mass difference between consecutive stories"
+  analysis.reentrant_corner_result:
+    source: computed
+    method: "check plan geometry"
+  analysis.foundation_reaction_combination:
+    source: etabs_csv
+    etabs_table: "Load Combinations"
+    method: "1.5DL+1.5LL combo text"

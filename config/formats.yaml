@@ -1,0 +1,96 @@
+# Number formatting rules per registry key.
+# Used by src/context_builder.py to format computed values.
+
+formats:
+  # Building geometry
+  building.storeys_above_grade: {decimals: 0}
+  building.num_storeys_analysed: {decimals: 0}
+  building.num_basements: {decimals: 0}
+  building.story_height_m: {decimals: 3}
+  building.height_ground_floor_m: {decimals: 3}
+  building.height_typical_floor_m: {decimals: 3}
+  building.total_height_m: {decimals: 3}
+  building.height_period_m: {decimals: 3}
+  building.span_x_m: {decimals: 3}
+  building.span_y_m: {decimals: 3}
+
+  # Seismic
+  seismic.zone_factor_z: {decimals: 2}
+  seismic.importance_factor_i: {decimals: 1}
+  seismic.response_modification_factor_rmu: {decimals: 0}
+  seismic.distribution_exponent_k: {decimals: 3}
+  seismic.design_period_used_s: {decimals: 3}
+  seismic.spectral_coefficient_cd: {decimals: 4}
+  seismic.alpha: {decimals: 1}
+  seismic.tc: {decimals: 1}
+  seismic.hsc_uls: {decimals: 3}
+  seismic.hsc_sls: {decimals: 3}
+  seismic.elastic_site_spectra_c: {decimals: 3}
+  seismic.elastic_site_spectra_cs: {decimals: 3}
+
+  # Modal
+  modal.empirical_period_s: {decimals: 3}
+  modal.rayleigh_period_s: {decimals: 3}
+  modal.base_shear_etabs: {decimals: 2}
+  modal.rayleigh_period_x_s: {decimals: 3}
+  modal.rayleigh_period_y_s: {decimals: 3}
+
+  # Design
+  design.overstrength_ultimate: {decimals: 1}
+  design.overstrength_serviceability: {decimals: 2}
+  design.column.max_rebar_area_mm2: {decimals: 0}
+  design.column.max_section_width_mm: {decimals: 0}
+  design.column.max_section_depth_mm: {decimals: 0}
+  design.column.max_provided_pct: {decimals: 2}
+  design.column.max_limit_pct: {decimals: 0}
+  design.column.min_provided_pct: {decimals: 3}
+  design.column.min_limit_pct: {decimals: 0}
+  design.beam.max_rebar_area_mm2: {decimals: 3}
+  design.beam.max_section_width_mm: {decimals: 0}
+  design.beam.max_section_depth_mm: {decimals: 0}
+  design.beam.max_provided_pct: {decimals: 3}
+  design.beam.max_limit_pct: {decimals: 1}
+  design.beam.min_provided_pct: {decimals: 3}
+  design.beam.min_limit_pct: {decimals: 2}
+
+  # Totals
+  totals.wi_kg: {decimals: 2}
+  totals.wi_hik: {decimals: 2}
+  totals.fi: {decimals: 2}
+  totals.fi_di_x: {decimals: 3}
+  totals.wi_di2_x: {decimals: 4}
+  totals.fi_di_y: {decimals: 3}
+  totals.wi_di2_y: {decimals: 4}
+
+  # Loads
+  loads.slab_dead_load: {decimals: 3}
+
+  # Codes limits
+  codes.limits.modal_mass_part_pct: {decimals: 0}
+  codes.limits.max_deflection_ratio: {decimals: 3}
+  codes.limits.sls_drift_ratio: {decimals: 3}
+  codes.limits.ultimate_story_drift_ratio: {decimals: 3}
+  codes.limits.torsional_disp_ratio: {decimals: 1}
+  codes.limits.soft_storey_adj_pct: {decimals: 0}
+  codes.limits.soft_storey_avg_pct: {decimals: 0}
+  codes.limits.mass_irregularity_diff_pct: {decimals: 0}
+  codes.limits.reentrant_proj_pct: {decimals: 0}
+  codes.limits.diaphragm_opening_area_pct: {decimals: 0}
+  codes.limits.diaphragm_stiffness_pct: {decimals: 0}
+
+# NBC 105:2025 engineering limits
+limits:
+  sls_drift_ratio: 0.006
+  uls_drift_ratio: 0.025
+  torsional_ratio: 1.5
+  torsional_extreme: 1.8
+  min_column_steel_pct: 1.0
+  max_column_steel_pct: 4.0
+  min_beam_steel_pct: 0.26
+  max_beam_steel_pct: 2.5
+  modal_mass_participation_pct: 90
+
+# Status word for pass/fail
+status_words:
+  pass: "Ok"
+  fail: "Not Ok"
