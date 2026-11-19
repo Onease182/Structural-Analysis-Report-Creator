@@ -98,7 +98,9 @@ class TemplatePlaceholderTests(unittest.TestCase):
         self.assertIn("{%p endif %}", self.full_text)
 
     def test_template_contains_table_row_templates(self) -> None:
-        self.assertIn("{%tr for r in rows %}", self.full_text)
+        # The loop tables now use full dotted paths like
+        # {%tr for r in table.seismic.vertical_force_dist.rows %}
+        self.assertIn("{%tr for r in ", self.full_text)
         self.assertIn("{%tr endfor %}", self.full_text)
 
     def test_template_contains_clause_placeholders(self) -> None:

@@ -103,10 +103,10 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
     # Sample table data for loop tables
     sample_tables = read_sample_table_values(sample_doc)
     loop_tables = {
-        9: ("table.seismic.vertical_force_dist", ["level", "wi", "hi", "hik", "wi_hik", "fi", "shear"], 1),
-        10: ("table.modal.rayleigh_x", ["level", "wi", "di_mm", "di_m", "di2", "fi", "fi_di", "wi_di2"], 1),
-        11: ("table.modal.rayleigh_y", ["level", "wi", "di_mm", "di_m", "di2", "fi", "fi_di", "wi_di2"], 1),
-        14: ("table.modal.periods_mass_part", ["case", "mode", "period", "ux", "uy", "sum_ux", "sum_uy"], 2),
+        9: ("table.seismic.vertical_force_dist", ["level", "wi", "hi", "hik", "wi_hik", "fi", "shear"], 1, 1),  # 1 header, 1 footer
+        10: ("table.modal.rayleigh_x", ["level", "wi", "di_mm", "di_m", "di2", "fi", "fi_di", "wi_di2"], 1, 2),  # 1 header, 2 footers
+        11: ("table.modal.rayleigh_y", ["level", "wi", "di_mm", "di_m", "di2", "fi", "fi_di", "wi_di2"], 1, 2),  # 1 header, 2 footers
+        14: ("table.modal.periods_mass_part", ["case", "mode", "period", "ux", "uy", "sum_ux", "sum_uy"], 2, 0),  # 2 headers, 0 footers
     }
 
     for entry in entries:
@@ -118,10 +118,13 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
             _set(key, True)
         elif etype == "table":
             # Check if it's a loop table
-            for tbl_idx, (ctx_key, cols, hdr) in loop_tables.items():
+            for tbl_idx, (ctx_key, cols, hdr, n_footers) in loop_tables.items():
                 if key == ctx_key and tbl_idx in sample_tables:
                     rows = []
-                    for ri in range(hdr, len(sample_tables[tbl_idx])):
+                    # Read data rows only (skip header rows and footer rows)
+                    n_rows = len(sample_tables[tbl_idx])
+                    data_end = n_rows - n_footers
+                    for ri in range(hdr, data_end):
                         row_data = {}
                         for ci, col_name in enumerate(cols):
                             if ci < len(sample_tables[tbl_idx][ri]):

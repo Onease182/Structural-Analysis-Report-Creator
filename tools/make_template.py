@@ -999,6 +999,13 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
     LOOP_TABLE_HEADER_ROWS: dict[int, int] = {
         9: 1, 10: 1, 11: 1, 14: 2,
     }
+    # Context key path for each loop table (dotted path to the {"rows": [...]} dict)
+    LOOP_TABLE_CTX_KEYS: dict[int, str] = {
+        9: "table.seismic.vertical_force_dist",
+        10: "table.modal.rayleigh_x",
+        11: "table.modal.rayleigh_y",
+        14: "table.modal.periods_mass_part",
+    }
     # Footer rows: (table_index, row_index_in_original, placeholder_map)
     # placeholder_map: {col_index: registry_key}
     LOOP_TABLE_FOOTERS: dict[int, list[dict]] = {
@@ -1054,12 +1061,15 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
                         cell.remove(extra_p)
 
         # Step 2: Create for-row BEFORE the template row.
+        # Use the full dotted context path so docxtpl can resolve it.
+        ctx_key = LOOP_TABLE_CTX_KEYS.get(tbl_idx, "")
+        for_tag = f"{{%tr for r in {ctx_key}.rows %}}" if ctx_key else "{%tr for r in rows %}"
         for_row = etree.Element(f"{{{W_NS}}}tr")
         for_cell = etree.SubElement(for_row, f"{{{W_NS}}}tc")
         for_p = etree.SubElement(for_cell, f"{{{W_NS}}}p")
         for_r = etree.SubElement(for_p, f"{{{W_NS}}}r")
         for_t = etree.SubElement(for_r, f"{{{W_NS}}}t")
-        for_t.text = "{%tr for r in rows %}"
+        for_t.text = for_tag
         for_t.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
         template_row.addprevious(for_row)
 
