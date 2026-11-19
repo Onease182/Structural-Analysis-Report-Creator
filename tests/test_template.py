@@ -236,13 +236,14 @@ class TemplatePlaceholderTests(unittest.TestCase):
         # Should not raise
         validate_context_strict(ctx, entries)
 
-    def test_t6_guard_present(self) -> None:
-        """T6 (table.loads.load_assessment) must have status=pending_implementation."""
+    def test_t6_guard_cleared(self) -> None:
+        """T6 (table.loads.load_assessment) must NOT have status=pending_implementation.
+        It is now implemented via src/input_workbook.py build_t6_load_assessment()."""
         with REGISTRY.open("r", encoding="utf-8") as f:
             entries = yaml.safe_load(f)["items"]
         t6 = next(e for e in entries if e["key"] == "table.loads.load_assessment")
-        self.assertEqual(t6.get("status"), "pending_implementation",
-                         "T6 must have status=pending_implementation")
+        self.assertNotEqual(t6.get("status"), "pending_implementation",
+                         "T6 should no longer be pending — implemented in 3c")
 
     def test_clause_placeholders_in_template(self) -> None:
         """The template must contain clause key placeholders for 4.1.4, 4.1.5,
