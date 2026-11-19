@@ -1,0 +1,71 @@
+Story,Label,UniqueName,Type,Length,AnalysisSect,DesignSect,MaxStaSpcg,MinNumSta,Releases
+Story3,B3,24,Beam,3.2004,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story3,B6,25,Beam,3.2004,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story3,B9,26,Beam,4.2164,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story3,B10,27,Beam,4.2164,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story3,B11,28,Beam,1.2192,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story3,B12,29,Beam,1.2192,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story3,B26,65,Beam,0.6,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story3,B28,66,Beam,0.6,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story3,C3,30,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story3,C4,31,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story3,C7,32,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story3,C8,33,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story2,B1,34,Beam,2.667,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B2,35,Beam,4.191,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B3,36,Beam,3.2004,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B4,37,Beam,2.667,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B5,38,Beam,4.191,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B6,39,Beam,3.2004,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B7,40,Beam,4.2164,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B8,41,Beam,4.2164,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B9,42,Beam,4.2164,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B10,43,Beam,4.2164,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B11,44,Beam,1.2192,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B12,45,Beam,1.2192,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B13,46,Beam,1.1176,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B14,47,Beam,1.1176,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story2,B16,57,Beam,2.057,Hidden Beam 125 x 125,Hidden Beam 125 x 125,0.5,,Yes
+Story2,B19,58,Beam,0.787,Hidden Beam 125 x 125,Hidden Beam 125 x 125,0.5,,Yes
+Story2,B23,61,Beam,3.2004,Hidden Beam 125 x 125,Hidden Beam 125 x 125,0.5,,Yes
+Story2,B24,62,Beam,1.0,Hidden Beam 125 x 125,Hidden Beam 125 x 125,0.5,,Yes
+Story2,B25,63,Beam,1.0,Hidden Beam 125 x 125,Hidden Beam 125 x 125,0.5,,Yes
+Story2,B21,70,Beam,4.2164,Hidden Beam 125 x 125,Hidden Beam 125 x 125,0.5,,Yes
+Story2,C1,48,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story2,C2,49,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story2,C3,50,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story2,C4,51,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story2,C5,52,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story2,C6,53,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story2,C7,54,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story2,C8,55,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story1,B1,1,Beam,2.667,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B2,2,Beam,4.191,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B3,3,Beam,3.2004,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B4,4,Beam,2.667,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B5,5,Beam,4.191,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B6,6,Beam,3.2004,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B7,7,Beam,4.2164,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B8,8,Beam,4.2164,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B9,9,Beam,4.2164,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B10,10,Beam,4.2164,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B11,11,Beam,1.2192,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B12,12,Beam,1.2192,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B13,68,Beam,1.1176,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B14,13,Beam,1.1176,Beam 250 x 430,Beam 250 x 430,0.5,,
+Story1,B17,22,Beam,4.2164,S. Beam 250X250,S. Beam 250X250,0.5,,Yes
+Story1,B18,23,Beam,2.1,S. Beam 250X250,S. Beam 250X250,0.5,,Yes
+Story1,B22,60,Beam,2.667,Hidden Beam 125 x 125,Hidden Beam 125 x 125,0.5,,Yes
+Story1,B23,59,Beam,3.2004,Hidden Beam 125 x 125,Hidden Beam 125 x 125,0.5,,Yes
+Story1,B27,64,Beam,1.0,Hidden Beam 125 x 125,Hidden Beam 125 x 125,0.5,,Yes
+Story1,B15,69,Beam,1.1176,Hidden Beam 125 x 125,Hidden Beam 125 x 125,0.5,,Yes
+Story1,B21,56,Beam,4.2164,Hidden Beam 125 x 125,Hidden Beam 125 x 125,0.5,,
+Story1,B29,67,Beam,0.767,Hidden Beam 125 x 125,Hidden Beam 125 x 125,0.5,,Yes
+Story1,C1,14,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story1,C2,15,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story1,C3,16,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story1,C4,17,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story1,C5,18,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story1,C6,19,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story1,C7,20,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,
+Story1,C8,21,Column,3.175,Column 355 x 355,Column 355 x 355,,3.0,

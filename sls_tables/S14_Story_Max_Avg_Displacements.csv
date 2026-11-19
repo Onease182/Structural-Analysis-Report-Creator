@@ -1,0 +1,19 @@
+Story,OutputCase,CaseType,StepType,StepNumber,Direction,Maximum,Average,Ratio
+Story3,EQX-SLS,LinStatic,Step By Step,1,X,0.019328,0.017821,1.085
+Story2,EQX-SLS,LinStatic,Step By Step,1,X,0.014741,0.010728,1.374
+Story1,EQX-SLS,LinStatic,Step By Step,1,X,0.006759,0.005099,1.326
+Story3,EQX-SLS,LinStatic,Step By Step,2,X,0.020821,0.01878,1.109
+Story2,EQX-SLS,LinStatic,Step By Step,2,X,0.015988,0.010749,1.487
+Story1,EQX-SLS,LinStatic,Step By Step,2,X,0.007395,0.005112,1.447
+Story3,EQX-SLS,LinStatic,Step By Step,3,X,0.017835,0.016862,1.058
+Story2,EQX-SLS,LinStatic,Step By Step,3,X,0.013494,0.010708,1.26
+Story1,EQX-SLS,LinStatic,Step By Step,3,X,0.006123,0.005086,1.204
+Story3,EQY-SLS,LinStatic,Step By Step,1,Y,0.012073,0.012019,1.005
+Story2,EQY-SLS,LinStatic,Step By Step,1,Y,0.008818,0.008772,1.005
+Story1,EQY-SLS,LinStatic,Step By Step,1,Y,0.004406,0.004381,1.006
+Story3,EQY-SLS,LinStatic,Step By Step,2,Y,0.012319,0.012019,1.025
+Story2,EQY-SLS,LinStatic,Step By Step,2,Y,0.008938,0.008772,1.019
+Story1,EQY-SLS,LinStatic,Step By Step,2,Y,0.004461,0.004381,1.018
+Story3,EQY-SLS,LinStatic,Step By Step,3,Y,0.012428,0.012019,1.034
+Story2,EQY-SLS,LinStatic,Step By Step,3,Y,0.00903,0.008772,1.029
+Story1,EQY-SLS,LinStatic,Step By Step,3,Y,0.00451,0.004381,1.029

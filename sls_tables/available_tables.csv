@@ -1,0 +1,142 @@
+table_name
+Analysis Messages
+Analysis Options - Active Degrees of Freedom
+Analysis Options - Analysis Model for Nonlinear Hinges
+Analysis Options - Automatic Mesh Settings for Floors
+Analysis Options - Automatic Rectangular Mesh Options for Walls
+Analysis Options - Cracking Analysis Options
+Analysis Options - Design and Response Recovery Options
+Analysis Options - SAPFire Options
+Area Assignments - Auto Edge Constraints
+Area Assignments - Diaphragms
+Area Assignments - Floor Auto Mesh Options
+Area Assignments - Insertion Point
+Area Assignments - Section Properties
+Area Assignments - Summary
+Area Load Assignments - Uniform
+Area Section Property Definitions - Summary
+Assembled Joint Masses
+Base Reactions
+Beam Bays
+Beam Object Connectivity
+Centers Of Mass And Rigidity
+Column Bays
+Column Object Connectivity
+Composite Beam Design Preferences - AISC 360-10
+Composite Column Design Preferences - AISC 360-10
+Concrete Beam Design Summary - IS 456-2000
+Concrete Beam Flexure Envelope - IS 456-2000
+Concrete Beam Overwrites - IS 456-2000
+Concrete Beam Shear Envelope - IS 456-2000
+Concrete Column Design Summary - IS 456-2000
+Concrete Column Overwrites - IS 456-2000
+Concrete Column PMM Envelope - IS 456-2000
+Concrete Column Shear Envelope - IS 456-2000
+Concrete Frame Design Load Combination Data
+Concrete Frame Design Preferences - IS 456-2000
+Concrete Joint Design Summary - IS 456-2000
+Concrete Joint Envelope - IS 456-2000
+Concrete Slab Design Overwrites - Finite Element Based
+Concrete Slab Design Overwrites - Punching Shear - General
+Concrete Slab Design Preferences - IS 456-2000
+Design Forces - Beams
+Design Forces - Columns
+Diaphragm Center Of Mass Displacements
+Diaphragm Definitions
+Diaphragm Max Over Avg Drifts
+Dimension Line Object Geometry
+Element Forces - Area Shells
+Element Forces - Beams
+Element Forces - Columns
+Element Joint Forces - Frame
+Element Joint Forces - Shells
+Element Strains - Area Shells
+Element Stresses - Area Shells
+Floor Bays
+Floor Object Connectivity
+Frame Assignments - End Length Offsets
+Frame Assignments - Frame Auto Mesh Options
+Frame Assignments - Insertion Point
+Frame Assignments - Output Stations
+Frame Assignments - Rebar Ratio For Creep Analysis
+Frame Assignments - Releases and Partial Fixity
+Frame Assignments - Section Properties
+Frame Assignments - Summary
+Frame Loads Assignments - Distributed
+Frame Loads Assignments - Open Structure Wind Parameters
+Frame Section Property Definitions - Concrete Beam Reinforcing
+Frame Section Property Definitions - Concrete Column Reinforcing
+Frame Section Property Definitions - Concrete Rectangular
+Frame Section Property Definitions - Summary
+Functions - Time History - User Defined
+Grid Definitions - General
+Grid Definitions - Grid Lines
+Grid Definitions - Reference Points
+Group Definitions
+Joint Assignments - Diaphragms
+Joint Assignments - Restraints
+Joint Assignments - Summary
+Joint Design Reactions
+Joint Displacements
+Joint Drifts
+Joint Reactions
+Link Property Definitions - Linear
+Link Property Definitions - Summary
+Load Case Definitions - Linear Static
+Load Case Definitions - Summary
+Load Combination Definitions
+Load Pattern Definitions
+Load Pattern Definitions - Auto Seismic - User Coefficient
+Mass Source Definition
+Mass Summary by Diaphragm
+Mass Summary by Group
+Mass Summary by Story
+Material List by Object Type
+Material List by Section Property
+Material List by Story
+Material Properties - Acceptance Criteria
+Material Properties - Basic Mechanical Properties
+Material Properties - Concrete Data
+Material Properties - Damping Parameters
+Material Properties - General
+Material Properties - Hysteresis Parameters - Concrete
+Material Properties - Rebar Data
+Material Properties - Steel Data
+Material Properties - Tendon Data
+Miscellaneous Options
+Modal Case Definitions - Eigen
+Modal Direction Factors
+Modal Load Participation Ratios
+Modal Participating Mass Ratios
+Modal Participation Factors
+Modal Periods And Frequencies
+Null Line Bays
+Null Line Object Connectivity
+Objects and Elements - Areas
+Objects and Elements - Frames
+Objects and Elements - Joints
+Options - Colors - Display
+Options - Colors - Output
+Panel Zone Property Definitions
+Pier Label Definitions
+Point Bays
+Point Object Connectivity
+Preferences - Graphics
+Preferences - Tolerance
+Program Control
+Project Information
+Reinforcing Bar Sizes
+Shear Wall Design Preferences - IS 456-2000
+Slab Property Definitions
+Spandrel Label Definitions
+Steel Frame Design Preferences - IS 800-2007
+Steel Joist Design Preferences - SJI-2010
+Story Definitions
+Story Drifts
+Story Forces
+Story Max Over Avg Displacements
+Story Max Over Avg Drifts
+Story Stiffness
+Tendon Section Properties
+Tower and Base Story Definitions
+Tributary Area and LLRF

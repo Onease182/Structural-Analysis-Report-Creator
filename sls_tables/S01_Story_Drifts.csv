@@ -1,0 +1,19 @@
+Story,OutputCase,CaseType,StepType,StepNumber,Direction,Drift,Label,X,Y,Z
+Story3,EQX-SLS,LinStatic,Step By Step,1,X,0.0015,10,4.2164,12.3952,9.525
+Story3,EQX-SLS,LinStatic,Step By Step,2,X,0.001612,10,4.2164,12.3952,9.525
+Story3,EQX-SLS,LinStatic,Step By Step,3,X,0.001388,10,4.2164,12.3952,9.525
+Story3,EQY-SLS,LinStatic,Step By Step,1,Y,0.001025,9,0.0,12.3952,9.525
+Story3,EQY-SLS,LinStatic,Step By Step,2,Y,0.001065,10,4.2164,12.3952,9.525
+Story3,EQY-SLS,LinStatic,Step By Step,3,Y,0.00107,9,0.0,12.3952,9.525
+Story2,EQX-SLS,LinStatic,Step By Step,1,X,0.002694,10,4.2164,12.3952,6.35
+Story2,EQX-SLS,LinStatic,Step By Step,2,X,0.002932,10,4.2164,12.3952,6.35
+Story2,EQX-SLS,LinStatic,Step By Step,3,X,0.002455,10,4.2164,12.3952,6.35
+Story2,EQY-SLS,LinStatic,Step By Step,1,Y,0.00139,12,0.0,0.0,6.35
+Story2,EQY-SLS,LinStatic,Step By Step,2,Y,0.00141,11,4.2164,0.0,6.35
+Story2,EQY-SLS,LinStatic,Step By Step,3,Y,0.001424,12,0.0,0.0,6.35
+Story1,EQX-SLS,LinStatic,Step By Step,1,X,0.002129,8,4.2164,11.176,3.175
+Story1,EQX-SLS,LinStatic,Step By Step,2,X,0.002329,8,4.2164,11.176,3.175
+Story1,EQX-SLS,LinStatic,Step By Step,3,X,0.001929,8,4.2164,11.176,3.175
+Story1,EQY-SLS,LinStatic,Step By Step,1,Y,0.001388,4,0.0,11.176,3.175
+Story1,EQY-SLS,LinStatic,Step By Step,2,Y,0.001405,8,4.2164,11.176,3.175
+Story1,EQY-SLS,LinStatic,Step By Step,3,Y,0.00142,4,0.0,11.176,3.175

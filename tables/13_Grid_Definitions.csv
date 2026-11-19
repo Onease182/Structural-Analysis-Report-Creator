@@ -1,0 +1,9 @@
+Name,LineType,ID,Ordinate,BubbleLoc,Visible
+G1,X (Cartesian),A,0.0,End,Yes
+G1,X (Cartesian),B,4.2164,End,Yes
+G1,Y (Cartesian),1,0.0,Start,Yes
+G1,Y (Cartesian),2,1.1176,Start,Yes
+G1,Y (Cartesian),3,3.7846,Start,Yes
+G1,Y (Cartesian),4,7.9756,Start,Yes
+G1,Y (Cartesian),5,11.176,Start,Yes
+G1,Y (Cartesian),6,12.3952,Start,Yes

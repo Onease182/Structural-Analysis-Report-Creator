@@ -1,0 +1,11 @@
+Name,Group,MassSource,StiffType,LoadType,LoadName,LoadSF,DesignType,GUID,Notes
+Dead,None,MsSrc1,P-Delta,Load,Dead,1,Program Determined,013c05bd-efb6-4c6f-8d67-68182a64ff10,
+Dead,,,,Load,Stair Dead,1,,,
+Dead,,,,Load,Wall Load,1,,,
+Dead,,,,Load,Floor Finish,1,,,
+Dead,,,,Load,Water Tank,1,,,
+EQX-ULS,None,MsSrc1,P-Delta,Load,EQX-ULS,1,Program Determined,aa464c0d-79c7-4d3c-a772-edd61e91b9ab,
+EQY-ULS,None,MsSrc1,P-Delta,Load,EQY-ULS,1,Program Determined,9ef4d1a7-87ef-41c6-adf5-daa7f7426622,
+Live,None,MsSrc1,P-Delta,Load,Live,1,Program Determined,03ea2293-e92e-42a7-b780-32d96eb56047,
+Live,,,,Load,Stair Live,1,,,
+Roof Live,None,MsSrc1,P-Delta,Load,Roof Live,1,Program Determined,9ce48b64-990e-42df-96dc-4dd29e0e842d,
