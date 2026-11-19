@@ -1,0 +1,19 @@
+# NBC 105:2025 formula inputs used by src/context_builder.py.
+# Values are explicit configuration, never silent code defaults.
+empirical_period:
+  formula: "Ta = Ct * H^0.75"
+  clause: "NBC 105:2025 Cl. 5.3 / project-approved RC-frame parameter"
+  Ct: 0.075
+  amplification_factor: 1.25
+rayleigh_period:
+  formula: "T = 2*pi*sqrt(sum(Wi*di^2)/(g*sum(Fi*di)))"
+  clause: "NBC 105:2025 dynamic analysis period calculation"
+  gravity_m_s2: 9.80665
+spectral_coefficient_cd:
+  formula: "Cd = C(T)*Z*I/(Rmu*Omega_s)"
+  clause: "NBC 105:2025 seismic coefficient calculation"
+  Omega_s: 1.5
+overstrength:
+  moment_resisting:
+    ultimate: 1.5
+    serviceability: 1.25

@@ -66,12 +66,12 @@ class ContextBuilderTests(unittest.TestCase):
                 input_xlsx=Path("/nonexistent"),
                 output_dir=str(Path(tmp) / "project"),
             )
-            # H = 9.525 m, Ct = 0.075
-            # T = 0.075 * 9.525^0.75
+            # H = 9.525 m, Ct = 0.075; the configured 1.25 amplification is
+            # reported separately from the unamplified empirical period.
             import math
-            expected_t = 0.075 * (9.525 ** 0.75)
-            actual_t = float(ctx["modal"]["empirical_period_s"])
-            self.assertAlmostEqual(actual_t, expected_t, places=3)
+            expected_raw = 0.075 * (9.525 ** 0.75)
+            self.assertAlmostEqual(float(ctx["modal"]["empirical_period_unamplified_s"]), expected_raw, places=3)
+            self.assertAlmostEqual(float(ctx["modal"]["empirical_period_s"]), expected_raw * 1.25, places=3)
 
     def test_compute_overstrength(self) -> None:
         builder = ContextBuilder()

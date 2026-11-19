@@ -1,0 +1,10 @@
+# Elastic site spectrum inputs. Replace or extend with the engineer-approved
+# NBC 105:2025 parameters for the project soil class; missing ranges remain unresolved.
+clause: "NBC 105:2025 seismic design spectrum"
+soil_classes:
+  C:
+    segments:
+      - min_period: 0.0
+        max_period: 10.0
+        c0: 2.5
+        slope: 0.0
