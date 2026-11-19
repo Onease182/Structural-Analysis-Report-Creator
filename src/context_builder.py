@@ -309,6 +309,19 @@ class ContextBuilder:
         if vals: self._set("design.column.max_provided_pct", max(vals) if max(vals) > 1 else max(vals) * 100, "etabs_csv")
 
     def _read_sls_tables(self, directory: Path) -> None:
+        # Reuse the report generator's case-aware normalizer when the project
+        # configuration supplies case names.  No EQX/EQY sample names are
+        # assumed here.
+        if tidy_story_drifts is not None:
+            import pandas as pd
+            cases = self._get("analysis.case_names", {})
+            drift_path = next((p for p in (directory / "S01_Story_Drifts.csv", directory / "04_Story_Drifts.csv") if p.exists()), None)
+            if isinstance(cases, dict) and cases and drift_path is not None:
+                try:
+                    tidy = tidy_story_drifts(pd.read_csv(drift_path), cases)
+                    self._set("drift.sls_story_data", tidy.to_dict(orient="records"), "generate_sls_drift_report.py")
+                except Exception as exc:
+                    self._unresolved(f"shared SLS drift normalizer failed: {exc}")
         for path in sorted(directory.glob("*.csv")):
             try:
                 rows = self._read_csv_rows(path)
