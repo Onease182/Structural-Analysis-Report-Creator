@@ -109,7 +109,7 @@ class ContextBuilder:
         for name in names:
             if name in row and str(row[name]).strip() != "":
                 try:
-                    value = float(row[name])
+                    value = float(str(row[name]).replace(",", "").replace("%", "").strip())
                     if math.isfinite(value):
                         return value
                 except (TypeError, ValueError):
@@ -241,6 +241,9 @@ class ContextBuilder:
                     self._process_base_reactions(rows, path.name)
                 elif "column" in name and "design" in name:
                     self._process_column_design(rows, path.name)
+                elif "story" in name and "max_avg" in name:
+                    self._process_torsion(rows, path.name)
+                    self._process_displacement_summary(rows, path.name, "drift.uls")
             except Exception as exc:
                 self.conflicts.append(f"Error reading {path.name}: {exc}")
 
@@ -275,8 +278,6 @@ class ContextBuilder:
             weight = self._number(row, "W", "Weight", "Wi", "Story Weight")
             records.append({"story": row["Story"], "force": force, "displacement": disp, "weight": weight, "case": self._value(row, "OutputCase", "Case", "Load Case")})
         self._set("analysis.story_force_data", records, "etabs_csv")
-        first = next((r for r in records if r["force"] is not None), None)
-        if first: self._set("modal.base_shear_etabs", self._fmt("modal.base_shear_etabs", abs(first["force"])), "etabs_csv")
 
     def _process_story_drifts(self, rows: list[dict[str, Any]], file: str) -> None:
         if not rows or not self._require(rows, ("Story",), file): return
@@ -295,9 +296,23 @@ class ContextBuilder:
     def _process_base_reactions(self, rows: list[dict[str, Any]], file: str) -> None:
         if not rows: return
         if not self._require(rows, ("OutputCase",), file): return
-        values = [self._number(r, "FX", "FY", "FZ") for r in rows]
-        values = [abs(v) for v in values if v is not None]
-        if values: self._set("modal.base_shear_modal", self._fmt("modal.base_shear_modal", max(values)), "etabs_csv")
+        selected = []
+        for row in rows:
+            case = str(self._value(row, "OutputCase", "Case", "Load Case") or "").upper()
+            if case == "EQX-ULS":
+                value = self._number(row, "FX")
+                if value is not None:
+                    self._set("modal.base_shear_etabs_x", abs(value), "etabs_csv:03_Base_Reactions.csv")
+                    selected.append(abs(value))
+            elif case == "EQY-ULS":
+                value = self._number(row, "FY")
+                if value is not None:
+                    self._set("modal.base_shear_etabs_y", abs(value), "etabs_csv:03_Base_Reactions.csv")
+                    selected.append(abs(value))
+        if selected:
+            self._set("modal.base_shear_etabs", max(selected), "etabs_csv:03_Base_Reactions.csv")
+        else:
+            self._unresolved(f"{file}: EQX-ULS FX or EQY-ULS FY base reaction not found")
 
     def _process_column_design(self, rows: list[dict[str, Any]], file: str) -> None:
         ratio = next((c for c in ("RatioRebar", "RebarPct", "SteelPct", "% Steel") if rows and c in rows[0]), None)
@@ -322,26 +337,53 @@ class ContextBuilder:
                     self._set("drift.sls_story_data", tidy.to_dict(orient="records"), "generate_sls_drift_report.py")
                 except Exception as exc:
                     self._unresolved(f"shared SLS drift normalizer failed: {exc}")
-        for path in sorted(directory.glob("*.csv")):
+        paths = sorted(directory.glob("*.csv"), key=lambda p: (0 if "s14" in p.name.lower() else 1, p.name))
+        for path in paths:
             try:
                 rows = self._read_csv_rows(path)
                 name = path.stem.lower()
-                if "displacement" in name:
+                if "story" in name and "drift" in name:
+                    self._process_sls_story_drifts(rows, path.name)
+                elif "displacement" in name:
                     self._process_sls_displacements(rows, path.name)
                 elif "torsion" in name or "max_avg" in name:
                     self._process_torsion(rows, path.name)
             except Exception as exc:
                 self.conflicts.append(f"Error reading SLS {path.name}: {exc}")
 
+    def _process_sls_story_drifts(self, rows: list[dict[str, Any]], file: str) -> None:
+        if not rows or not self._require(rows, ("Story", "OutputCase", "Direction", "Drift"), file):
+            return
+        by_dir: dict[str, float] = {}
+        for row in rows:
+            value = self._number(row, "Drift")
+            direction = str(row.get("Direction", "")).upper()
+            if value is not None and direction in {"X", "Y"}:
+                by_dir[direction] = max(by_dir.get(direction, 0.0), abs(value))
+        for direction, value in by_dir.items():
+            self._set(f"drift.sls_max_{direction.lower()}", value, "etabs_csv:" + file)
+
     def _process_sls_displacements(self, rows: list[dict[str, Any]], file: str) -> None:
         if not rows: return
-        col = next((c for c in ("Maximum", "Displacement", "UX", "UY") if c in rows[0]), None)
+        col = next((c for c in ("Maximum", "Displacement", "Ux", "Uy", "UX", "UY") if c in rows[0]), None)
         if not col:
             self._unresolved(f"{file}: missing displacement column (expected Maximum, Displacement, UX or UY)"); return
         vals = [self._number(r, col) for r in rows]
         vals = [abs(v) for v in vals if v is not None]
         if not vals: self._unresolved(f"{file}: no numeric displacement values"); return
         self._set("drift.sls_max_displacement_mm", max(vals) * (1000 if max(vals) < 1 else 1), "etabs_csv")
+
+    def _process_displacement_summary(self, rows: list[dict[str, Any]], file: str, prefix: str) -> None:
+        if not rows or not self._require(rows, ("OutputCase", "Direction", "Maximum"), file):
+            return
+        by_dir: dict[str, float] = {}
+        for row in rows:
+            value = self._number(row, "Maximum")
+            direction = str(row.get("Direction", "")).upper()
+            if value is not None and direction in {"X", "Y"}:
+                by_dir[direction] = max(by_dir.get(direction, 0.0), abs(value) * 1000.0)
+        for direction, value in by_dir.items():
+            self._set(f"{prefix}_max_{direction.lower()}_mm", value, "etabs_csv:" + file)
 
     def _process_torsion(self, rows: list[dict[str, Any]], file: str) -> None:
         col = next((c for c in ("Ratio", "delta_max/delta_avg", "Max/Avg") if rows and c in rows[0]), None)
@@ -402,11 +444,14 @@ class ContextBuilder:
 
     def _spectrum_coefficient(self, soil: str, period: float) -> float | None:
         entry = self.spectrum.get("soil_classes", {}).get(soil.upper())
-        if not entry: self._unresolved(f"No NBC spectrum parameters for soil class {soil}"); return None
-        for segment in entry.get("segments", []):
-            if segment["min_period"] <= period <= segment["max_period"]:
-                return float(segment["c0"]) + float(segment.get("slope", 0)) * (period - segment["min_period"])
-        self._unresolved(f"NBC spectrum has no period range covering T={period:g}s for soil class {soil}")
+        if not entry:
+            self._unresolved(f"No NBC spectrum parameters for soil class {soil}")
+            return None
+        tc = float(entry.get("Tc", 0.0))
+        if period <= tc:
+            return float(entry["constant_shape_factor"])
+        for branch in entry.get("unresolved_branches", []):
+            self._unresolved(f"NBC spectrum Soil {soil}, T={period:g}s: {branch}")
         return None
 
     def _check_base_shear(self, words: dict[str, str]) -> str:

@@ -1,10 +1,14 @@
-# Elastic site spectrum inputs. Replace or extend with the engineer-approved
-# NBC 105:2025 parameters for the project soil class; missing ranges remain unresolved.
-clause: "NBC 105:2025 seismic design spectrum"
+# NBC 105:2025 Table 4-1 elastic site spectrum inputs.
+# The constant branch is usable; decay branches remain unresolved until the
+# engineer supplies equation 4.1(2).
+clause: "NBC 105:2025 Table 4-1 / equation 4.1(2)"
 soil_classes:
   C:
-    segments:
-      - min_period: 0.0
-        max_period: 10.0
-        c0: 2.5
-        slope: 0.0
+    Ta: 0.1
+    Ta_esm: 0.0
+    Tc: 1.0
+    Td: 4.0
+    constant_shape_factor: 2.5
+    unresolved_branches:
+      - "Tc < T <= Td: engineer equation 4.1(2) required"
+      - "T > Td: engineer equation 4.1(2) required"
