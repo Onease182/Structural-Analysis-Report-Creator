@@ -1,7 +1,7 @@
 Dir,Case,Story,Height,Elevation,all_max,all_label,all_loc,per_max,label,loc,x,y,step,source,table_max,table_label,gov,gov_eff,ratio,status
 X,EQX-SLS,Story3,3.175,9.525,0.001612,9,Corner,0.001612,9,Corner,0.0,12.3952,Step By Step 2,"Joint Drifts, corner/edge points",0.001612,10,0.001612,0.001612,0.26866666666666666,PASS
 X,EQX-SLS,Story2,3.175,6.3500000000000005,0.002932,9,Corner,0.002932,9,Corner,0.0,12.3952,Step By Step 2,"Joint Drifts, corner/edge points",0.002932,10,0.002932,0.002932,0.4886666666666667,PASS
-X,EQX-SLS,Story1,3.175,3.1750000000000003,0.002329,4,Corner,0.002329,4,Corner,0.0,11.176,Step By Step 2,"Joint Drifts, corner/edge points",0.002329,8,0.002329,0.002329,0.38816666666666666,PASS
+X,EQX-SLS,Story1,3.175,3.1750000000000003,0.002328,4,Corner,0.002328,4,Corner,0.0,11.176,Step By Step 2,"Joint Drifts, corner/edge points",0.002328,8,0.002328,0.002328,0.388,PASS
 Y,EQY-SLS,Story3,3.175,9.525,0.00107,3,Corner,0.00107,3,Corner,0.0,7.975600000000001,Step By Step 3,"Joint Drifts, corner/edge points",0.00107,9,0.00107,0.00107,0.17833333333333332,PASS
-Y,EQY-SLS,Story2,3.175,6.3500000000000005,0.001424,1,Edge,0.001424,1,Edge,0.0,1.1176,Step By Step 3,"Joint Drifts, corner/edge points",0.001424,12,0.001424,0.001424,0.2373333333333333,PASS
-Y,EQY-SLS,Story1,3.175,3.1750000000000003,0.00142,1,Corner,0.00142,1,Corner,0.0,1.1176,Step By Step 3,"Joint Drifts, corner/edge points",0.00142,4,0.00142,0.00142,0.23666666666666666,PASS
+Y,EQY-SLS,Story2,3.175,6.3500000000000005,0.001426,1,Edge,0.001426,1,Edge,0.0,1.1176,Step By Step 3,"Joint Drifts, corner/edge points",0.001426,12,0.001426,0.001426,0.23766666666666666,PASS
+Y,EQY-SLS,Story1,3.175,3.1750000000000003,0.001422,1,Corner,0.001422,1,Corner,0.0,1.1176,Step By Step 3,"Joint Drifts, corner/edge points",0.001422,4,0.001422,0.001422,0.23700000000000002,PASS

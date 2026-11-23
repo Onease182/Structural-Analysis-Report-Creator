@@ -1,9 +1,9 @@
 {
-  "extraction_timestamp": "2026-11-19T13:44:12.476929+05:45",
+  "extraction_timestamp": "2026-11-23T20:22:12.048923+05:45",
   "model_filename": "L:\\Other computers\\My Computer\\Swarup Engineering Consultancy\\Analysis\\Dheeraj Vai\\Chatra Bdr Ramtel_Damak\\Chatra Bahadur Ramel_ULS.EDB",
   "present_units_enum": 6,
   "analysis_ran": false,
-  "concrete_design_ran": true,
+  "concrete_design_ran": false,
   "available_table_count": 139,
   "diagnostic_files": [
     "available_tables.csv",
