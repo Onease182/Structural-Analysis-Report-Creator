@@ -311,6 +311,53 @@ def get_paragraph_text(p_element) -> str:
     return "".join(texts)
 
 
+def scrub_sample_literals(doc) -> None:
+    """Remove sample-specific literals from every text node in the DOCX.
+
+    This runs after all anchored replacements and table/conditional rewrites.
+    Those operations can copy source paragraphs or rows, undoing an earlier
+    paragraph-only scrub. The walk covers the main document and headers/footers.
+    """
+    replacements = {
+        "ETABS 19.0.0": "{{ foundation.modeling_software }}",
+        "3.175": "{{ building.story_height_m }}",
+        "4.216": "{{ building.span_x_m }}",
+        "10.058": "{{ building.span_y_m }}",
+        "240.02": "{{ modal.base_shear_etabs }}",
+        "1.004": "{{ seismic.distribution_exponent_k }}",
+        "0.508": "{{ modal.empirical_period_s }}",
+    }
+    elements = [doc.element]
+    for section in doc.sections:
+        elements.extend([
+            section.header._element,
+            section.first_page_header._element,
+            section.even_page_header._element,
+            section.footer._element,
+            section.first_page_footer._element,
+            section.even_page_footer._element,
+        ])
+    seen: set[int] = set()
+    for element in elements:
+        if id(element) in seen:
+            continue
+        seen.add(id(element))
+        # Word commonly splits a visible phrase across several runs. Handle
+        # complete paragraphs first so replacements also catch those splits.
+        for paragraph in element.iter(f"{{{W_NS}}}p"):
+            text = get_paragraph_text(paragraph)
+            replaced = text
+            for literal, placeholder in replacements.items():
+                replaced = replaced.replace(literal, placeholder)
+            if replaced != text:
+                replace_paragraph_text_with_placeholder(paragraph, replaced)
+        for text_node in element.iter(f"{{{W_NS}}}t"):
+            text = text_node.text or ""
+            for literal, placeholder in replacements.items():
+                text = text.replace(literal, placeholder)
+            text_node.text = text
+
+
 def merge_same_format_runs(p_element) -> None:
     """Merge adjacent runs with identical rPr (run properties) into a single
     run. The first run's rPr is kept; subsequent runs' text is appended."""
@@ -686,6 +733,71 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
             if len(old_text.strip()) < 200:
                 replace_paragraph_text_with_placeholder(p_element, f"{{{{ {key} }}}}")
                 logger.log(f"paragraph idx={idx}", old_text, f"{{{{ {key} }}}}")
+
+    # Current sample cover fields are deliberately anchored by text rather
+    # than stale inventory positions so edits to the cover remain safe.
+    for child in body_children:
+        if child.tag.split("}")[-1] != "p":
+            continue
+        text = get_paragraph_text(child)
+        if text.strip() == "Swarup Engineering Consultancy":
+            replace_paragraph_text_with_placeholder(child, "{{ consultancy.name }}")
+        elif text.strip() == "Dharan-16, Sunsari":
+            replace_paragraph_text_with_placeholder(child, "{{ consultancy.address }}")
+        elif text.strip() == "Er. Anij Bhandari":
+            replace_paragraph_text_with_placeholder(child, "{{ designer.name }}")
+        elif text.strip().startswith("NEC No.13925"):
+            replace_paragraph_text_with_placeholder(child, "NEC No.{{ designer.nec_no }} {{ designer.nec_category }}")
+        elif text.strip().startswith("This report comprises the summary"):
+            replace_paragraph_text_with_placeholder(child, "This report comprises the summary of the residential building of {{ client.owner_name }} {{ building.location }}, Nepal. The reports consist of the design procedures adopted, the assumptions made, the inputs made in the design and the design output. During the design, it is assumed that the client will completely follow the architectural as well as the structural design. It is also assumed that the construction will be supervised by professional engineer.")
+
+    # Normalize legacy replacements that may already have been applied by the
+    # registry-index pass before the current cover anchors are handled.
+    for child in body_children:
+        if child.tag.split("}")[-1] != "p":
+            continue
+        text = get_paragraph_text(child)
+        if "{{ client.consultant_name }}" in text:
+            replace_paragraph_text_with_placeholder(child, "{{ consultancy.name }}")
+        elif "{{ building.location }}" == text.strip() and child is not body_children[10]:
+            # Keep location variables elsewhere; this exact early cover line is
+            # the address field in the current sample.
+            pass
+        elif "{{ designer" not in text and text.strip() == "Er. Anij Bhandari":
+            replace_paragraph_text_with_placeholder(child, "{{ designer.name }}")
+    # Paragraph positions 9/10 are anchored by their cover order after the
+    # sample's text pass; this avoids binding to a stale inventory index.
+    if len(body_children) > 10:
+        if get_paragraph_text(body_children[9]).strip() in {"{{ client.consultant_name }}", "Swarup Engineering Consultancy"}:
+            replace_paragraph_text_with_placeholder(body_children[9], "{{ consultancy.name }}")
+        if get_paragraph_text(body_children[10]).strip() == "{{ building.location }}":
+            replace_paragraph_text_with_placeholder(body_children[10], "{{ consultancy.address }}")
+    for child in body_children:
+        text = get_paragraph_text(child)
+        if text.strip() in {"{{ designer.nec_no }}", "{{ client.designer_nec_reg }}"}:
+            replace_paragraph_text_with_placeholder(child, "NEC No.{{ designer.nec_no }} {{ designer.nec_category }}")
+        elif text.strip() == "Er. Anij Bhandari":
+            replace_paragraph_text_with_placeholder(child, "{{ designer.name }}")
+        elif text.strip().startswith("NEC No.13925"):
+            replace_paragraph_text_with_placeholder(child, "NEC No.{{ designer.nec_no }} {{ designer.nec_category }}")
+
+    # Remove known sample-only literals from both paragraphs and table cells.
+    # Values remain data-layer placeholders; the sample context supplies the
+    # regression values and real projects supply computed/source values.
+    literal_map = {
+        "ETABS 19.0.0": "{{ foundation.modeling_software }}",
+        "3.175": "{{ building.story_height_m }}",
+        "4.216": "{{ building.span_x_m }}",
+        "10.058": "{{ building.span_y_m }}",
+        "240.02": "{{ modal.base_shear_etabs }}",
+        "1.004": "{{ seismic.distribution_exponent_k }}",
+        "0.508": "{{ modal.empirical_period_s }}",
+    }
+    for node in body.iter(f"{{{W_NS}}}t"):
+        value = node.text or ""
+        for old, new in literal_map.items():
+            value = value.replace(old, new)
+        node.text = value
 
     # --- Process caption paragraphs (partial substitution only) ---
     # Captions keep their style, SEQ field, and "Table N:" label intact.
@@ -1237,6 +1349,7 @@ def generate_template(args: argparse.Namespace) -> ReplacementLogger:
         body_children = list(body)
 
     # --- Save ---
+    scrub_sample_literals(doc)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     doc.save(str(args.output))
     return logger

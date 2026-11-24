@@ -47,6 +47,12 @@ owner_approved:
     match_type: loop_table
     table_indices: [9, 10, 11, 14]
 
+  # Source sample inconsistency: the table uses a space after Mr., while
+  # the retained introduction uses Mr. immediately before the owner name.
+  - description: "Owner-name punctuation differs between source table and introduction"
+    match_type: exact_text
+    old_fragment: "Mr. Chatra Bahadur Ramtel"
+    new_fragment: "Mr.Chatra Bahadur Ramtel"
   # D1: NBC edition spacing — one exact-text difference for para 179
   - description: "D1: NBC edition typo corrected (NBC105:2025 → NBC 105:2025)"
     match_type: exact_text

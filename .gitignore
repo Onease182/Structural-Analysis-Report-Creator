@@ -7,3 +7,13 @@ templates/pdf/
 *.pdf
 !docs/*.pdf
 tests/fixtures/dummy_*.png
+~$*
+ULS/
+*.K_*
+*.Y0*
+*.msh
+*.LOG
+*.$et
+*.Y
+*.Y_*
+*.$et

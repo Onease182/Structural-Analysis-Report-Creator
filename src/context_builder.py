@@ -167,28 +167,33 @@ class ContextBuilder:
             data = E2KParser().parse_file(path)
             stories = data.get("stories", [])
             above = [s for s in stories if s.get("Story") != "Base"]
+            # Real ETABS exports store geometry in the file units (mm for the
+            # committed model); legacy fixtures already use metres.
+            def length_m(value: Any) -> float:
+                number = float(value)
+                return number / 1000.0 if abs(number) > 100 else number
             self._set("building.storeys_above_grade", len(above), "e2k")
             self._set("building.num_storeys_analysed", len(above), "e2k")
-            basements = [s for s in stories if float(s.get("Elevation", "0")) <= 0 and s.get("Story") != "Base"]
+            basements = [s for s in stories if length_m(s.get("Elevation", "0")) <= 0 and s.get("Story") != "Base"]
             self._set("building.num_basements", len(basements), "e2k")
             if above:
                 first = above[-1]
                 typical = above[0] if len(above) > 1 else first
-                heights = [float(s["StoryHt"]) for s in above if s.get("StoryHt") not in (None, "")]
-                self._set("building.story_height_m", self._fmt("building.story_height_m", float(first["StoryHt"])), "e2k")
-                self._set("building.height_ground_floor_m", self._fmt("building.height_ground_floor_m", float(first["StoryHt"])), "e2k")
-                self._set("building.height_typical_floor_m", self._fmt("building.height_typical_floor_m", float(typical["StoryHt"])), "e2k")
+                heights = [length_m(s["StoryHt"]) for s in above if s.get("StoryHt") not in (None, "")]
+                self._set("building.story_height_m", self._fmt("building.story_height_m", length_m(first["StoryHt"])), "e2k")
+                self._set("building.height_ground_floor_m", self._fmt("building.height_ground_floor_m", length_m(first["StoryHt"])), "e2k")
+                self._set("building.height_typical_floor_m", self._fmt("building.height_typical_floor_m", length_m(typical["StoryHt"])), "e2k")
                 self._set("building.total_height_m", self._fmt("building.total_height_m", sum(heights)), "e2k")
-                self._set("building.height_period_m", self._fmt("building.height_period_m", max(float(s["Elevation"]) for s in above)), "e2k")
+                self._set("building.height_period_m", self._fmt("building.height_period_m", max(length_m(s["Elevation"]) for s in above)), "e2k")
             grids = data.get("grids", [])
             xs, ys = [], []
             for grid in grids:
                 try:
-                    xs.append(float(grid.get("XOrd", "")))
+                    xs.append(length_m(grid.get("XOrd", grid.get("Coord", ""))))
                 except (TypeError, ValueError):
                     pass
                 try:
-                    ys.append(float(grid.get("YOrd", "")))
+                    ys.append(length_m(grid.get("YOrd", grid.get("Coord", ""))))
                 except (TypeError, ValueError):
                     pass
             if xs: self._set("building.span_x_m", self._fmt("building.span_x_m", max(xs) - min(xs)), "e2k")
@@ -198,7 +203,7 @@ class ContextBuilder:
                     self._set("materials.concrete_grade_used", f"M{int(float(mat['Fc']))}", "e2k")
                     self._set("building.primary_frame_material", mat.get("Material"), "e2k")
                 elif mat.get("Type") == "Rebar":
-                    self._set("materials.rebar_grade_used", f"Fe{int(float(mat['Fc']))}", "e2k")
+                    self._set("materials.rebar_grade_used", f"Fe{int(float(mat.get('Fy', mat.get('Fc'))))}", "e2k")
             diaph = data.get("diaphragms", [])
             if diaph:
                 self._set("building.diaphragm_type", diaph[0].get("Type"), "e2k")

@@ -1,0 +1,21 @@
+{
+  "source_priority": [
+    "etabs_api",
+    "etabs_csv",
+    "e2k",
+    "excel",
+    "computed"
+  ],
+  "models": {
+    "ULS": {
+      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
+      "section_count": 45,
+      "unparsed_count": 24
+    },
+    "SLS": {
+      "file": "sls_tables/Chatra Bahadur Ramel_SLS.e2k",
+      "section_count": 45,
+      "unparsed_count": 24
+    }
+  }
+}

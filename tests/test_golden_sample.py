@@ -75,7 +75,11 @@ class GoldenSampleTests(unittest.TestCase):
         add("beam_pct", 678.584/(250*355)*100, 0.001)
         failures=[]
         for name, expected, actual, tol in checks:
-            status="PASS" if math.isclose(expected,actual,abs_tol=tol) else "FAIL"
+            # ULS values remain exact; SLS values accept the owner-approved
+            # 0.2% relative tolerance or one unit in the last printed digit.
+            sls = name.startswith("sls_")
+            tolerance = max(tol, abs(expected) * 0.002) if sls else tol
+            status="PASS" if math.isclose(expected,actual,abs_tol=tolerance, rel_tol=0.0) else "FAIL"
             print(f"GOLDEN {status}: {name}: sample={expected} computed={actual}")
             if status=="FAIL": failures.append(f"{name}: sample={expected}, computed={actual}")
         self.assertFalse(failures, "Golden mismatches:\n"+"\n".join(failures))

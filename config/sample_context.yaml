@@ -26,22 +26,29 @@ building:
   story_height_m: '3.175'
   total_height_m: '9.525'
 client:
-  application_date: 2026/xx/xx
-  consultant_name: CivoraX Infra
-  designer_contact: 9841xxxxxxx
-  designer_name: Mr. Sachin KC
-  designer_nec_reg: 131xx”Civil A”
-  municipality_reg: Xxxx
-  owner_name: Mr. Chatra Bahadur Ramtel
+  application_date: 2026/11/24
+  consultant_name: Swarup Engineering Consultancy
+  designer_contact: '9862123845'
+  designer_name: Mr. Anij Bhandari
+  designer_nec_reg: 13925 ”Civil A”
+  municipality_reg: '123'
+  owner_name: Mr.Chatra Bahadur Ramtel
 codes:
   clauses: '...'
   edition: NBC 105:2025
   limits: '...'
+consultancy:
+  address: Dharan-16, Sunsari
+  name: Swarup Engineering Consultancy
 design:
   beam: '...'
   column: '...'
   overstrength_serviceability: '1.25'
   overstrength_ultimate: '1.5'
+designer:
+  name: Er. Anij Bhandari
+  nec_category: Civil “A” Category
+  nec_no: '13925'
 figure:
   building: '...'
   design: '...'

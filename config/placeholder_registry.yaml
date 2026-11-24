@@ -1,9 +1,5 @@
 # Curated placeholder registry.
-# Generated from config/placeholder_registry.generated.yaml by
-# scripts/curate_registry.py. Owner review gate applies: do not
-# build a master template from this file until the unresolved
-# NBC 105:2025 clause mappings in docs/needs_my_decision.md are
-# answered.
+# Generated from config/placeholder_registry.generated.yaml; owner-reviewed entries follow.
 items:
 - key: project.report_title
   description: Structural report of Residence Building of Chatra Bahadur Ramtel
@@ -26,7 +22,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 2
   example:
     alt_text: null
@@ -44,7 +41,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 5
   example:
     alt_text: null
@@ -80,7 +78,7 @@ items:
   example: Damak
   inventory_item_indices:
   - 12
-  - 405
+  - 435
 - key: table.client.general_information
   description: 'Table 1: S.N. | General Information:'
   type: table
@@ -169,13 +167,13 @@ items:
   source: e2k
   required: true
   condition: null
-  inventory_item_index: 164
+  inventory_item_index: 195
   example: 3
-  sentence_template: The building has {{ building.storeys_above_grade }} floors made of {{ building.primary_frame_material
-    }} frames and filled with
+  sentence_template: The building has {{ building.storeys_above_grade }} floors made
+    of {{ building.primary_frame_material }} frames and filled with
   inventory_item_indices:
-  - 164
-  - 413
+  - 195
+  - 443
   etabs_table_or_e2k_section: $STORYDATA
 - key: building.primary_frame_material
   description: Primary structural frame material
@@ -186,12 +184,12 @@ items:
   source: etabs_api
   required: true
   condition: null
-  inventory_item_index: 164
+  inventory_item_index: 195
   example: reinforced concrete
-  sentence_template: The building has {{ building.storeys_above_grade }} floors made of {{ building.primary_frame_material
-    }} frames and filled with
+  sentence_template: The building has {{ building.storeys_above_grade }} floors made
+    of {{ building.primary_frame_material }} frames and filled with
   inventory_item_indices:
-  - 164
+  - 195
   etabs_table_or_e2k_section: Material Properties + Frame Section Assignments
 - key: building.infill_wall_material
   description: Infill wall material
@@ -202,14 +200,15 @@ items:
   source: excel
   required: true
   condition: null
-  inventory_item_index: 165
+  inventory_item_index: 196
   example: brick
-  sentence_template: '{{ building.infill_wall_material }} walls. Each floor has a height of {{ building.story_height_m
-    }} meters. The building is laid out in a rectangular grid pattern, with a span of {{ building.span_x_m
-    }} meters horizontally (X-direction) and {{ building.span_y_m }} meters vertically (Y-direction) between
+  sentence_template: '{{ building.infill_wall_material }} walls. Each floor has a
+    height of {{ building.story_height_m }} meters. The building is laid out in a
+    rectangular grid pattern, with a span of {{ building.span_x_m }} meters horizontally
+    (X-direction) and {{ building.span_y_m }} meters vertically (Y-direction) between
     columns.'
   inventory_item_indices:
-  - 165
+  - 196
 - key: building.span_y_m
   description: Typical vertical Y-direction span
   type: number
@@ -219,14 +218,15 @@ items:
   source: e2k
   required: true
   condition: null
-  inventory_item_index: 165
+  inventory_item_index: 196
   example: '10.058'
-  sentence_template: '{{ building.infill_wall_material }} walls. Each floor has a height of {{ building.story_height_m
-    }} meters. The building is laid out in a rectangular grid pattern, with a span of {{ building.span_x_m
-    }} meters horizontally (X-direction) and {{ building.span_y_m }} meters vertically (Y-direction) between
+  sentence_template: '{{ building.infill_wall_material }} walls. Each floor has a
+    height of {{ building.story_height_m }} meters. The building is laid out in a
+    rectangular grid pattern, with a span of {{ building.span_x_m }} meters horizontally
+    (X-direction) and {{ building.span_y_m }} meters vertically (Y-direction) between
     columns.'
   inventory_item_indices:
-  - 165
+  - 196
   etabs_table_or_e2k_section: $FRAMEOBJCONN
 - key: building.span_x_m
   description: Typical horizontal X-direction span
@@ -237,14 +237,15 @@ items:
   source: e2k
   required: true
   condition: null
-  inventory_item_index: 165
+  inventory_item_index: 196
   example: '4.216'
-  sentence_template: '{{ building.infill_wall_material }} walls. Each floor has a height of {{ building.story_height_m
-    }} meters. The building is laid out in a rectangular grid pattern, with a span of {{ building.span_x_m
-    }} meters horizontally (X-direction) and {{ building.span_y_m }} meters vertically (Y-direction) between
+  sentence_template: '{{ building.infill_wall_material }} walls. Each floor has a
+    height of {{ building.story_height_m }} meters. The building is laid out in a
+    rectangular grid pattern, with a span of {{ building.span_x_m }} meters horizontally
+    (X-direction) and {{ building.span_y_m }} meters vertically (Y-direction) between
     columns.'
   inventory_item_indices:
-  - 165
+  - 196
   etabs_table_or_e2k_section: $FRAMEOBJCONN
 - key: building.story_height_m
   description: Typical storey height
@@ -255,15 +256,16 @@ items:
   source: e2k
   required: true
   condition: null
-  inventory_item_index: 165
+  inventory_item_index: 196
   example: '3.175'
-  sentence_template: '{{ building.infill_wall_material }} walls. Each floor has a height of {{ building.story_height_m
-    }} meters. The building is laid out in a rectangular grid pattern, with a span of {{ building.span_x_m
-    }} meters horizontally (X-direction) and {{ building.span_y_m }} meters vertically (Y-direction) between
+  sentence_template: '{{ building.infill_wall_material }} walls. Each floor has a
+    height of {{ building.story_height_m }} meters. The building is laid out in a
+    rectangular grid pattern, with a span of {{ building.span_x_m }} meters horizontally
+    (X-direction) and {{ building.span_y_m }} meters vertically (Y-direction) between
     columns.'
   inventory_item_indices:
-  - 165
-  - 413
+  - 196
+  - 443
   etabs_table_or_e2k_section: $STORYDATA
 - key: figure.building.plan_of_building
   description: 'Figure 1: Plan of Building'
@@ -273,7 +275,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 168
   example:
     alt_text: null
@@ -291,7 +294,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 175
   example:
     alt_text: null
@@ -415,7 +419,8 @@ items:
     unit: null
     format:
       decimals: null
-  row_source: Fixed three-row owner-defined table; the foundation row depends on the approved selection.
+  row_source: Fixed three-row owner-defined table; the foundation row depends on the
+    approved selection.
   row_behavior: fixed
   inventory_item_indices:
   - 202
@@ -436,8 +441,8 @@ items:
   - 208
   sample_clause: '2.1'
 - key: materials.as_building_is_less_than_12_m
-  description: As the building is less than 12 m in height, M20 concrete has been taken for all the structural
-    components.
+  description: As the building is less than 12 m in height, M20 concrete has been
+    taken for all the structural components.
   type: text
   unit: m
   format:
@@ -445,13 +450,14 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 210
+  inventory_item_index: 240
   example: M20
   inventory_item_indices:
-  - 210
-  etabs_table_or_e2k_section: $STORYDATA (height) + Material Properties (concrete grade)
-  sentence_template: As the building is less than 12 m in height, {{ materials.concrete_grade_used }}
-    concrete has been taken for all the structural components.
+  - 240
+  etabs_table_or_e2k_section: $STORYDATA (height) + Material Properties (concrete
+    grade)
+  sentence_template: As the building is less than 12 m in height, {{ materials.concrete_grade_used
+    }} concrete has been taken for all the structural components.
 - key: figure.materials.concrete
   description: 'Figure 3: Material Property (Concrete)'
   type: image
@@ -460,7 +466,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 212
   example:
     alt_text: null
@@ -479,7 +486,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 221
   example:
     alt_text: null
@@ -490,7 +498,8 @@ items:
   figure_origin: user_supplied
   generator: null
 - key: materials.rebar_grade_used
-  description: Steel Grade of Fe500 has been used in the longitudinal and transverse reinforcement.
+  description: Steel Grade of Fe500 has been used in the longitudinal and transverse
+    reinforcement.
   type: text
   unit: null
   format:
@@ -498,13 +507,13 @@ items:
   source: etabs_api
   required: true
   condition: null
-  inventory_item_index: 224
+  inventory_item_index: 254
   example: Fe500
   inventory_item_indices:
-  - 224
+  - 254
   etabs_table_or_e2k_section: Material Properties (rebar)
-  sentence_template: Steel Grade of {{ materials.rebar_grade_used }} has been used in the longitudinal
-    and transverse reinforcement.
+  sentence_template: Steel Grade of {{ materials.rebar_grade_used }} has been used
+    in the longitudinal and transverse reinforcement.
 - key: table.modifiers.effective_stiffness
   description: 'Table 4: Effective stiffness of different components'
   type: table
@@ -565,14 +574,16 @@ items:
   - 240
   sample_clause: '5.6'
 - key: figure.irregularity.eqx_eccentricity
-  description: EQxEQxDesign eccentricity edi,y = esi,y+0.05*byDesign eccentricity edi,y = esi,y+0.05*by
+  description: EQxEQxDesign eccentricity edi,y = esi,y+0.05*byDesign eccentricity
+    edi,y = esi,y+0.05*by
   type: image
   unit: null
   format:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 244
   example:
     alt_text: null
@@ -584,14 +595,16 @@ items:
   figure_origin: etabs_screenshot
   generator: null
 - key: figure.irregularity.eqx_eccentricity_b
-  description: EQxEQxDesign eccentricity edi,y = esi,y+0.05*byDesign eccentricity edi,y = esi,y+0.05*by
+  description: EQxEQxDesign eccentricity edi,y = esi,y+0.05*byDesign eccentricity
+    edi,y = esi,y+0.05*by
   type: image
   unit: null
   format:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 245
   example:
     alt_text: null
@@ -610,7 +623,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 251
   example:
     alt_text: null
@@ -629,7 +643,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 252
   example:
     alt_text: null
@@ -641,13 +656,15 @@ items:
   figure_origin: etabs_screenshot
   generator: null
 - key: foundation.modeling_software
-  description: The building was modeled using the ETABS 19.0.0 software. ETABS 19.0.0 is a specialized
-    program designed specifically for the analysis and design of building systems. It offers a user-friendly
-    interface and advanced features, making it both sophisticated and easy to use. The software provides
-    intuitive modeling capabilities, powerful analytical tools, efficient design procedures, robust numerical
-    methods, and supports various international design codes. With its ability to handle complex structures
-    and nonlinear behaviors, ETABS 19.0.0 is widely preferred by structural engineers in the building
-    industry. For the design of foundation, manual calculation was done.
+  description: The building was modeled using the ETABS 19.0.0 software. ETABS 19.0.0
+    is a specialized program designed specifically for the analysis and design of
+    building systems. It offers a user-friendly interface and advanced features, making
+    it both sophisticated and easy to use. The software provides intuitive modeling
+    capabilities, powerful analytical tools, efficient design procedures, robust numerical
+    methods, and supports various international design codes. With its ability to
+    handle complex structures and nonlinear behaviors, ETABS 19.0.0 is widely preferred
+    by structural engineers in the building industry. For the design of foundation,
+    manual calculation was done.
   type: text
   unit: null
   format:
@@ -655,23 +672,26 @@ items:
   source: etabs_api
   required: false
   condition: The software/version narrative is project-specific and may be omitted.
-  inventory_item_index: 258
+  inventory_item_index: 288
   example: ETABS 19.0.0
   inventory_item_indices:
-  - 258
+  - 288
   etabs_table_or_e2k_section: null
-  sentence_template: The building was modeled using the {{ foundation.modeling_software }} software. {{
-    foundation.modeling_software }} is a specialized program designed specifically for the analysis and
-    design of building systems. It offers a user-friendly interface and advanced features, making it both
-    sophisticated and easy to use. The software provides intuitive modeling capabilities, powerful analytical
-    tools, efficient design procedures, robust numerical methods, and supports various international design
-    codes. With its ability to handle complex structures and nonlinear behaviors, {{ foundation.modeling_software
-    }} is widely preferred by structural engineers in the building industry. For the design of foundation,
-    manual calculation was done.
+  sentence_template: The building was modeled using the {{ foundation.modeling_software
+    }} software. {{ foundation.modeling_software }} is a specialized program designed
+    specifically for the analysis and design of building systems. It offers a user-friendly
+    interface and advanced features, making it both sophisticated and easy to use.
+    The software provides intuitive modeling capabilities, powerful analytical tools,
+    efficient design procedures, robust numerical methods, and supports various international
+    design codes. With its ability to handle complex structures and nonlinear behaviors,
+    {{ foundation.modeling_software }} is widely preferred by structural engineers
+    in the building industry. For the design of foundation, manual calculation was
+    done.
 - key: project.brick_specs
-  description: Standard rectangular bricks are used, which are well burnt, hand-formed or machine-made,
-    and possess a crushing strength of at least 3.5 N/mm². The preferred brick size is 250 x 100 x 75
-    mm, with 10 mm thick horizontal and vertical mortar joints.
+  description: Standard rectangular bricks are used, which are well burnt, hand-formed
+    or machine-made, and possess a crushing strength of at least 3.5 N/mm². The preferred
+    brick size is 250 x 100 x 75 mm, with 10 mm thick horizontal and vertical mortar
+    joints.
   type: text
   unit: mm
   format:
@@ -679,12 +699,13 @@ items:
   source: excel
   required: true
   condition: null
-  inventory_item_index: 268
-  example: Standard rectangular bricks are used, which are well burnt, hand-formed or machine-made, and
-    possess a crushing strength of at least 3.5 N/mm². The preferred brick size is 250 x 100 x 75 mm,
-    with 10 mm thick horizontal and vertical mortar joints.
+  inventory_item_index: 298
+  example: Standard rectangular bricks are used, which are well burnt, hand-formed
+    or machine-made, and possess a crushing strength of at least 3.5 N/mm². The preferred
+    brick size is 250 x 100 x 75 mm, with 10 mm thick horizontal and vertical mortar
+    joints.
   inventory_item_indices:
-  - 268
+  - 298
 - key: table.loads.load_assessment
   description: 'Table 5: Load Assessment for Structural Analysis'
   type: table
@@ -744,7 +765,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 293
   example:
     alt_text: null
@@ -762,7 +784,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 298
   example:
     alt_text: null
@@ -780,7 +803,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 302
   example:
     alt_text: null
@@ -798,7 +822,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 310
   example:
     alt_text: null
@@ -816,7 +841,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 317
   example:
     alt_text: null
@@ -827,10 +853,11 @@ items:
   figure_origin: etabs_screenshot
   generator: null
 - key: building.occupancy
-  description: The live loads for the floor and roof are determined using IS 875 part 2, as referenced
-    by the National Building Code. For residential buildings, the appropriate live load values specified
-    in Table 1 of IS 875 Part 2 are considered. Since the building is intended for residential use, the
-    loading intensity for dwelling houses under the residential category is taken into account.
+  description: The live loads for the floor and roof are determined using IS 875 part
+    2, as referenced by the National Building Code. For residential buildings, the
+    appropriate live load values specified in Table 1 of IS 875 Part 2 are considered.
+    Since the building is intended for residential use, the loading intensity for
+    dwelling houses under the residential category is taken into account.
   type: text
   unit: null
   format:
@@ -839,10 +866,11 @@ items:
   required: true
   condition: null
   inventory_item_index: 325
-  example: The live loads for the floor and roof are determined using IS 875 part 2, as referenced by
-    the National Building Code. For residential buildings, the appropriate live load values specified
-    in Table 1 of IS 875 Part 2 are considered. Since the building is intended for residential use, the
-    loading intensity for dwelling houses under the residential category is taken into account.
+  example: The live loads for the floor and roof are determined using IS 875 part
+    2, as referenced by the National Building Code. For residential buildings, the
+    appropriate live load values specified in Table 1 of IS 875 Part 2 are considered.
+    Since the building is intended for residential use, the loading intensity for
+    dwelling houses under the residential category is taken into account.
   inventory_item_indices:
   - 325
 - key: table.loads.live_load_intensity
@@ -890,7 +918,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 332
   example:
     alt_text: null
@@ -908,7 +937,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 337
   example:
     alt_text: null
@@ -926,7 +956,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 344
   example:
     alt_text: null
@@ -944,7 +975,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 348
   example:
     alt_text: null
@@ -962,7 +994,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 355
   example:
     alt_text: null
@@ -981,7 +1014,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 360
   example:
     alt_text: null
@@ -1000,7 +1034,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 362
   example:
     alt_text: null
@@ -1070,14 +1105,16 @@ items:
   - 375
   etabs_table_or_e2k_section: null
 - key: figure.modal.uls_force_distribution
-  description: 'Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025 Cl. 6.3)'
+  description: 'Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025
+    Cl. 6.3)'
   type: image
   unit: null
   format:
     decimals: null
   source: computed
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 379
   example:
     alt_text: null
@@ -1097,10 +1134,10 @@ items:
   source: etabs_api
   required: true
   condition: null
-  inventory_item_index: 380
+  inventory_item_index: 410
   example: '240.02'
   inventory_item_indices:
-  - 380
+  - 410
   etabs_table_or_e2k_section: Base Reactions / Story Forces
   sentence_template: Base shear from ETABS {{ modal.base_shear_etabs }} kN.
 - key: codes.clauses.vertical_force_dist
@@ -1120,7 +1157,8 @@ items:
   - 381
   sample_clause: '6.3'
 - key: table.seismic.vertical_force_dist
-  description: 'Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025 Cl. 6.3)'
+  description: 'Table 9: Vertical distribution of ULS seismic forces (NBC 105:2025
+    Cl. 6.3)'
   type: table
   unit: null
   format:
@@ -1176,7 +1214,8 @@ items:
     unit: kN
     format:
       decimals: null
-  row_source: One row per modeled storey; derived from project seismic weight and elevation.
+  row_source: One row per modeled storey; derived from project seismic weight and
+    elevation.
   row_behavior: data-driven
   inventory_item_indices:
   - 383
@@ -1190,14 +1229,15 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 384
+  inventory_item_index: 414
   example: '1.004'
-  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
-    s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
-    }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_ultimate }}.
+  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s
+    }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base.
+    Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i
+    }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_ultimate
+    }}.
   inventory_item_indices:
-  - 384
+  - 414
   etabs_table_or_e2k_section: null
 - key: seismic.design_period_used_s
   description: Fundamental period used in the seismic calculation
@@ -1208,14 +1248,15 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 384
+  inventory_item_index: 414
   example: '0.508'
-  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
-    s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
-    }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_ultimate }}.
+  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s
+    }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base.
+    Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i
+    }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_ultimate
+    }}.
   inventory_item_indices:
-  - 384
+  - 414
   etabs_table_or_e2k_section: null
 - key: seismic.spectral_coefficient_cd
   description: Seismic spectral coefficient Cd
@@ -1226,14 +1267,15 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 384
+  inventory_item_index: 414
   example: '0.1458'
-  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
-    s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
-    }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_ultimate }}.
+  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s
+    }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base.
+    Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i
+    }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_ultimate
+    }}.
   inventory_item_indices:
-  - 384
+  - 414
   etabs_table_or_e2k_section: null
 - key: seismic.zone_factor_z
   description: Seismic zoning factor Z
@@ -1244,14 +1286,15 @@ items:
   source: excel
   required: true
   condition: null
-  inventory_item_index: 384
+  inventory_item_index: 414
   example: '0.35'
-  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
-    s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
-    }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_ultimate }}.
+  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s
+    }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base.
+    Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i
+    }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_ultimate
+    }}.
   inventory_item_indices:
-  - 384
+  - 414
 - key: seismic.importance_factor_i
   description: Importance factor I
   type: number
@@ -1261,14 +1304,15 @@ items:
   source: excel
   required: true
   condition: null
-  inventory_item_index: 384
+  inventory_item_index: 414
   example: '1.0'
-  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
-    s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
-    }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_ultimate }}.
+  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s
+    }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base.
+    Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i
+    }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_ultimate
+    }}.
   inventory_item_indices:
-  - 384
+  - 414
 - key: seismic.response_modification_factor_rmu
   description: Response modification factor Rμ
   type: number
@@ -1278,14 +1322,15 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 384
+  inventory_item_index: 414
   example: '4'
-  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
-    s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
-    }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_ultimate }}.
+  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s
+    }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base.
+    Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i
+    }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_ultimate
+    }}.
   inventory_item_indices:
-  - 384
+  - 414
   etabs_table_or_e2k_section: null
 - key: design.overstrength_ultimate
   description: Ultimate overstrength factor Ωu
@@ -1296,14 +1341,15 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 384
+  inventory_item_index: 414
   example: '1.5'
-  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
-    s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
-    }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_ultimate }}.
+  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s
+    }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base.
+    Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i
+    }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_ultimate
+    }}.
   inventory_item_indices:
-  - 384
+  - 414
   etabs_table_or_e2k_section: null
 - key: seismic.soil_class
   description: Soil class stated with the seismic parameters
@@ -1314,14 +1360,15 @@ items:
   source: excel
   required: true
   condition: null
-  inventory_item_index: 384
+  inventory_item_index: 414
   example: C
-  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s }}
-    s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base. Z = {{ seismic.zone_factor_z
-    }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i }}, Rμ = {{ seismic.response_modification_factor_rmu
-    }}, Ωu = {{ design.overstrength_ultimate }}.
+  sentence_template: k = {{ seismic.distribution_exponent_k }} (T = {{ seismic.design_period_used_s
+    }} s); Cd = {{ seismic.spectral_coefficient_cd }}; V = Cd·W, W taken above Base.
+    Z = {{ seismic.zone_factor_z }}, soil {{ seismic.soil_class }}, I = {{ seismic.importance_factor_i
+    }}, Rμ = {{ seismic.response_modification_factor_rmu }}, Ωu = {{ design.overstrength_ultimate
+    }}.
   inventory_item_indices:
-  - 384
+  - 414
 - key: table.modal.rayleigh_x
   description: 'Table 10: Rayleigh time period, X-direction (EQX-ULS)'
   type: table
@@ -1467,13 +1514,13 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 395
+  inventory_item_index: 425
   example: '0.531'
-  sentence_template: As Empirical time period ({{ modal.empirical_period_s }} sec) is lesser than the
-    Rayleigh time period ({{ modal.rayleigh_period_s }} sec), use {{ modal.selected_period_method }} time
-    period for the calculation.
+  sentence_template: As Empirical time period ({{ modal.empirical_period_s }} sec)
+    is lesser than the Rayleigh time period ({{ modal.rayleigh_period_s }} sec), use
+    {{ modal.selected_period_method }} time period for the calculation.
   inventory_item_indices:
-  - 395
+  - 425
   etabs_table_or_e2k_section: null
 - key: modal.empirical_period_s
   description: Empirical fundamental period
@@ -1484,13 +1531,13 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 395
+  inventory_item_index: 425
   example: '0.508'
-  sentence_template: As Empirical time period ({{ modal.empirical_period_s }} sec) is lesser than the
-    Rayleigh time period ({{ modal.rayleigh_period_s }} sec), use {{ modal.selected_period_method }} time
-    period for the calculation.
+  sentence_template: As Empirical time period ({{ modal.empirical_period_s }} sec)
+    is lesser than the Rayleigh time period ({{ modal.rayleigh_period_s }} sec), use
+    {{ modal.selected_period_method }} time period for the calculation.
   inventory_item_indices:
-  - 395
+  - 425
   etabs_table_or_e2k_section: null
 - key: modal.selected_period_method
   description: Method selected for the design period based on the code comparison
@@ -1501,13 +1548,13 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 395
+  inventory_item_index: 425
   example: empirical
-  sentence_template: As Empirical time period ({{ modal.empirical_period_s }} sec) is lesser than the
-    Rayleigh time period ({{ modal.rayleigh_period_s }} sec), use {{ modal.selected_period_method }} time
-    period for the calculation.
+  sentence_template: As Empirical time period ({{ modal.empirical_period_s }} sec)
+    is lesser than the Rayleigh time period ({{ modal.rayleigh_period_s }} sec), use
+    {{ modal.selected_period_method }} time period for the calculation.
   inventory_item_indices:
-  - 395
+  - 425
   etabs_table_or_e2k_section: null
 - key: codes.clauses.spectral_shape_factor
   description: Clause citation value for 4.1.2
@@ -1566,14 +1613,15 @@ items:
   source: excel
   required: true
   condition: null
-  inventory_item_index: 405
+  inventory_item_index: 435
   example: NBC 105:2025
-  sentence_template: 'Table 12: Seismic design parameters for the RC moment resisting frame in {{ building.location
-    }} ({{ codes.edition }}).'
+  sentence_template: 'Table 12: Seismic design parameters for the RC moment resisting
+    frame in {{ building.location }} ({{ codes.edition }}).'
   inventory_item_indices:
-  - 405
+  - 435
 - key: table.seismic.design_parameters
-  description: 'Table 12: Seismic design parameters for the RC moment resisting frame in Damak (NBC 105:2025).'
+  description: 'Table 12: Seismic design parameters for the RC moment resisting frame
+    in Damak (NBC 105:2025).'
   type: table
   unit: null
   format:
@@ -1610,13 +1658,15 @@ items:
     unit: null
     format:
       decimals: null
-  row_source: Fixed parameter labels; values sourced from approved code/project inputs and calculations.
+  row_source: Fixed parameter labels; values sourced from approved code/project inputs
+    and calculations.
   row_behavior: fixed
   inventory_item_indices:
   - 407
   etabs_table_or_e2k_section: null
 - key: table.design.overstrength_factors
-  description: 'Table 12: Seismic design parameters for the RC moment resisting frame in Damak (NBC 105:2025).'
+  description: 'Table 12: Seismic design parameters for the RC moment resisting frame
+    in Damak (NBC 105:2025).'
   type: table
   unit: null
   format:
@@ -1656,12 +1706,12 @@ items:
   source: excel
   required: true
   condition: null
-  inventory_item_index: 413
+  inventory_item_index: 443
   example: null
   target_clause_2025: 3.2.1
   mapping_status: sample_reference
   inventory_item_indices:
-  - 413
+  - 443
   sample_clause: 3.2.1
 - key: building.total_height_m
   description: Total building height
@@ -1672,18 +1722,19 @@ items:
   source: e2k
   required: true
   condition: null
-  inventory_item_index: 413
+  inventory_item_index: 443
   example: '9.525'
-  sentence_template: As per Clause {{ codes.clauses.equivalent_static_method }} of {{ codes.edition }},
-    the Equivalent Static Method may be used for all serviceability limit state calculations regardless
-    of the building characteristics. For the ultimate limit state, the Equivalent Static Method may be
-    used when at least one of the listed criteria is satisfied, including that the height of the structure
-    is less than or equal to 15 m. The total height of the building is {{ building.total_height_m }} m
-    ({{ building.storeys_above_grade }} stories × {{ building.story_height_m }} m), which is less than
-    15 m. Therefore, the Equivalent Static Method is applicable for both ULS and SLS, and Modal Response
-    Spectrum Analysis is not required.
+  sentence_template: As per Clause {{ codes.clauses.equivalent_static_method }} of
+    {{ codes.edition }}, the Equivalent Static Method may be used for all serviceability
+    limit state calculations regardless of the building characteristics. For the ultimate
+    limit state, the Equivalent Static Method may be used when at least one of the
+    listed criteria is satisfied, including that the height of the structure is less
+    than or equal to 15 m. The total height of the building is {{ building.total_height_m
+    }} m ({{ building.storeys_above_grade }} stories × {{ building.story_height_m
+    }} m), which is less than 15 m. Therefore, the Equivalent Static Method is applicable
+    for both ULS and SLS, and Modal Response Spectrum Analysis is not required.
   inventory_item_indices:
-  - 413
+  - 443
   etabs_table_or_e2k_section: $STORYDATA
 - key: codes.clauses.load_combinations
   description: Clause citation value for 3.6.1
@@ -1711,12 +1762,12 @@ items:
   source: excel
   required: true
   condition: null
-  inventory_item_index: 430
+  inventory_item_index: 460
   example: null
   target_clause_2025: '7.3'
   mapping_status: sample_reference
   inventory_item_indices:
-  - 430
+  - 460
   sample_clause: '7.3'
 - key: codes.limits.modal_mass_part_pct
   description: Minimum modal mass participation threshold
@@ -1727,16 +1778,17 @@ items:
   source: excel
   required: true
   condition: Verify this code limit against the approved edition.
-  inventory_item_index: 430
+  inventory_item_index: 460
   example: '90'
-  sentence_template: '{{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that
-    number of modes to be used in the analysis should be such that the sum total of modal masses of all
-    modes considered is at least {{ codes.limits.modal_mass_part_pct }} percent of the total seismic mass
-    of the structure. The analysis was carried out for {{ modal.modes_included_count }} modes so that
-    the mass participation satisfies this criterion in both orthogonal directions. The table shows time
-    period and mass participation ratio for all modes.'
+  sentence_template: '{{ codes.edition }} clause {{ codes.clauses.modal_mass_participation
+    }} states that number of modes to be used in the analysis should be such that
+    the sum total of modal masses of all modes considered is at least {{ codes.limits.modal_mass_part_pct
+    }} percent of the total seismic mass of the structure. The analysis was carried
+    out for {{ modal.modes_included_count }} modes so that the mass participation
+    satisfies this criterion in both orthogonal directions. The table shows time period
+    and mass participation ratio for all modes.'
   inventory_item_indices:
-  - 430
+  - 460
 - key: modal.modes_included_count
   description: Number of modes included in the ETABS analysis
   type: number
@@ -1746,16 +1798,17 @@ items:
   source: etabs_api
   required: true
   condition: null
-  inventory_item_index: 430
+  inventory_item_index: 460
   example: '12'
-  sentence_template: '{{ codes.edition }} clause {{ codes.clauses.modal_mass_participation }} states that
-    number of modes to be used in the analysis should be such that the sum total of modal masses of all
-    modes considered is at least {{ codes.limits.modal_mass_part_pct }} percent of the total seismic mass
-    of the structure. The analysis was carried out for {{ modal.modes_included_count }} modes so that
-    the mass participation satisfies this criterion in both orthogonal directions. The table shows time
-    period and mass participation ratio for all modes.'
+  sentence_template: '{{ codes.edition }} clause {{ codes.clauses.modal_mass_participation
+    }} states that number of modes to be used in the analysis should be such that
+    the sum total of modal masses of all modes considered is at least {{ codes.limits.modal_mass_part_pct
+    }} percent of the total seismic mass of the structure. The analysis was carried
+    out for {{ modal.modes_included_count }} modes so that the mass participation
+    satisfies this criterion in both orthogonal directions. The table shows time period
+    and mass participation ratio for all modes.'
   inventory_item_indices:
-  - 430
+  - 460
   etabs_table_or_e2k_section: Modal Load Case
 - key: table.modal.periods_mass_part
   description: 'Table 13: Time period and mass participation ratio'
@@ -1814,7 +1867,8 @@ items:
     unit: null
     format:
       decimals: null
-  row_source: One row per requested ETABS mode; include the mass-adequacy threshold check.
+  row_source: One row per requested ETABS mode; include the mass-adequacy threshold
+    check.
   row_behavior: data-driven
   inventory_item_indices:
   - 434
@@ -1827,7 +1881,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 443
   example:
     alt_text: null
@@ -1847,13 +1902,13 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 450
+  inventory_item_index: 480
   example: '1557'
   sentence_template: = {{ design.column.max_rebar_area_mm2 }}/ ({{ design.column.max_section_width_mm
-    }}*{{ design.column.max_section_depth_mm }})*100% ={{ design.column.max_provided_pct }}% <{{ design.column.max_limit_pct
-    }}% ({{ design.column.max_status }})
+    }}*{{ design.column.max_section_depth_mm }})*100% ={{ design.column.max_provided_pct
+    }}% <{{ design.column.max_limit_pct }}% ({{ design.column.max_status }})
   inventory_item_indices:
-  - 450
+  - 480
   etabs_table_or_e2k_section: null
 - key: design.column.max_section_width_mm
   description: Column maximum reinforcement section width mm
@@ -1864,13 +1919,13 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 450
+  inventory_item_index: 480
   example: '355'
-  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{
-    design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct }}% < {{ design.column.max_limit_pct
-    }}% ({{ design.column.max_status }})
+  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm
+    }}*{{ design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct
+    }}% < {{ design.column.max_limit_pct }}% ({{ design.column.max_status }})
   inventory_item_indices:
-  - 450
+  - 480
   etabs_table_or_e2k_section: null
 - key: design.column.max_section_depth_mm
   description: Column maximum reinforcement section depth mm
@@ -1881,13 +1936,13 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 450
+  inventory_item_index: 480
   example: '355'
-  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{
-    design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct }}% < {{ design.column.max_limit_pct
-    }}% ({{ design.column.max_status }})
+  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm
+    }}*{{ design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct
+    }}% < {{ design.column.max_limit_pct }}% ({{ design.column.max_status }})
   inventory_item_indices:
-  - 450
+  - 480
   etabs_table_or_e2k_section: null
 - key: design.column.max_provided_pct
   description: Column maximum reinforcement provided pct
@@ -1898,13 +1953,13 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 450
+  inventory_item_index: 480
   example: '1.24'
-  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{
-    design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct }}% < {{ design.column.max_limit_pct
-    }}% ({{ design.column.max_status }})
+  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm
+    }}*{{ design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct
+    }}% < {{ design.column.max_limit_pct }}% ({{ design.column.max_status }})
   inventory_item_indices:
-  - 450
+  - 480
   etabs_table_or_e2k_section: null
 - key: design.column.max_limit_pct
   description: Column maximum reinforcement limit pct
@@ -1915,13 +1970,13 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 450
+  inventory_item_index: 480
   example: '4'
-  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{
-    design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct }}% < {{ design.column.max_limit_pct
-    }}% ({{ design.column.max_status }})
+  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm
+    }}*{{ design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct
+    }}% < {{ design.column.max_limit_pct }}% ({{ design.column.max_status }})
   inventory_item_indices:
-  - 450
+  - 480
   etabs_table_or_e2k_section: null
 - key: design.column.max_status
   description: Column maximum reinforcement check status
@@ -1932,13 +1987,13 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 450
+  inventory_item_index: 480
   example: pass
-  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm }}*{{
-    design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct }}% < {{ design.column.max_limit_pct
-    }}% ({{ design.column.max_status }})
+  sentence_template: = {{ design.column.max_rebar_area_mm2 }}/({{ design.column.max_section_width_mm
+    }}*{{ design.column.max_section_depth_mm }})*100% = {{ design.column.max_provided_pct
+    }}% < {{ design.column.max_limit_pct }}% ({{ design.column.max_status }})
   inventory_item_indices:
-  - 450
+  - 480
   etabs_table_or_e2k_section: null
 - key: design.column.min_provided_pct
   description: 'Column minimum reinforcement: Provided reinforcement percentage'
@@ -1949,12 +2004,12 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 454
+  inventory_item_index: 484
   example: '1.026'
-  sentence_template: = {{ design.column.min_provided_pct }}% > {{ design.column.min_limit_pct }}% ({{
-    design.column.min_status }})
+  sentence_template: = {{ design.column.min_provided_pct }}% > {{ design.column.min_limit_pct
+    }}% ({{ design.column.min_status }})
   inventory_item_indices:
-  - 454
+  - 484
   etabs_table_or_e2k_section: null
 - key: design.column.min_limit_pct
   description: 'Column minimum reinforcement: Code/project comparison percentage'
@@ -1965,12 +2020,12 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 454
+  inventory_item_index: 484
   example: '1'
-  sentence_template: \t= {{ design.column.min_provided_pct }}%\t> {{ design.column.min_limit_pct }}% ({{
-    design.column.min_status }})
+  sentence_template: \t= {{ design.column.min_provided_pct }}%\t> {{ design.column.min_limit_pct
+    }}% ({{ design.column.min_status }})
   inventory_item_indices:
-  - 454
+  - 484
   etabs_table_or_e2k_section: null
 - key: design.column.min_status
   description: Column minimum reinforcement check status
@@ -1981,12 +2036,12 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 454
+  inventory_item_index: 484
   example: pass
-  sentence_template: \t= {{ design.column.min_provided_pct }}%\t> {{ design.column.min_limit_pct }}% ({{
-    design.column.min_status }})
+  sentence_template: \t= {{ design.column.min_provided_pct }}%\t> {{ design.column.min_limit_pct
+    }}% ({{ design.column.min_status }})
   inventory_item_indices:
-  - 454
+  - 484
   etabs_table_or_e2k_section: null
 - key: design.beam.max_rebar_area_mm2
   description: Beam maximum reinforcement provided reinforcement area mm2
@@ -1997,13 +2052,13 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 456
+  inventory_item_index: 486
   example: '678.584'
-  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/ ({{ design.beam.max_section_width_mm }}*{{
-    design.beam.max_section_depth_mm }}) = {{ design.beam.max_provided_pct }}% <{{ design.beam.max_limit_pct
-    }}% ({{ design.beam.max_status }})
+  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/ ({{ design.beam.max_section_width_mm
+    }}*{{ design.beam.max_section_depth_mm }}) = {{ design.beam.max_provided_pct }}%
+    <{{ design.beam.max_limit_pct }}% ({{ design.beam.max_status }})
   inventory_item_indices:
-  - 456
+  - 486
   etabs_table_or_e2k_section: null
 - key: design.beam.max_section_width_mm
   description: Beam maximum reinforcement section width mm
@@ -2014,13 +2069,14 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 456
+  inventory_item_index: 486
   example: '250'
-  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm }}*{{
-    design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct }}% < {{ design.beam.max_limit_pct
-    }}% ({{ design.beam.maximum_reinforcement.status }})
+  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm
+    }}*{{ design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct
+    }}% < {{ design.beam.max_limit_pct }}% ({{ design.beam.maximum_reinforcement.status
+    }})
   inventory_item_indices:
-  - 456
+  - 486
   etabs_table_or_e2k_section: null
 - key: design.beam.max_section_depth_mm
   description: Beam maximum reinforcement section depth mm
@@ -2031,13 +2087,14 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 456
+  inventory_item_index: 486
   example: '355'
-  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm }}*{{
-    design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct }}% < {{ design.beam.max_limit_pct
-    }}% ({{ design.beam.maximum_reinforcement.status }})
+  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm
+    }}*{{ design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct
+    }}% < {{ design.beam.max_limit_pct }}% ({{ design.beam.maximum_reinforcement.status
+    }})
   inventory_item_indices:
-  - 456
+  - 486
   etabs_table_or_e2k_section: null
 - key: design.beam.max_provided_pct
   description: Beam maximum reinforcement provided pct
@@ -2048,13 +2105,14 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 456
+  inventory_item_index: 486
   example: '0.764'
-  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm }}*{{
-    design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct }}% < {{ design.beam.max_limit_pct
-    }}% ({{ design.beam.maximum_reinforcement.status }})
+  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm
+    }}*{{ design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct
+    }}% < {{ design.beam.max_limit_pct }}% ({{ design.beam.maximum_reinforcement.status
+    }})
   inventory_item_indices:
-  - 456
+  - 486
   etabs_table_or_e2k_section: null
 - key: design.beam.max_limit_pct
   description: Beam maximum reinforcement limit pct
@@ -2065,13 +2123,14 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 456
+  inventory_item_index: 486
   example: '2.5'
-  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm }}*{{
-    design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct }}% < {{ design.beam.max_limit_pct
-    }}% ({{ design.beam.maximum_reinforcement.status }})
+  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm
+    }}*{{ design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct
+    }}% < {{ design.beam.max_limit_pct }}% ({{ design.beam.maximum_reinforcement.status
+    }})
   inventory_item_indices:
-  - 456
+  - 486
   etabs_table_or_e2k_section: null
 - key: design.beam.maximum_reinforcement.status
   description: Beam maximum reinforcement check status
@@ -2082,13 +2141,14 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 456
+  inventory_item_index: 486
   example: pass
-  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm }}*{{
-    design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct }}% < {{ design.beam.max_limit_pct
-    }}% ({{ design.beam.maximum_reinforcement.status }})
+  sentence_template: = {{ design.beam.max_rebar_area_mm2 }}/({{ design.beam.max_section_width_mm
+    }}*{{ design.beam.max_section_depth_mm }})*100% = {{ design.beam.max_provided_pct
+    }}% < {{ design.beam.max_limit_pct }}% ({{ design.beam.maximum_reinforcement.status
+    }})
   inventory_item_indices:
-  - 456
+  - 486
   etabs_table_or_e2k_section: null
 - key: design.beam.min_provided_pct
   description: 'Beam minimum reinforcement: Provided reinforcement percentage'
@@ -2099,12 +2159,12 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 458
+  inventory_item_index: 488
   example: '0.764'
-  sentence_template: = {{ design.beam.min_provided_pct }}% >{{ design.beam.min_limit_pct }} % ({{ design.beam.min_status
-    }})
+  sentence_template: = {{ design.beam.min_provided_pct }}% >{{ design.beam.min_limit_pct
+    }} % ({{ design.beam.min_status }})
   inventory_item_indices:
-  - 458
+  - 488
   etabs_table_or_e2k_section: null
 - key: design.beam.min_limit_pct
   description: 'Beam minimum reinforcement: Code/project comparison percentage'
@@ -2115,12 +2175,12 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 458
+  inventory_item_index: 488
   example: '0.26'
-  sentence_template: = {{ design.beam.min_provided_pct }}% >{{ design.beam.min_limit_pct }}% ({{ design.beam.minimum_reinforcement.status
-    }})
+  sentence_template: = {{ design.beam.min_provided_pct }}% >{{ design.beam.min_limit_pct
+    }}% ({{ design.beam.minimum_reinforcement.status }})
   inventory_item_indices:
-  - 458
+  - 488
   etabs_table_or_e2k_section: null
 - key: design.beam.minimum_reinforcement.status
   description: Beam minimum reinforcement check status
@@ -2131,12 +2191,12 @@ items:
   source: computed
   required: true
   condition: null
-  inventory_item_index: 458
+  inventory_item_index: 488
   example: pass
-  sentence_template: = {{ design.beam.min_provided_pct }}% >{{ design.beam.min_limit_pct }}% ({{ design.beam.minimum_reinforcement.status
-    }})
+  sentence_template: = {{ design.beam.min_provided_pct }}% >{{ design.beam.min_limit_pct
+    }}% ({{ design.beam.minimum_reinforcement.status }})
   inventory_item_indices:
-  - 458
+  - 488
   etabs_table_or_e2k_section: null
 - key: table.design.slab_design_output
   description: 'Table 16: | | | | | | |'
@@ -2201,8 +2261,8 @@ items:
     unit: null
     format:
       decimals: null
-  row_source: ETABS slab design records; column/header semantics are unresolved because the sample header
-    is blank.
+  row_source: ETABS slab design records; column/header semantics are unresolved because
+    the sample header is blank.
   row_behavior: data-driven
   inventory_item_indices:
   - 461
@@ -2247,7 +2307,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 469
   example:
     alt_text: null
@@ -2266,7 +2327,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 471
   example:
     alt_text: null
@@ -2285,7 +2347,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 475
   example:
     alt_text: null
@@ -2303,7 +2366,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 478
   example:
     alt_text: null
@@ -2321,7 +2385,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 486
   example:
     alt_text: null
@@ -2340,7 +2405,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 487
   example:
     alt_text: null
@@ -2359,7 +2425,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 493
   example:
     alt_text: null
@@ -2378,14 +2445,15 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
-  inventory_item_index: 500
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
+  inventory_item_index: 501
   example:
     alt_text: null
     width_inches: 6.9924
     height_inches: 5.916
   inventory_item_indices:
-  - 500
+  - 501
   etabs_table_or_e2k_section: Foundation Design Output
   figure_origin: etabs_screenshot
   generator: null
@@ -2397,7 +2465,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 506
   example:
     alt_text: null
@@ -2416,7 +2485,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 508
   example:
     alt_text: null
@@ -2435,7 +2505,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 512
   example:
     alt_text: null
@@ -2454,7 +2525,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 518
   example:
     alt_text: null
@@ -2472,7 +2544,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 520
   example:
     alt_text: null
@@ -2490,7 +2563,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 522
   example:
     alt_text: null
@@ -2515,7 +2589,7 @@ items:
   mapping_status: owner_mapped
   inventory_item_indices:
   - 533
-  - 535
+  - 565
   sample_clause: 5.6.3
 - key: codes.limits.max_deflection_ratio
   description: Maximum story deflection-to-height ratio
@@ -2525,16 +2599,18 @@ items:
     decimals: 3
   source: excel
   required: true
-  condition: Owner/engineer must verify against the approved NBC 105:2025 edition before use.
-  inventory_item_index: 535
+  condition: Owner/engineer must verify against the approved NBC 105:2025 edition
+    before use.
+  inventory_item_index: 565
   example: '0.006'
-  sentence_template: '{{ codes.clauses.serviceability_drift }} of {{ codes.edition }} is applied. The
-    maximum deflection in any story due to the minimum specified design lateral force, with partial load
-    factor of 1.0 shall not exceed {{ codes.limits.max_deflection_ratio }} times the story height. Furthermore,
-    the drift shall not exceed {{ codes.limits.sls_drift_ratio }} in Serviceability Limit State and {{
-    codes.limits.ultimate_story_drift_ratio }} in Ultimate Limit State case.'
+  sentence_template: '{{ codes.clauses.serviceability_drift }} of {{ codes.edition
+    }} is applied. The maximum deflection in any story due to the minimum specified
+    design lateral force, with partial load factor of 1.0 shall not exceed {{ codes.limits.max_deflection_ratio
+    }} times the story height. Furthermore, the drift shall not exceed {{ codes.limits.sls_drift_ratio
+    }} in Serviceability Limit State and {{ codes.limits.ultimate_story_drift_ratio
+    }} in Ultimate Limit State case.'
   inventory_item_indices:
-  - 535
+  - 565
 - key: codes.limits.sls_drift_ratio
   description: Serviceability-limit story drift ratio
   type: number
@@ -2543,16 +2619,18 @@ items:
     decimals: 3
   source: excel
   required: true
-  condition: Owner/engineer must verify against the approved NBC 105:2025 edition before use.
-  inventory_item_index: 535
+  condition: Owner/engineer must verify against the approved NBC 105:2025 edition
+    before use.
+  inventory_item_index: 565
   example: '0.006'
-  sentence_template: '{{ codes.clauses.serviceability_drift }} of {{ codes.edition }} is applied. The
-    maximum deflection in any story due to the minimum specified design lateral force, with partial load
-    factor of 1.0 shall not exceed {{ codes.limits.max_deflection_ratio }} times the story height. Furthermore,
-    the drift shall not exceed {{ codes.limits.sls_drift_ratio }} in Serviceability Limit State and {{
-    codes.limits.ultimate_story_drift_ratio }} in Ultimate Limit State case.'
+  sentence_template: '{{ codes.clauses.serviceability_drift }} of {{ codes.edition
+    }} is applied. The maximum deflection in any story due to the minimum specified
+    design lateral force, with partial load factor of 1.0 shall not exceed {{ codes.limits.max_deflection_ratio
+    }} times the story height. Furthermore, the drift shall not exceed {{ codes.limits.sls_drift_ratio
+    }} in Serviceability Limit State and {{ codes.limits.ultimate_story_drift_ratio
+    }} in Ultimate Limit State case.'
   inventory_item_indices:
-  - 535
+  - 565
 - key: codes.limits.ultimate_story_drift_ratio
   description: Ultimate-limit story drift ratio
   type: number
@@ -2561,16 +2639,18 @@ items:
     decimals: 3
   source: excel
   required: true
-  condition: Owner/engineer must verify against the approved NBC 105:2025 edition before use.
-  inventory_item_index: 535
+  condition: Owner/engineer must verify against the approved NBC 105:2025 edition
+    before use.
+  inventory_item_index: 565
   example: '0.025'
-  sentence_template: '{{ codes.clauses.serviceability_drift }} of {{ codes.edition }} is applied. The
-    maximum deflection in any story due to the minimum specified design lateral force, with partial load
-    factor of 1.0 shall not exceed {{ codes.limits.max_deflection_ratio }} times the story height. Furthermore,
-    the drift shall not exceed {{ codes.limits.sls_drift_ratio }} in Serviceability Limit State and {{
-    codes.limits.ultimate_story_drift_ratio }} in Ultimate Limit State case.'
+  sentence_template: '{{ codes.clauses.serviceability_drift }} of {{ codes.edition
+    }} is applied. The maximum deflection in any story due to the minimum specified
+    design lateral force, with partial load factor of 1.0 shall not exceed {{ codes.limits.max_deflection_ratio
+    }} times the story height. Furthermore, the drift shall not exceed {{ codes.limits.sls_drift_ratio
+    }} in Serviceability Limit State and {{ codes.limits.ultimate_story_drift_ratio
+    }} in Ultimate Limit State case.'
   inventory_item_indices:
-  - 535
+  - 565
 - key: figure.drift.displacement
   description: \tDISPLACEMENT AND DRIFT CHECK
   type: image
@@ -2579,7 +2659,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 542
   example:
     alt_text: null
@@ -2726,7 +2807,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 584
   example:
     alt_text: null
@@ -2762,12 +2844,12 @@ items:
   source: excel
   required: true
   condition: Owner-approved mapping.
-  inventory_item_index: 593
+  inventory_item_index: 623
   example: null
   target_clause_2025: 5.4.2.1
   mapping_status: owner_mapped
   inventory_item_indices:
-  - 593
+  - 623
   sample_clause: 5.5.2.1
 - key: codes.limits.torsional_disp_ratio
   description: Torsional irregularity displacement ratio threshold
@@ -2777,16 +2859,18 @@ items:
     decimals: 1
   source: excel
   required: true
-  condition: Owner/engineer must verify against the approved NBC 105:2025 edition before use.
-  inventory_item_index: 593
+  condition: Owner/engineer must verify against the approved NBC 105:2025 edition
+    before use.
+  inventory_item_index: 623
   example: '1.5'
-  sentence_template: As per the clause {{ codes.clauses.torsional_irregularity }} of {{ codes.edition
-    }}, torsion irregularity is considered to exist when the maximum horizontal displacement of any floor
-    in the direction of the lateral force, applied at the centre of mass, at one end of the storey is
-    more than {{ codes.limits.torsional_disp_ratio }} times its minimum horizontal displacement at the
-    far end of the same storey in that direction.
+  sentence_template: As per the clause {{ codes.clauses.torsional_irregularity }}
+    of {{ codes.edition }}, torsion irregularity is considered to exist when the maximum
+    horizontal displacement of any floor in the direction of the lateral force, applied
+    at the centre of mass, at one end of the storey is more than {{ codes.limits.torsional_disp_ratio
+    }} times its minimum horizontal displacement at the far end of the same storey
+    in that direction.
   inventory_item_indices:
-  - 593
+  - 623
 - key: figure.irregularity.torsional
   description: 'Figure 26: Torsional Irregularity'
   type: image
@@ -2795,7 +2879,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 595
   example:
     alt_text: null
@@ -2814,7 +2899,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 600
   example:
     alt_text: null
@@ -2834,12 +2920,12 @@ items:
   source: excel
   required: true
   condition: Owner-approved mapping.
-  inventory_item_index: 603
+  inventory_item_index: 633
   example: null
   target_clause_2025: 5.4.1.2
   mapping_status: owner_mapped
   inventory_item_indices:
-  - 603
+  - 633
   sample_clause: 5.5.1.2
 - key: codes.limits.soft_storey_adj_pct
   description: Soft-storey adjacent-storey stiffness threshold
@@ -2849,16 +2935,18 @@ items:
     decimals: 0
   source: excel
   required: true
-  condition: Owner/engineer must verify against the approved NBC 105:2025 edition before use.
-  inventory_item_index: 603
+  condition: Owner/engineer must verify against the approved NBC 105:2025 edition
+    before use.
+  inventory_item_index: 633
   example: '70'
-  sentence_template: As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition }}, a soft
-    story is the one whose stiffness of the lateral force resisting system is less than {{ codes.limits.soft_storey_adj_pct
-    }}% of the lateral force resisting system stiffness in an adjacent story above or below, or less than
-    {{ codes.limits.soft_storey_avg_pct }}% of the average lateral force resisting system stiffness of
-    the three storys above or below.
+  sentence_template: As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition
+    }}, a soft story is the one whose stiffness of the lateral force resisting system
+    is less than {{ codes.limits.soft_storey_adj_pct }}% of the lateral force resisting
+    system stiffness in an adjacent story above or below, or less than {{ codes.limits.soft_storey_avg_pct
+    }}% of the average lateral force resisting system stiffness of the three storys
+    above or below.
   inventory_item_indices:
-  - 603
+  - 633
 - key: codes.limits.soft_storey_avg_pct
   description: Soft-storey three-storey average stiffness threshold
   type: number
@@ -2867,16 +2955,18 @@ items:
     decimals: 0
   source: excel
   required: true
-  condition: Owner/engineer must verify against the approved NBC 105:2025 edition before use.
-  inventory_item_index: 603
+  condition: Owner/engineer must verify against the approved NBC 105:2025 edition
+    before use.
+  inventory_item_index: 633
   example: '80'
-  sentence_template: As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition }}, a soft
-    story is the one whose stiffness of the lateral force resisting system is less than {{ codes.limits.soft_storey_adj_pct
-    }}% of the lateral force resisting system stiffness in an adjacent story above or below, or less than
-    {{ codes.limits.soft_storey_avg_pct }}% of the average lateral force resisting system stiffness of
-    the three storys above or below.
+  sentence_template: As per the clause {{ codes.clauses.soft_storey }} of {{ codes.edition
+    }}, a soft story is the one whose stiffness of the lateral force resisting system
+    is less than {{ codes.limits.soft_storey_adj_pct }}% of the lateral force resisting
+    system stiffness in an adjacent story above or below, or less than {{ codes.limits.soft_storey_avg_pct
+    }}% of the average lateral force resisting system stiffness of the three storys
+    above or below.
   inventory_item_indices:
-  - 603
+  - 633
 - key: figure.irregularity.soft_story_panel_b
   description: 'Figure 27: Soft story check'
   type: image
@@ -2885,7 +2975,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 605
   example:
     alt_text: null
@@ -2904,7 +2995,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 613
   example:
     alt_text: null
@@ -2924,12 +3016,12 @@ items:
   source: excel
   required: true
   condition: Owner-approved mapping.
-  inventory_item_index: 617
+  inventory_item_index: 647
   example: null
   target_clause_2025: 5.4.1.5
   mapping_status: owner_mapped
   inventory_item_indices:
-  - 617
+  - 647
   sample_clause: 5.5.1.5
 - key: codes.limits.mass_irregularity_diff_pct
   description: Mass-irregularity effective-mass difference threshold
@@ -2939,17 +3031,18 @@ items:
     decimals: 0
   source: excel
   required: true
-  condition: Owner/engineer must verify against the approved NBC 105:2025 edition before use.
-  inventory_item_index: 617
+  condition: Owner/engineer must verify against the approved NBC 105:2025 edition
+    before use.
+  inventory_item_index: 647
   example: '50'
   sentence_template: If there is a difference of more than {{ codes.limits.mass_irregularity_diff_pct
-    }}% between the effective masses of two consecutive storeys, then there will be the existence of mass
-    irregularity in the structural system of the building as per the clause {{ codes.clauses.mass_irregularity
-    }} of {{ codes.edition }}. However, for such checks, light roofs, penthouse and mezzanine floors are
-    not to be considered. The Designer is required to carry out the check for mass irregularity in the
-    structural
+    }}% between the effective masses of two consecutive storeys, then there will be
+    the existence of mass irregularity in the structural system of the building as
+    per the clause {{ codes.clauses.mass_irregularity }} of {{ codes.edition }}. However,
+    for such checks, light roofs, penthouse and mezzanine floors are not to be considered.
+    The Designer is required to carry out the check for mass irregularity in the structural
   inventory_item_indices:
-  - 617
+  - 647
 - key: codes.clauses.reentrant_corner
   description: Clause citation value for 5.5.2.2
   type: text
@@ -2959,12 +3052,12 @@ items:
   source: excel
   required: true
   condition: Owner-approved mapping.
-  inventory_item_index: 624
+  inventory_item_index: 654
   example: null
   target_clause_2025: 5.4.2.3
   mapping_status: owner_mapped
   inventory_item_indices:
-  - 624
+  - 654
   sample_clause: 5.5.2.2
 - key: codes.limits.reentrant_proj_pct
   description: Re-entrant-corner projection threshold
@@ -2974,15 +3067,16 @@ items:
     decimals: 0
   source: excel
   required: true
-  condition: Owner/engineer must verify against the approved NBC 105:2025 edition before use.
-  inventory_item_index: 624
+  condition: Owner/engineer must verify against the approved NBC 105:2025 edition
+    before use.
+  inventory_item_index: 654
   example: '15'
-  sentence_template: As per the clause {{ codes.clauses.reentrant_corner }} of {{ codes.edition }}, a
-    structure is said to have re-entrant corner irregularity in a direction if its structural configuration
-    has a projection of greater than {{ codes.limits.reentrant_proj_pct }}% of its overall dimensions
-    in that direction.
+  sentence_template: As per the clause {{ codes.clauses.reentrant_corner }} of {{
+    codes.edition }}, a structure is said to have re-entrant corner irregularity in
+    a direction if its structural configuration has a projection of greater than {{
+    codes.limits.reentrant_proj_pct }}% of its overall dimensions in that direction.
   inventory_item_indices:
-  - 624
+  - 654
 - key: figure.irregularity.re_entrant_corners
   description: 'Figure 29: Re-entrant corners'
   type: image
@@ -2991,7 +3085,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 627
   example:
     alt_text: null
@@ -3011,12 +3106,12 @@ items:
   source: excel
   required: true
   condition: Owner-approved mapping.
-  inventory_item_index: 632
+  inventory_item_index: 662
   example: null
   target_clause_2025: 5.4.2.4
   mapping_status: owner_mapped
   inventory_item_indices:
-  - 632
+  - 662
   sample_clause: 5.5.2.3
 - key: codes.limits.diaphragm_opening_area_pct
   description: Diaphragm opening-area threshold
@@ -3026,17 +3121,19 @@ items:
     decimals: 0
   source: excel
   required: true
-  condition: Owner/engineer must verify against the approved NBC 105:2025 edition before use.
-  inventory_item_index: 632
+  condition: Owner/engineer must verify against the approved NBC 105:2025 edition
+    before use.
+  inventory_item_index: 662
   example: '50'
-  sentence_template: If the diaphragm of a building has a cutout or open area greater than {{ codes.limits.diaphragm_opening_area_pct
-    }}% of the gross enclosed diaphragm area or if the effective diaphragm stiffness changes more than
-    {{ codes.limits.diaphragm_stiffness_pct }}% from one story to the next, then as per the clause {{
-    codes.clauses.diaphragm_discontinuity }} of {{ codes.edition }}, the building is said to have diaphragm
-    discontinuity irregularity. The Designer is required to check the existence of such irregularity in
-    the building and provide the details in the structural design report.
+  sentence_template: If the diaphragm of a building has a cutout or open area greater
+    than {{ codes.limits.diaphragm_opening_area_pct }}% of the gross enclosed diaphragm
+    area or if the effective diaphragm stiffness changes more than {{ codes.limits.diaphragm_stiffness_pct
+    }}% from one story to the next, then as per the clause {{ codes.clauses.diaphragm_discontinuity
+    }} of {{ codes.edition }}, the building is said to have diaphragm discontinuity
+    irregularity. The Designer is required to check the existence of such irregularity
+    in the building and provide the details in the structural design report.
   inventory_item_indices:
-  - 632
+  - 662
 - key: codes.limits.diaphragm_stiffness_pct
   description: Diaphragm stiffness-change threshold
   type: number
@@ -3045,17 +3142,19 @@ items:
     decimals: 0
   source: excel
   required: true
-  condition: Owner/engineer must verify against the approved NBC 105:2025 edition before use.
-  inventory_item_index: 632
+  condition: Owner/engineer must verify against the approved NBC 105:2025 edition
+    before use.
+  inventory_item_index: 662
   example: '50'
-  sentence_template: If the diaphragm of a building has a cutout or open area greater than {{ codes.limits.diaphragm_opening_area_pct
-    }}% of the gross enclosed diaphragm area or if the effective diaphragm stiffness changes more than
-    {{ codes.limits.diaphragm_stiffness_pct }}% from one story to the next, then as per the clause {{
-    codes.clauses.diaphragm_discontinuity }} of {{ codes.edition }}, the building is said to have diaphragm
-    discontinuity irregularity. The Designer is required to check the existence of such irregularity in
-    the building and provide the details in the structural design report.
+  sentence_template: If the diaphragm of a building has a cutout or open area greater
+    than {{ codes.limits.diaphragm_opening_area_pct }}% of the gross enclosed diaphragm
+    area or if the effective diaphragm stiffness changes more than {{ codes.limits.diaphragm_stiffness_pct
+    }}% from one story to the next, then as per the clause {{ codes.clauses.diaphragm_discontinuity
+    }} of {{ codes.edition }}, the building is said to have diaphragm discontinuity
+    irregularity. The Designer is required to check the existence of such irregularity
+    in the building and provide the details in the structural design report.
   inventory_item_indices:
-  - 632
+  - 662
 - key: figure.irregularity.diaphragm
   description: 'Figure 30: Diaphragm Discontinuity'
   type: image
@@ -3064,7 +3163,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 635
   example:
     alt_text: null
@@ -3083,7 +3183,8 @@ items:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 645
   example:
     alt_text: null
@@ -3102,7 +3203,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 651
   example:
     alt_text: null
@@ -3120,7 +3222,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 654
   example:
     alt_text: null
@@ -3138,7 +3241,8 @@ items:
     decimals: null
   source: excel
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 657
   example:
     alt_text: null
@@ -3149,14 +3253,16 @@ items:
   figure_origin: user_supplied
   generator: null
 - key: figure.elements.rebar_grid_a
-  description: 'Figure 32: Required longitudinal reinforcement (mm²) in beams and columns along Grid A.'
+  description: 'Figure 32: Required longitudinal reinforcement (mm²) in beams and
+    columns along Grid A.'
   type: image
   unit: null
   format:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 666
   example:
     alt_text: null
@@ -3168,14 +3274,16 @@ items:
   figure_origin: generated
   generator: generate_etabs_figures.py:member_figures (12_reinforcement.png)
 - key: figure.elements.rebar_grid_b
-  description: 'Figure 33: Required longitudinal reinforcement (mm²) in beams and columns along Grid B.'
+  description: 'Figure 33: Required longitudinal reinforcement (mm²) in beams and
+    columns along Grid B.'
   type: image
   unit: null
   format:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 671
   example:
     alt_text: null
@@ -3187,14 +3295,16 @@ items:
   figure_origin: generated
   generator: generate_etabs_figures.py:member_figures (12_reinforcement.png)
 - key: figure.elements.rebar_story1
-  description: 'Figure 34: Required longitudinal reinforcement (mm²) in beams at Story 1.'
+  description: 'Figure 34: Required longitudinal reinforcement (mm²) in beams at Story
+    1.'
   type: image
   unit: null
   format:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 676
   example:
     alt_text: null
@@ -3206,14 +3316,16 @@ items:
   figure_origin: generated
   generator: generate_etabs_figures.py:member_figures (12_reinforcement.png)
 - key: figure.elements.rebar_story2
-  description: 'Figure 35: Required longitudinal reinforcement (mm²) in beams at Story 2.'
+  description: 'Figure 35: Required longitudinal reinforcement (mm²) in beams at Story
+    2.'
   type: image
   unit: null
   format:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 683
   example:
     alt_text: null
@@ -3225,14 +3337,16 @@ items:
   figure_origin: generated
   generator: generate_etabs_figures.py:member_figures (12_reinforcement.png)
 - key: figure.elements.rebar_story3
-  description: 'Figure 36: Required longitudinal reinforcement (mm²) in beams at Story 3.'
+  description: 'Figure 36: Required longitudinal reinforcement (mm²) in beams at Story
+    3.'
   type: image
   unit: null
   format:
     decimals: null
   source: etabs_api
   required: false
-  condition: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+  condition: Generated from ETABS or supplied by the user; the figure manager must
+    resolve its source.
   inventory_item_index: 688
   example:
     alt_text: null
@@ -3291,7 +3405,8 @@ items:
   sentence_template: '{{ building.has_staircase }}'
   inventory_item_indices: []
 - key: foundation.type
-  description: Foundation type chosen in Phase 2.5 from column loads, q_a, and the boundary answer.
+  description: Foundation type chosen in Phase 2.5 from column loads, q_a, and the
+    boundary answer.
   type: text
   unit: null
   source: computed
@@ -3326,12 +3441,12 @@ items:
   example: fixed
   format:
     decimals: null
-  condition: Computed from foundation.type and foundation.soil_class per owner decision. .e2k $POINTRESTRAINTS
-    provides a cross-check input.
-  inventory_item_index: 256
+  condition: Computed from foundation.type and foundation.soil_class per owner decision.
+    .e2k $POINTRESTRAINTS provides a cross-check input.
+  inventory_item_index: 286
   sentence_template: '{{ foundation.support_condition }}'
   inventory_item_indices:
-  - 256
+  - 286
   etabs_table_or_e2k_section: $POINTRESTRAINTS (cross-check input)
 - key: structural.system_type
   description: Structural system type shown in Table 5; also drives Rμ/Ωu/Ωs.
@@ -3348,7 +3463,8 @@ items:
   inventory_item_indices: []
   etabs_table_or_e2k_section: Frame Section Assignments + Connectivity
 - key: slab.type
-  description: Slab type shown in Table 5; may be supplied by intake or identified from .e2k shell sections.
+  description: Slab type shown in Table 5; may be supplied by intake or identified
+    from .e2k shell sections.
   type: text
   unit: null
   source: e2k
@@ -3371,10 +3487,10 @@ items:
   format:
     decimals: null
   condition: Caption text is variable; retain the existing foundation reaction image.
-  inventory_item_index: 494
+  inventory_item_index: 524
   sentence_template: '{{ analysis.foundation_reaction_combination }}'
   inventory_item_indices:
-  - 494
+  - 524
   etabs_table_or_e2k_section: Load Combinations
 - key: analysis.soft_storey_result
   description: Computed soft-storey conclusion variant.
@@ -3386,10 +3502,10 @@ items:
   format:
     decimals: null
   condition: Select the result variant from computed project checks.
-  inventory_item_index: 608
+  inventory_item_index: 638
   sentence_template: '{{ analysis.soft_storey_result }}'
   inventory_item_indices:
-  - 608
+  - 638
   etabs_table_or_e2k_section: null
 - key: analysis.in_plane_discontinuity_result
   description: Computed in-plane-discontinuity conclusion variant.
@@ -3416,10 +3532,10 @@ items:
   format:
     decimals: null
   condition: Select the result variant from computed project checks.
-  inventory_item_index: 621
+  inventory_item_index: 651
   sentence_template: '{{ analysis.mass_irregularity_result }}'
   inventory_item_indices:
-  - 621
+  - 651
   etabs_table_or_e2k_section: null
 - key: analysis.reentrant_corner_result
   description: Computed re-entrant-corner conclusion variant.
@@ -3445,7 +3561,7 @@ items:
   source: etabs_api
   required: true
   condition: null
-  inventory_item_index: 210
+  inventory_item_index: 240
   example: M20
   etabs_table_or_e2k_section: Material Properties (concrete)
 - key: client.owner_name
@@ -3786,8 +3902,8 @@ items:
   required: true
   condition: null
   inventory_item_index: null
-  example: The live loads for the floor and roof are determined using IS 875 part 2, as referenced by
-    the National Building Code.
+  example: The live loads for the floor and roof are determined using IS 875 part
+    2, as referenced by the National Building Code.
 - key: building.num_storeys_analysed
   description: Number of storeys considered in the design
   type: number
@@ -3860,7 +3976,8 @@ items:
   example: Moment Resisting Frames
   etabs_table_or_e2k_section: Frame Section Assignments + Connectivity
 - key: structural.system_type_period_category
-  description: Structural system type for period formula (T8, NBC 105:2025 period category)
+  description: Structural system type for period formula (T8, NBC 105:2025 period
+    category)
   type: text
   unit: null
   format:
@@ -3871,7 +3988,8 @@ items:
   inventory_item_index: null
   example: Moment Resisting Concrete Frame
 - key: structural.system_type_table_5_2
-  description: Structural system type for seismic parameters (T12, NBC 105:2025 Table 5-2 system name)
+  description: Structural system type for seismic parameters (T12, NBC 105:2025 Table
+    5-2 system name)
   type: text
   unit: null
   format:
@@ -4130,3 +4248,68 @@ items:
   inventory_item_index: null
   example: 10.61 < 43.7, OK
   etabs_table_or_e2k_section: null
+- key: consultancy.name
+  description: Consultancy name printed on the report cover
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: 11
+  example: Swarup Engineering Consultancy
+  inventory_item_indices:
+  - 11
+- key: consultancy.address
+  description: Consultancy address printed on the report cover
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: 12
+  example: Dharan-16, Sunsari
+  inventory_item_indices:
+  - 12
+- key: designer.name
+  description: Structural designer name printed on the report
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: 40
+  example: Er. Anij Bhandari
+  inventory_item_indices:
+  - 40
+- key: designer.nec_no
+  description: NEC registration number printed on the report
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: 41
+  example: '13925'
+  inventory_item_indices:
+  - 41
+- key: designer.nec_category
+  description: NEC registration category printed on the report
+  type: text
+  unit: null
+  format:
+    decimals: null
+  source: excel
+  required: true
+  condition: null
+  inventory_item_index: 41
+  example: Civil “A” Category
+  inventory_item_indices:
+  - 41

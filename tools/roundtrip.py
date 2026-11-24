@@ -289,6 +289,10 @@ def build_sample_context(entries: list[dict[str, Any]], tpl: DocxTemplate,
     # but "1" in table T12 cell 9,2 — sample inconsistency)
     _set("seismic.importance_factor_i", "1.0")
     _set("seismic.importance_factor_i_table", "1")
+    # The source sample has no space after the ``Mr.`` prefix. Keep that
+    # punctuation in the sample-only context so the comparison is exact;
+    # production Excel input remains free to provide its own display form.
+    _set("client.owner_name", "Mr.Chatra Bahadur Ramtel")
     # ETABS modeling software
     _set("foundation.modeling_software", "ETABS 19.0.0")
 
