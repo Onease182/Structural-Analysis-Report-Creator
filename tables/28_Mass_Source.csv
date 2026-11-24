@@ -1,5 +1,5 @@
 Name,IsDefault,IncLateral,IncVertical,LumpMass,SourceSelf,SourceAdded,SourceLoads,MoveMass,LoadPattern,Multiplier,GUID
-MsSrc1,Yes,Yes,No,Yes,No,No,Yes,No,Dead,1.0,21346515-93a1-4e82-b8bb-f47b58c87e70
+MsSrc1,Yes,Yes,No,Yes,No,No,Yes,No,Dead,1.0,a3aeaa8c-d1e5-47c3-bd5b-1ec362ef396e
 MsSrc1,,,,,,,,,Live,0.3,
 MsSrc1,,,,,,,,,Stair Live,0.3,
 MsSrc1,,,,,,,,,Floor Finish,1.0,

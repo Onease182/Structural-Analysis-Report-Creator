@@ -1,4 +1,4 @@
 Tower,Story,Height,IsMaster,SimilarTo,IsSpliced,Color,GUID
-T1,Story3,3.175,Yes,None,No,Cyan,796e639d-b8eb-4e0e-b38d-a4778e391ef3
-T1,Story2,3.175,No,Story3,No,Red,2c01d517-7c88-4bcf-ae5f-4e080891a135
-T1,Story1,3.175,No,Story3,No,Magenta,3d6b366d-df1f-4ceb-a660-3078f033ad87
+T1,Story3,3.175,No,None,No,Yellow,6cd01056-d5dc-4f9e-959e-338124cd73b3
+T1,Story2,3.175,No,None,No,Blue,fae6b6e4-70e3-4db7-ad55-c2c1f4e8fe65
+T1,Story1,3.175,No,None,No,Cyan,a6d3d840-a39b-4568-9928-570460f0b8ab

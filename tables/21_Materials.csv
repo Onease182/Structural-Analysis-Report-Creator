@@ -1,8 +1,5 @@
 Material,Type,SymType,Grade,Color,GUID,Notes
-4000Psi,Concrete,Isotropic,Unknown,Cyan,57b8b9fe-2a03-44fc-89b8-1c7e78416702,
-A416Gr270,Tendon,Uniaxial,Unknown,Gray8Dark,88384f39-c26b-432e-8f78-375d322689f2,
-A615Gr60,Rebar,Uniaxial,Unknown,Magenta,c03c4cb3-8bda-42bc-9803-4827c9015add,
-A992Fy50,Steel,Isotropic,Unknown,Blue,62206881-99df-4eed-8193-1ccb65d596c4,
-HYSD500,Rebar,Uniaxial,Unknown,Yellow,4430f4b3-519d-4938-892f-99e573471fcf,
-M20,Concrete,Isotropic,Unknown,Green,e627622d-b15d-4cc6-b40b-9b599f13d0c0,
-M25,Concrete,Isotropic,Unknown,Red,ac2535ac-8b82-4af6-b84d-e87129e2fa7b,
+A416Gr270,Tendon,Uniaxial,Grade 270,Gray8Dark,87d1c64d-e914-4833-930d-0ab239ad2a26,
+A992Fy50,Steel,Isotropic,Grade 50,Magenta,15cb8477-35de-4935-85f4-5c62f2ea111f,
+HYSD500,Rebar,Uniaxial,Unknown,Cyan,ce79635b-78fc-44bc-a62e-861eddf4ad34,
+M20,Concrete,Isotropic,Unknown,Blue,69021f80-161c-4075-a238-e55d32aad23b,

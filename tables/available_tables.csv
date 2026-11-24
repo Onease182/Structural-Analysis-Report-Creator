@@ -8,6 +8,7 @@ Analysis Options - Cracking Analysis Options,Analysis Options - Cracking Analysi
 Analysis Options - Design and Response Recovery Options,Analysis Options - Design and Response Recovery Options
 Analysis Options - SAPFire Options,Analysis Options - SAPFire Options
 Area Assignments - Auto Edge Constraints,Area Assignments - Auto Edge Constraints
+Area Assignments - Diaphragms,Area Assignments - Diaphragms
 Area Assignments - Floor Auto Mesh Options,Area Assignments - Floor Auto Mesh Options
 Area Assignments - Insertion Point,Area Assignments - Insertion Point
 Area Assignments - Section Properties,Area Assignments - Section Properties
@@ -38,7 +39,6 @@ Concrete Joint Envelope - IS 456-2000,Concrete Joint Envelope - IS 456-2000
 Concrete Slab Design Overwrites - Finite Element Based,Concrete Slab Design Overwrites - Finite Element Based
 Concrete Slab Design Overwrites - Punching Shear - General,Concrete Slab Design Overwrites - Punching Shear - General
 Concrete Slab Design Preferences - IS 456-2000,Concrete Slab Design Preferences - IS 456-2000
-Deck Property Definitions,Deck Property Definitions
 Design Forces - Beams,Design Forces - Beams
 Design Forces - Columns,Design Forces - Columns
 Diaphragm Center Of Mass Displacements,Diaphragm Center Of Mass Displacements
@@ -67,13 +67,11 @@ Frame Loads Assignments - Open Structure Wind Parameters,Frame Loads Assignments
 Frame Section Property Definitions - Concrete Beam Reinforcing,Frame Section Property Definitions - Concrete Beam Reinforcing
 Frame Section Property Definitions - Concrete Column Reinforcing,Frame Section Property Definitions - Concrete Column Reinforcing
 Frame Section Property Definitions - Concrete Rectangular,Frame Section Property Definitions - Concrete Rectangular
-Frame Section Property Definitions - Steel I/Wide Flange,Frame Section Property Definitions - Steel I/Wide Flange
 Frame Section Property Definitions - Summary,Frame Section Property Definitions - Summary
 Functions - Time History - User Defined,Functions - Time History - User Defined
 Grid Definitions - General,Grid Definitions - General
 Grid Definitions - Grid Lines,Grid Definitions - Grid Lines
 Grid Definitions - Reference Points,Grid Definitions - Reference Points
-Group Assignments,Group Assignments
 Group Definitions,Group Definitions
 Joint Assignments - Diaphragms,Joint Assignments - Diaphragms
 Joint Assignments - Restraints,Joint Assignments - Restraints
@@ -140,4 +138,3 @@ Story Stiffness,Story Stiffness
 Tendon Section Properties,Tendon Section Properties
 Tower and Base Story Definitions,Tower and Base Story Definitions
 Tributary Area and LLRF,Tributary Area and LLRF
-Wall Property Definitions - Specified,Wall Property Definitions - Specified

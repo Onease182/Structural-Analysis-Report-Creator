@@ -1,6 +1,6 @@
 {
-  "extraction_timestamp": "2026-11-24T10:23:09.292082+05:45",
-  "model_filename": "E:\\Apps\\structural report\\sls_tables\\Bal Kumari Karki_SLS.$et",
+  "extraction_timestamp": "2026-11-24T16:46:07.244071+05:45",
+  "model_filename": "E:\\Apps\\structural report\\sls_tables\\Chatra Bahadur Ramel_SLS.$et",
   "etabs_version": "19.0.0",
   "present_units_enum": 6,
   "analysis_ran": true,
@@ -99,7 +99,7 @@
     "S04_Modal_Periods": {
       "status": "ok",
       "etabs_table_name": "Modal Periods and Frequencies",
-      "rows": 12,
+      "rows": 9,
       "columns": [
         "Case",
         "Mode",
@@ -113,7 +113,7 @@
     "S05_Modal_Mass_Ratios": {
       "status": "ok",
       "etabs_table_name": "Modal Participating Mass Ratios",
-      "rows": 12,
+      "rows": 9,
       "columns": [
         "Case",
         "Mode",
@@ -261,7 +261,7 @@
     "S13_Joint_Displacements": {
       "status": "ok",
       "etabs_table_name": "Joint Displacements",
-      "rows": 360,
+      "rows": 420,
       "columns": [
         "Story",
         "Label",

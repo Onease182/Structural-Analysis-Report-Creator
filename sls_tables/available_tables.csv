@@ -8,6 +8,7 @@ Analysis Options - Cracking Analysis Options
 Analysis Options - Design and Response Recovery Options
 Analysis Options - SAPFire Options
 Area Assignments - Auto Edge Constraints
+Area Assignments - Diaphragms
 Area Assignments - Floor Auto Mesh Options
 Area Assignments - Insertion Point
 Area Assignments - Section Properties
@@ -28,7 +29,6 @@ Concrete Frame Design Preferences - IS 456-2000
 Concrete Slab Design Overwrites - Finite Element Based
 Concrete Slab Design Overwrites - Punching Shear - General
 Concrete Slab Design Preferences - IS 456-2000
-Deck Property Definitions
 Diaphragm Center Of Mass Displacements
 Diaphragm Definitions
 Diaphragm Max Over Avg Drifts
@@ -55,13 +55,11 @@ Frame Loads Assignments - Open Structure Wind Parameters
 Frame Section Property Definitions - Concrete Beam Reinforcing
 Frame Section Property Definitions - Concrete Column Reinforcing
 Frame Section Property Definitions - Concrete Rectangular
-Frame Section Property Definitions - Steel I/Wide Flange
 Frame Section Property Definitions - Summary
 Functions - Time History - User Defined
 Grid Definitions - General
 Grid Definitions - Grid Lines
 Grid Definitions - Reference Points
-Group Assignments
 Group Definitions
 Joint Assignments - Diaphragms
 Joint Assignments - Restraints
@@ -128,4 +126,3 @@ Story Stiffness
 Tendon Section Properties
 Tower and Base Story Definitions
 Tributary Area and LLRF
-Wall Property Definitions - Specified

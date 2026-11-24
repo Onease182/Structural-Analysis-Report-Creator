@@ -1,7 +1,5 @@
 Name,Material,FromFile,t3,t2,RigidZone,NotSizeType,NotAutoFact,DesignType,AMod,A2Mod,A3Mod,JMod,I2Mod,I3Mod,MMod,WMod,Color,GUID,Notes
-Beam 250 x 430,M20,No,0.43,0.25,No,Auto,1,Beam,1.0,1,1,1.0,0.35,0.35,1,1,Gray8Dark,bcbfbbee-d871-4e83-90e2-7c2fa4b7fe39,
-Column 355 x 355,M20,No,0.355,0.355,No,Auto,1,Column,1.0,1,1,1.0,0.7,0.7,1,1,Green,67b72286-42fe-43a4-bc23-83cc7e46f4f9,
-ConcBm,M25,No,0.5,0.375,No,Auto,1,Beam,1.0,1,1,1.0,1.0,1.0,1,1,Gray8Dark,687fb469-a9e0-4687-aef0-b83fe35f6080,
-ConcCol,M25,No,0.375,0.375,No,Auto,1,Column,1.0,1,1,1.0,1.0,1.0,1,1,Yellow,7250562c-bea5-421c-9e9c-4f7ccb078579,
-Hidden Beam 125 x 125,M20,No,0.125,0.125,No,Auto,1,Beam,0.0001,0,0,0.0001,0.0001,0.0001,1,1,Cyan,959f8f97-3140-4674-acc3-542db5dc65bb,
-S. Beam 250X250,M20,No,0.25,0.25,No,Auto,1,Beam,1.0,0,0,1.0,0.35,0.35,1,1,Blue,2de1ce32-c33e-4764-9ff2-9dd5fd6d4165,
+Beam 250 x 430,M20,No,0.43,0.25,No,Auto,1,Beam,1,1,1,1,0.35,0.35,1,1,Blue,0dd03054-9fb9-4079-beed-97cb22978bfb,
+Column 355 x 355,M20,No,0.355,0.355,No,Auto,1,Column,1,1,1,1,0.7,0.7,1,1,Cyan,b9948adb-e746-4baf-8f63-f9e2670e6c8e,
+Hidden Beam 125 x 125,M20,No,0.125,0.125,No,Auto,1,Beam,1,1,1,1,0.35,0.35,1,1,Red,b6599371-1bf6-46a4-a867-6ee0e09612d1,
+S. Beam 250X250,M20,No,0.25,0.25,No,Auto,1,Beam,1,1,1,1,0.35,0.35,1,1,Green,75ec5c63-d402-4b1b-aeca-7ffd79e3f89e,
