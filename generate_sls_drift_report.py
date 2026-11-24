@@ -157,6 +157,9 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--fck", type=float, default=20, help="concrete cylinder strength (MPa) for the confinement check")
     p.add_argument("--fy-tie", type=float, default=500, help="tie steel yield strength (MPa)")
     p.add_argument("--no-beams", action="store_true", help="skip the beam reinforcement details image")
+    p.add_argument("--no-plans", action="store_true", help="skip the beam and column layout plan images")
+    p.add_argument("--beam-plan-output", type=Path, default=None, help="default: Beam_Layout_Plan.jpg beside --output")
+    p.add_argument("--column-plan-output", type=Path, default=None, help="default: Column_Layout_Plan.jpg beside --output")
     p.add_argument("--beams-output", type=Path, default=None, help="default: Beam_Reinforcement_Details.jpg beside --output")
     p.add_argument("--beam-ladder", default="3-12,2-16+1-12,3-16,2-20+1-16,3-20,2-20+2-16,4-20,5-20,6-20,3-25,4-25,5-25",
                    help="allowed beam bar combinations (n-dia[+n-dia]); the smallest one that covers the required As is used "
@@ -1842,6 +1845,202 @@ def beam_reinforcement_panel(cfg, uls_dir: Path, stories: pd.DataFrame, out: Pat
     return content
 
 
+# ----------------------------------------------------------------------------
+# Panels 6 and 7: beam layout plan and column layout plan (one plan per floor)
+# ----------------------------------------------------------------------------
+BEAM_TYPE_COLORS = ["#2F5D8C", "#C0504D", "#4F9D5D", "#E39B2D", "#7B5EA7", "#2BA3A3", "#8C6D3F", "#D2527F"]
+
+
+def _plan_inputs(uls_dir: Path):
+    """Joint XY, frame members and (story, label) -> frames lookups for the plan drawings."""
+    jn, fm, fa = read_csv(uls_dir, "14_Joint_Coordinates"), read_csv(uls_dir, "29_Frame_Members"), \
+        read_csv(uls_dir, "17_Frame_Assignments")
+    if jn is None or fm is None or fa is None:
+        return None, "need 14_Joint_Coordinates, 29_Frame_Members and 17_Frame_Assignments (re-run etabs_extract_tables.py)"
+    jc, jx, jy = col(jn, "Joint"), col(jn, "GlobalX"), col(jn, "GlobalY")
+    fc, ic, jjc, fs = col(fm, "Frame"), col(fm, "JointI"), col(fm, "JointJ"), col(fm, "Story")
+    ls, ll, lu = col(fa, "Story"), col(fa, "Label"), col(fa, "UniqueName")
+    if None in (jc, jx, jy, fc, ic, jjc, fs, ls, ll, lu):
+        return None, "unexpected column names in the joint / frame tables"
+    xy = {sid(j): (float(x), float(y)) for j, x, y in zip(jn[jc], jn[jx], jn[jy])}
+    ends = {(sid(st), sid(f)): (sid(a), sid(b)) for f, a, b, st in zip(fm[fc], fm[ic], fm[jjc], fm[fs])}
+    by_label: dict[tuple[str, str], list[str]] = {}
+    for st, lab, u in zip(fa[ls], fa[ll], fa[lu]):
+        by_label.setdefault((sid(st), sid(lab)), []).append(sid(u))
+    return {"xy": xy, "ends": ends, "by_label": by_label}, ""
+
+
+def _draw_grid(ax, xs: list, ys: list, x0: float, y0: float, x1: float, y1: float, m: float = 0.55) -> None:
+    for o, name in xs:
+        ax.plot([o, o], [y0 - m, y1 + m], color="#9AA7B8", lw=0.5, ls=(0, (6, 3)), zorder=1)
+        ax.text(o, y0 - m - 0.28, name, ha="center", va="center", fontsize=6.5, color=D_INK, zorder=6,
+                bbox=dict(boxstyle="circle,pad=0.25", fc="white", ec=D_INK, lw=0.6))
+    for o, name in ys:
+        ax.plot([x0 - m, x1 + m], [o, o], color="#9AA7B8", lw=0.5, ls=(0, (6, 3)), zorder=1)
+        ax.text(x0 - m - 0.28, o, name, ha="center", va="center", fontsize=6.5, color=D_INK, zorder=6,
+                bbox=dict(boxstyle="circle,pad=0.25", fc="white", ec=D_INK, lw=0.6))
+
+
+def _with_grid(bounds: tuple, xs: list, ys: list) -> tuple:
+    """Widen (x0, y0, x1, y1) so every grid line (and its bubble) lies inside the plan."""
+    x0, y0, x1, y1 = bounds
+    if xs:
+        x0, x1 = min(x0, min(o for o, _ in xs)), max(x1, max(o for o, _ in xs))
+    if ys:
+        y0, y1 = min(y0, min(o for o, _ in ys)), max(y1, max(o for o, _ in ys))
+    return x0, y0, x1, y1
+
+
+def _plan_canvas(title: str, sub: str, floors: list[str], bounds: tuple, pad: float = 1.6):
+    """Navy title band + one axes per floor. Returns (fig, {floor: ax})."""
+    import math as _m
+    x0, y0, x1, y1 = bounds
+    w, h = (x1 - x0) + 2 * pad, (y1 - y0) + 2 * pad
+    n = len(floors)
+    ncols = min(n, 3)
+    nrows = _m.ceil(n / ncols)
+    axw = (PANEL_W - 0.3) / ncols
+    axh = min(max(axw * h / w, 2.2), 7.5)
+    band, leg = 0.8, 0.75
+    H = band + nrows * (axh + leg + 0.25) + 0.1
+    fig = plt.figure(figsize=(PANEL_W, H), dpi=DPI, facecolor="white")
+    bx = fig.add_axes([0, 1 - band / H, 1, band / H]); bx.set_facecolor(D_BAND); bx.set_xticks([]); bx.set_yticks([])
+    for sp in bx.spines.values():
+        sp.set_visible(False)
+    bx.text(0.02, 0.62, title, color="white", fontsize=15, fontweight="bold", va="center", transform=bx.transAxes, family=_font())
+    bx.text(0.02, 0.2, sub, color=D_BAND_SUB, fontsize=8, va="center", transform=bx.transAxes, family=_font())
+    axes = {}
+    for i, fl in enumerate(floors):
+        r, c = divmod(i, ncols)
+        left = 0.15 / PANEL_W + c * axw / PANEL_W
+        bottom = 1 - (band + (r + 1) * (axh + leg + 0.25) - leg) / H
+        ax = fig.add_axes([left, bottom, axw / PANEL_W - 0.1 / PANEL_W, axh / H])
+        ax.set_xlim(x0 - pad, x1 + pad); ax.set_ylim(y0 - pad, y1 + pad); ax.set_aspect("equal", adjustable="box")
+        ax.axis("off")
+        ax.set_title(fl.upper(), fontsize=10, fontweight="bold", color=D_INK, family=_font(), pad=4,
+                     loc="left", bbox=dict(fc=D_HEAD, ec="none", pad=3))
+        axes[fl] = ax
+    return fig, axes
+
+
+def beam_layout_plan(cfg, uls_dir: Path, content: dict, stories: pd.DataFrame, out: Path, checks: list):
+    """Plan of every floor with each beam drawn and labelled with its type (B1, B2, ...) from the beam table."""
+    geo, msg = _plan_inputs(uls_dir)
+    if geo is None:
+        checks.append(("WARN", f"Beam layout plan skipped: {msg}."))
+        print(f"[SKIP] Beam layout plan: {msg}")
+        return None
+    inv = {v: k for k, v in (kv.split("=", 1) for kv in cfg.beam_names.split(",") if "=" in kv)}
+    rows = pd.DataFrame(content["csv"])
+    floors = list(content["floors"])
+    segs: dict[str, list] = {f: [] for f in floors}
+    types: dict[str, dict] = {f: {} for f in floors}
+    xy, miss = geo["xy"], 0
+    for r in rows.itertuples():
+        for u in geo["by_label"].get((str(r.Story), inv.get(str(r.Label), str(r.Label))), []):
+            e = geo["ends"].get((str(r.Story), u))
+            if e and e[0] in xy and e[1] in xy:
+                segs[str(r.Story)].append((xy[e[0]], xy[e[1]], str(r.Type), str(r.Label), bool(r.is_cantilever)))
+                types[str(r.Story)].setdefault(str(r.Type), f"{r.b_mm:g} x {r.D_mm:g}")
+            else:
+                miss += 1
+    pts = [pt for f in floors for a, b, *_ in segs[f] for pt in (a, b)]
+    loc = read_csv(uls_dir, "34_Column_Locations")
+    colpts = {}
+    if loc is not None and col(loc, "Story") and col(loc, "X") and col(loc, "Y"):
+        for st, x, y in zip(loc[col(loc, "Story")].map(sid), pd.to_numeric(loc[col(loc, "X")], errors="coerce"),
+                            pd.to_numeric(loc[col(loc, "Y")], errors="coerce")):
+            if pd.notna(x) and pd.notna(y):
+                colpts.setdefault(st, []).append((float(x), float(y)))
+        pts += [p for v in colpts.values() for p in v]
+    if not pts:
+        checks.append(("WARN", "Beam layout plan skipped: no beam geometry found for the beams in the table."))
+        print("[SKIP] Beam layout plan: no beam geometry matched the beam table")
+        return None
+    bounds = (min(p[0] for p in pts), min(p[1] for p in pts), max(p[0] for p in pts), max(p[1] for p in pts))
+    xs, ys = grid_lines(uls_dir)
+    bounds = _with_grid(bounds, xs, ys)
+    fig, axes = _plan_canvas("BEAM LAYOUT PLAN", "Beam types as in the Beam Reinforcement Details table (size b x D in mm)",
+                             floors, bounds)
+    from matplotlib.lines import Line2D
+    for fl, ax in axes.items():
+        _draw_grid(ax, xs, ys, *bounds)
+        for (a, b, t, lab, cant) in segs[fl]:
+            k = int(re.sub(r"\D", "", t) or 1) - 1
+            colr = BEAM_TYPE_COLORS[k % len(BEAM_TYPE_COLORS)]
+            ax.plot([a[0], b[0]], [a[1], b[1]], color=colr, lw=3.2, solid_capstyle="butt", zorder=3,
+                    ls=(0, (4, 1.2)) if cant else "-")
+            mx, my = (a[0] + b[0]) / 2, (a[1] + b[1]) / 2
+            ax.text(mx, my, t, ha="center", va="center", fontsize=6.3, fontweight="bold", color=colr, zorder=5,
+                    bbox=dict(boxstyle="round,pad=0.12", fc="white", ec="none", alpha=0.92))
+        half = 0.355 / 2
+        for (x, y) in colpts.get(fl, []):
+            ax.add_patch(plt.Rectangle((x - half, y - half), 2 * half, 2 * half, fc=D_INK, ec=D_INK, zorder=4))
+        hs = [Line2D([0], [0], color=BEAM_TYPE_COLORS[(int(re.sub(r"\D", "", t) or 1) - 1) % len(BEAM_TYPE_COLORS)], lw=3,
+                     label=f"{t}  {sz}") for t, sz in sorted(types[fl].items(), key=lambda kv: nat_key(kv[0]))]
+        if hs:
+            ax.legend(handles=hs, loc="upper center", bbox_to_anchor=(0.5, -0.01), ncol=2, fontsize=7, frameon=False,
+                      handlelength=1.6, columnspacing=1.4)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out, dpi=DPI, facecolor="white", pil_kwargs={"quality": 92})
+    plt.close(fig)
+    n = sum(len(v) for v in segs.values())
+    checks.append(("PASS" if not miss else "WARN", f"Beam layout plan drawn for {len(floors)} floors, {n} beams" +
+                   (f"; {miss} beams had no geometry." if miss else ".")))
+    return {"floors": floors, "beams_drawn": n, "beams_without_geometry": miss}
+
+
+def column_layout_plan(cfg, uls_dir: Path, content: dict, stories: pd.DataFrame, out: Path, checks: list):
+    """Plan of every floor with each column at its grid position, labelled with its designation and provided bars."""
+    loc = read_csv(uls_dir, "34_Column_Locations")
+    if loc is None or not (col(loc, "Label") and col(loc, "Story") and col(loc, "X") and col(loc, "Y")):
+        checks.append(("WARN", "Column layout plan skipped: 34_Column_Locations.csv missing (re-run etabs_extract_tables.py)."))
+        print("[SKIP] Column layout plan: 34_Column_Locations.csv missing")
+        return None
+    rename = {}
+    if not cfg.no_grid_names:
+        rename, _ = grid_designations(uls_dir, pd.DataFrame(), cfg.grid_tol)
+    rename.update(dict(kv.split("=", 1) for kv in cfg.col_names.split(",") if "=" in kv))
+    info = {(str(r["Label"]), str(r["Story"])): r for r in content["csv"]}
+    rect = read_csv(uls_dir, "22b_Frame_Sect_Rect")
+    cols = []
+    for lab, st, x, y in zip(loc[col(loc, "Label")].map(sid), loc[col(loc, "Story")].map(sid),
+                             pd.to_numeric(loc[col(loc, "X")], errors="coerce"), pd.to_numeric(loc[col(loc, "Y")], errors="coerce")):
+        if pd.notna(x) and pd.notna(y):
+            d = rename.get(lab, lab)
+            cols.append({"story": st, "x": float(x), "y": float(y), "name": d, "row": info.get((d, st))})
+    present = {c["story"] for c in cols}
+    top_down = [s for s in stories["Story"] if s in present] + [s for s in sorted(present) if s not in set(stories["Story"])]
+    floors = top_down[::-1]
+    if not floors:
+        return None
+    bounds = (min(c["x"] for c in cols), min(c["y"] for c in cols), max(c["x"] for c in cols), max(c["y"] for c in cols))
+    xs, ys = grid_lines(uls_dir)
+    bounds = _with_grid(bounds, xs, ys)
+    fig, axes = _plan_canvas("COLUMN LAYOUT PLAN", "Column designation (grid ID), section and provided longitudinal bars",
+                             floors, bounds)
+    for fl, ax in axes.items():
+        _draw_grid(ax, xs, ys, *bounds)
+        for c in [c for c in cols if c["story"] == fl]:
+            dims = column_dims(c["row"]["Section"], rect) if c["row"] else None
+            bw, bd = (dims[0] / 1000, dims[1] / 1000) if dims else (0.355, 0.355)
+            ax.add_patch(plt.Rectangle((c["x"] - bw / 2, c["y"] - bd / 2), bw, bd, fc=D_INK, ec=D_INK, zorder=4))
+            txt = c["name"] + (f"\n{c['row']['Provided']}" if c["row"] and c["row"].get("Provided") else "")
+            ax.text(c["x"] + 0.28, c["y"] + 0.26, txt, ha="left", va="bottom", fontsize=6.3, color=D_INK, zorder=6,
+                    fontweight="bold", linespacing=1.05,
+                    bbox=dict(boxstyle="round,pad=0.12", fc="white", ec="none", alpha=0.92))
+        secs = sorted({c["row"]["Section"] for c in cols if c["story"] == fl and c["row"]})
+        if secs:
+            ax.text(0.5, -0.02, "   |   ".join(secs), transform=ax.transAxes, ha="center", va="top", fontsize=7, color=D_MUTED)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out, dpi=DPI, facecolor="white", pil_kwargs={"quality": 92})
+    plt.close(fig)
+    unmatched = sum(1 for c in cols if c["row"] is None)
+    checks.append(("PASS" if not unmatched else "WARN", f"Column layout plan drawn for {len(floors)} floors, {len(cols)} columns" +
+                   (f"; {unmatched} had no matching row in the column table." if unmatched else ".")))
+    return {"floors": floors, "columns_drawn": len(cols), "unmatched": unmatched}
+
+
 def project_info(cfg, ctx: dict, manifest: dict) -> dict:
     def clean(v):
         s = "" if v is None else str(v).strip()
@@ -2030,6 +2229,10 @@ def main() -> int:
     colres = None if cfg.no_columns else column_reinforcement_panel(cfg, uls_dir, stories, col_path, checks)
     beam_path = (cfg.beams_output or out.with_name("Beam_Reinforcement_Details.jpg")).with_suffix(".jpg")
     beamres = None if cfg.no_beams else beam_reinforcement_panel(cfg, uls_dir, stories, beam_path, checks)
+    bplan_path = (cfg.beam_plan_output or out.with_name("Beam_Layout_Plan.jpg")).with_suffix(".jpg")
+    cplan_path = (cfg.column_plan_output or out.with_name("Column_Layout_Plan.jpg")).with_suffix(".jpg")
+    bplan = beam_layout_plan(cfg, uls_dir, beamres, stories, bplan_path, checks) if beamres and not cfg.no_plans else None
+    cplan = column_layout_plan(cfg, uls_dir, colres, stories, cplan_path, checks) if colres and not cfg.no_plans else None
 
     # ---- merged multi-page file (one panel per page) ------------------------
     summary_base = (cfg.summary_output or out.with_name("SLS_ULS_Check_Summary")).with_suffix("")
@@ -2065,6 +2268,10 @@ def main() -> int:
         print(f"Saved: {col_path.resolve()}")
     if beamres:
         print(f"Saved: {beam_path.resolve()}")
+    if bplan:
+        print(f"Saved: {bplan_path.resolve()}")
+    if cplan:
+        print(f"Saved: {cplan_path.resolve()}")
     for f in merged:
         print(f"Saved: {f.resolve()}")
     if torsion:

@@ -58,6 +58,11 @@ EXPORT_E2K = True                    # also write the model as an .e2k text file
 # eFileTypeIO values to try, in order, until a valid .e2k comes out. The enum differs
 # between ETABS releases, so every result is checked by reading the file header.
 E2K_FILETYPE_CANDIDATES = [3, 2, 1]
+# Last-resort strategy: File.Save(<path>.e2k). In some ETABS builds this writes the text model,
+# but it is a "Save As": ETABS may switch its current file to the .e2k. The code detects that
+# and re-saves the model under its original name, which overwrites your .EDB with the open
+# model. Off by default - turn on only if you accept that.
+E2K_TRY_SAVE_AS = False
 USE_API_GEOMETRY_FALLBACK = True     # read joints/frames/areas through the ETABS API if the
                                      # connectivity tables are missing or unreadable
 
@@ -279,42 +284,94 @@ def find_key(name_to_key, candidates):
 
 
 
+def _looks_like_e2k(path):
+    """True if the file exists, is non-empty and starts like an ETABS .e2k text model."""
+    if not (os.path.exists(path) and os.path.getsize(path) > 0):
+        return False
+    try:
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            head = f.read(20000).upper()
+    except OSError:
+        return False
+    return "$ PROGRAM INFORMATION" in head or "$ CONTROLS" in head or "$ STORIES" in head
+
+
+def _file_api_methods(model):
+    """Public member names of model.File, recorded in the manifest so a failed export shows
+    which calls this ETABS version really offers."""
+    try:
+        return sorted(n for n in dir(model.File) if not n.startswith("_"))
+    except Exception:
+        return []
+
+
 def export_e2k(model, model_filename):
     """Export the open model to <OUT_DIR>/<model>.e2k and verify it is really an .e2k.
 
-    Returns a manifest dict. The file is checked for the e2k section markers because a
-    wrong FileType enum can silently write a different format under the .e2k name.
+    Strategies, in order (each result is checked by reading the file header, because a wrong
+    call can silently write another format under the .e2k name):
+      1. File.ExportFile(path, FileType) for every type in E2K_FILETYPE_CANDIDATES
+      2. any other File method whose name contains "export" or "e2k", called with (path,)
+      3. File.Save(path) - only if E2K_TRY_SAVE_AS is True (see its comment)
+    Returns a manifest dict; on failure it lists the File methods ETABS exposes.
     """
     stem = os.path.splitext(os.path.basename(str(model_filename or "model")))[0] or "model"
     path = os.path.join(OUT_DIR, f"{stem}.e2k")
+    methods = _file_api_methods(model)
     attempts = []
-    for ftype in E2K_FILETYPE_CANDIDATES:
+
+    def done(strategy):
+        size = os.path.getsize(path)
+        print(f"[E2K]     {path} ({size / 1024:.0f} KB, {strategy})")
+        return {"status": "ok", "path": os.path.basename(path), "strategy": strategy,
+                "size_bytes": size, "attempts": attempts}
+
+    def try_call(label, fn):
         if os.path.exists(path):
             os.remove(path)
         try:
-            ret = model.File.ExportFile(path, ftype)
+            ret = fn()
             ret = ret[-1] if isinstance(ret, (tuple, list)) else ret
         except Exception as exc:
-            attempts.append({"file_type": ftype, "result": f"exception: {exc}"})
-            continue
-        ok = False
-        if ret == 0 and os.path.exists(path) and os.path.getsize(path) > 0:
-            try:
-                with open(path, "r", encoding="utf-8", errors="ignore") as f:
-                    head = f.read(20000).upper()
-                ok = "$ PROGRAM INFORMATION" in head or "$ CONTROLS" in head or "$ STORIES" in head
-            except OSError:
-                ok = False
-        attempts.append({"file_type": ftype, "return_code": ret, "valid_e2k": ok})
-        if ok:
-            print(f"[E2K]     {path} ({os.path.getsize(path) / 1024:.0f} KB, FileType={ftype})")
-            return {"status": "ok", "path": os.path.basename(path), "file_type_used": ftype,
-                    "size_bytes": os.path.getsize(path), "attempts": attempts}
-        if os.path.exists(path):
+            attempts.append({"call": label, "result": f"exception: {exc}"})
+            return False
+        ok = ret in (0, None) and _looks_like_e2k(path)
+        attempts.append({"call": label, "return_code": ret, "valid_e2k": ok})
+        if not ok and os.path.exists(path):
             os.remove(path)               # do not leave a wrong-format file behind
-    print("[E2K]     export failed - use File > Export > ETABS .e2k Text File manually. "
-          f"Attempts: {attempts}")
-    return {"status": "failed", "attempts": attempts}
+        return ok
+
+    # 1. documented call
+    for ftype in E2K_FILETYPE_CANDIDATES:
+        if try_call(f"File.ExportFile(path, {ftype})", lambda t=ftype: model.File.ExportFile(path, t)):
+            return done(f"ExportFile type {ftype}")
+
+    # 2. any other export-like method this ETABS build exposes
+    for name in methods:
+        low = name.lower()
+        if name == "ExportFile" or not ("export" in low or "e2k" in low):
+            continue
+        if try_call(f"File.{name}(path)", lambda n=name: getattr(model.File, n)(path)):
+            return done(f"File.{name}")
+
+    # 3. Save-as fallback (opt-in)
+    if E2K_TRY_SAVE_AS and "Save" in methods:
+        before = str(model.GetModelFilename() or "")
+        ok = try_call("File.Save(path.e2k)", lambda: model.File.Save(path))
+        after = str(model.GetModelFilename() or "")
+        if after and before and os.path.normcase(after) != os.path.normcase(before):
+            try:
+                model.File.Save(before)   # point ETABS back at the original model file
+                attempts.append({"call": "restore File.Save(original)", "result": "done"})
+            except Exception as exc:
+                attempts.append({"call": "restore File.Save(original)", "result": f"exception: {exc}"})
+        if ok:
+            return done("File.Save as .e2k")
+
+    print("[E2K]     export failed - use File > Export > ETABS .e2k Text File manually "
+          f"and save it into {OUT_DIR}.")
+    print(f"[E2K]     File methods exposed by this ETABS: {methods or 'not readable'}")
+    return {"status": "failed", "file_methods": methods, "attempts": attempts}
 
 # ----------------------------------------------------------------------------
 # Geometry package for the 3D figure (generate_etabs_figures.py)

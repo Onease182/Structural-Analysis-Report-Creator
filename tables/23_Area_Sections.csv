@@ -1,2 +1,5 @@
-Name,Type,AnalType,Material,TotalThick
-Slab 125,Slab,Shell-Thin,M20,0.125
+Name,Type,AnalType,Material,TotalThick,DeckMat,DeckDepth
+Deck1,Deck,Membrane,4000Psi,0.1625,A992Fy50,0.075
+Slab 125,Slab,Shell-Thin,M20,0.125,,
+Stair Slab,Slab,Shell-Thin,M20,0.175,,
+Wall1,Wall,Shell-Thin,4000Psi,0.25,,

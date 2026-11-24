@@ -1,10 +1,10 @@
 {
-  "extraction_timestamp": "2026-11-23T20:22:12.048923+05:45",
-  "model_filename": "L:\\Other computers\\My Computer\\Swarup Engineering Consultancy\\Analysis\\Dheeraj Vai\\Chatra Bdr Ramtel_Damak\\Chatra Bahadur Ramel_ULS.EDB",
+  "extraction_timestamp": "2026-11-24T10:22:07.348065+05:45",
+  "model_filename": "L:\\Other computers\\My Computer\\Swarup Engineering Consultancy\\Analysis\\Dheeraj Vai\\Bal Kumari\\Bal Kumari Karki.EDB",
   "present_units_enum": 6,
   "analysis_ran": false,
-  "concrete_design_ran": false,
-  "available_table_count": 139,
+  "concrete_design_ran": true,
+  "available_table_count": 142,
   "diagnostic_files": [
     "available_tables.csv",
     "available_tables.txt"
@@ -49,17 +49,39 @@
   },
   "e2k_export": {
     "status": "failed",
+    "file_methods": [
+      "AddRef",
+      "GetFilePath",
+      "GetIDsOfNames",
+      "GetTypeInfo",
+      "GetTypeInfoCount",
+      "Invoke",
+      "New2DFrame",
+      "New3DFrame",
+      "NewBeam",
+      "NewBlank",
+      "NewGridOnly",
+      "NewSolidBlock",
+      "NewSteelDeck",
+      "NewWall",
+      "OpenFile",
+      "QueryInterface",
+      "Release",
+      "Save",
+      "from_param",
+      "value"
+    ],
     "attempts": [
       {
-        "file_type": 3,
+        "call": "File.ExportFile(path, 3)",
         "result": "exception: ExportFile"
       },
       {
-        "file_type": 2,
+        "call": "File.ExportFile(path, 2)",
         "result": "exception: ExportFile"
       },
       {
-        "file_type": 1,
+        "call": "File.ExportFile(path, 1)",
         "result": "exception: ExportFile"
       }
     ]
@@ -69,16 +91,16 @@
     "sources": {
       "joints": "api",
       "frames": "table",
-      "areas": "table (+5 polygons completed from API)"
+      "areas": "table (+1 polygons completed from API)"
     },
-    "joints": 70,
-    "frames": 70,
-    "areas": 19,
-    "sized_frames": 70
+    "joints": 60,
+    "frames": 69,
+    "areas": 15,
+    "sized_frames": 69
   },
   "column_locations": {
     "status": "ok",
-    "columns": 20,
+    "columns": 25,
     "unlabeled": 0
   },
   "tables": {
@@ -89,7 +111,7 @@
       ],
       "etabs_table_name": "Modal Periods and Frequencies",
       "table_key": "Modal Periods And Frequencies",
-      "rows": 9,
+      "rows": 12,
       "columns": [
         "Case",
         "Mode",
@@ -107,7 +129,7 @@
       ],
       "etabs_table_name": "Modal Participating Mass Ratios",
       "table_key": "Modal Participating Mass Ratios",
-      "rows": 9,
+      "rows": 12,
       "columns": [
         "Case",
         "Mode",
@@ -134,7 +156,7 @@
       ],
       "etabs_table_name": "Base Reactions",
       "table_key": "Base Reactions",
-      "rows": 9,
+      "rows": 8,
       "columns": [
         "OutputCase",
         "CaseType",
@@ -171,8 +193,7 @@
           "1.2DL+0.3LL-EQX",
           "1.2DL+0.3LL-EQY",
           "1.2DL+1.5LL",
-          "1.5DL+1.5LL",
-          "DL + LL",
+          "1.5 DL + 1.5 LL",
           "Dead",
           "ENV-ULS",
           "EQX-ULS",
@@ -222,8 +243,7 @@
           "1.2DL+0.3LL-EQX",
           "1.2DL+0.3LL-EQY",
           "1.2DL+1.5LL",
-          "1.5DL+1.5LL",
-          "DL + LL",
+          "1.5 DL + 1.5 LL",
           "Dead",
           "ENV-ULS",
           "EQX-ULS",
@@ -274,8 +294,7 @@
           "1.2DL+0.3LL-EQX",
           "1.2DL+0.3LL-EQY",
           "1.2DL+1.5LL",
-          "1.5DL+1.5LL",
-          "DL + LL",
+          "1.5 DL + 1.5 LL",
           "Dead",
           "ENV-ULS",
           "EQX-ULS",
@@ -294,7 +313,7 @@
       ],
       "etabs_table_name": "Concrete Column PMM Envelope - IS 456-2000",
       "table_key": "Concrete Column PMM Envelope - IS 456-2000",
-      "rows": 40,
+      "rows": 50,
       "columns": [
         "Story",
         "Label",
@@ -317,7 +336,7 @@
       ],
       "etabs_table_name": "Concrete Beam Flexure Envelope - IS 456-2000",
       "table_key": "Concrete Beam Flexure Envelope - IS 456-2000",
-      "rows": 150,
+      "rows": 132,
       "columns": [
         "Story",
         "Label",
@@ -340,7 +359,7 @@
       ],
       "etabs_table_name": "Concrete Column PMM Envelope - IS 456-2000",
       "table_key": "Concrete Column PMM Envelope - IS 456-2000",
-      "rows": 40,
+      "rows": 50,
       "columns": [
         "Story",
         "Label",
@@ -362,7 +381,7 @@
       ],
       "etabs_table_name": "Concrete Column Shear Envelope - IS 456-2000",
       "table_key": "Concrete Column Shear Envelope - IS 456-2000",
-      "rows": 40,
+      "rows": 50,
       "columns": [
         "Story",
         "Label",
@@ -385,7 +404,7 @@
       ],
       "etabs_table_name": "Concrete Beam Flexure Envelope - IS 456-2000",
       "table_key": "Concrete Beam Flexure Envelope - IS 456-2000",
-      "rows": 150,
+      "rows": 132,
       "columns": [
         "Story",
         "Label",
@@ -408,7 +427,7 @@
       ],
       "etabs_table_name": "Concrete Beam Shear Envelope - IS 456-2000",
       "table_key": "Concrete Beam Shear Envelope - IS 456-2000",
-      "rows": 150,
+      "rows": 132,
       "columns": [
         "Story",
         "Label",
@@ -481,7 +500,7 @@
       ],
       "etabs_table_name": "Joint Reactions",
       "table_key": "Joint Reactions",
-      "rows": 96,
+      "rows": 121,
       "columns": [
         "Story",
         "Label",
@@ -519,8 +538,7 @@
           "1.2DL+0.3LL-EQX",
           "1.2DL+0.3LL-EQY",
           "1.2DL+1.5LL",
-          "1.5DL+1.5LL",
-          "DL + LL",
+          "1.5 DL + 1.5 LL",
           "Dead",
           "ENV-ULS",
           "EQX-ULS",
@@ -578,7 +596,7 @@
       ],
       "etabs_table_name": "Objects and Elements - Joints",
       "table_key": "Objects and Elements - Joints",
-      "rows": 332,
+      "rows": 255,
       "columns": [
         "Story",
         "ElmName",
@@ -598,7 +616,7 @@
       ],
       "etabs_table_name": "Beam Object Connectivity",
       "table_key": "Beam Object Connectivity",
-      "rows": 50,
+      "rows": 44,
       "columns": [
         "UniqueName",
         "Story",
@@ -617,7 +635,7 @@
       ],
       "etabs_table_name": "Column Object Connectivity",
       "table_key": "Column Object Connectivity",
-      "rows": 20,
+      "rows": 25,
       "columns": [
         "UniqueName",
         "Story",
@@ -642,7 +660,7 @@
       ],
       "etabs_table_name": "Objects and Elements - Areas",
       "table_key": "Objects and Elements - Areas",
-      "rows": 234,
+      "rows": 173,
       "columns": [
         "Story",
         "ElmName",
@@ -663,7 +681,7 @@
       ],
       "etabs_table_name": "Floor Object Connectivity",
       "table_key": "Floor Object Connectivity",
-      "rows": 20,
+      "rows": 16,
       "columns": [
         "UniqueName",
         "Story",
@@ -694,7 +712,7 @@
       ],
       "etabs_table_name": "Frame Assignments - Summary",
       "table_key": "Frame Assignments - Summary",
-      "rows": 70,
+      "rows": 69,
       "columns": [
         "Story",
         "Label",
@@ -717,7 +735,7 @@
       ],
       "etabs_table_name": "Area Assignments - Section Properties",
       "table_key": "Area Assignments - Section Properties",
-      "rows": 17,
+      "rows": 15,
       "columns": [
         "Story",
         "Label",
@@ -735,7 +753,7 @@
       ],
       "etabs_table_name": "Joint Assignments - Diaphragms",
       "table_key": "Joint Assignments - Diaphragms",
-      "rows": 70,
+      "rows": 60,
       "columns": [
         "Story",
         "Label",
@@ -752,7 +770,7 @@
       ],
       "etabs_table_name": "Joint Assignments - Restraints",
       "table_key": "Joint Assignments - Restraints",
-      "rows": 8,
+      "rows": 11,
       "columns": [
         "Story",
         "Label",
@@ -775,7 +793,7 @@
       ],
       "etabs_table_name": "Material Properties - General",
       "table_key": "Material Properties - General",
-      "rows": 4,
+      "rows": 7,
       "columns": [
         "Material",
         "Type",
@@ -797,7 +815,7 @@
       ],
       "etabs_table_name": "Frame Section Property Definitions - Summary",
       "table_key": "Frame Section Property Definitions - Summary",
-      "rows": 4,
+      "rows": 8,
       "columns": [
         "Name",
         "Material",
@@ -817,6 +835,7 @@
         "Z22",
         "R33",
         "R22",
+        "Cw",
         "CGOffset3",
         "CGOffset2",
         "PNAOffset3",
@@ -839,7 +858,7 @@
       ],
       "etabs_table_name": "Frame Section Property Definitions - Concrete Rectangular",
       "table_key": "Frame Section Property Definitions - Concrete Rectangular",
-      "rows": 4,
+      "rows": 6,
       "columns": [
         "Name",
         "Material",
@@ -880,13 +899,15 @@
       ],
       "etabs_table_name": "Area Section Property Definitions - Summary",
       "table_key": "Area Section Property Definitions - Summary",
-      "rows": 1,
+      "rows": 4,
       "columns": [
         "Name",
         "Type",
         "AnalType",
         "Material",
-        "TotalThick"
+        "TotalThick",
+        "DeckMat",
+        "DeckDepth"
       ],
       "filter": null
     },
@@ -940,7 +961,7 @@
       ],
       "etabs_table_name": "Load Combination Definitions",
       "table_key": "Load Combination Definitions",
-      "rows": 37,
+      "rows": 34,
       "columns": [
         "Name",
         "Type",
@@ -1025,7 +1046,7 @@
       ],
       "etabs_table_name": "Joint Displacements",
       "table_key": "Joint Displacements",
-      "rows": 420,
+      "rows": 360,
       "columns": [
         "Story",
         "Label",

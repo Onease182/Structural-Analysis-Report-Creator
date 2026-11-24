@@ -1,44 +1,27 @@
 Story,Label,UniqueName,Diaphragm
-Story3,3,25,D3
-Story3,4,26,D3
-Story3,7,27,D3
-Story3,8,28,D3
-Story3,9,29,From Shell Object
-Story3,10,30,D3
-Story3,21,31,D3
-Story3,27,32,D3
-Story3,29,33,D3
-Story3,30,34,D3
-Story3,31,35,D3
-Story3,33,36,D3
-Story3,22,68,D3
+Story3,3,38,D3
+Story3,4,39,D3
+Story3,5,40,D3
+Story3,6,41,D3
+Story3,28,42,D3
+Story2,2,13,D2
+Story2,3,14,D2
+Story2,4,27,D2
+Story2,5,28,D2
+Story2,6,29,D2
+Story2,7,30,D2
+Story2,8,31,D2
+Story2,9,32,D2
+Story2,10,33,D2
+Story2,12,35,D2
+Story2,13,36,From Shell Object
 Story2,1,37,D2
-Story2,2,38,D2
-Story2,3,39,D2
-Story2,4,40,D2
-Story2,5,41,D2
-Story2,6,42,D2
-Story2,7,43,D2
-Story2,8,44,D2
-Story2,9,45,D2
-Story2,10,46,D2
-Story2,11,47,D2
-Story2,12,48,D2
-Story2,17,49,D2
-Story2,18,50,D2
-Story2,19,51,D2
-Story2,20,52,D2
-Story2,21,53,D2
-Story2,27,54,D2
-Story2,29,55,D2
-Story2,30,56,D2
-Story2,13,57,D2
-Story2,14,58,D2
-Story2,15,59,D2
-Story2,16,63,D2
-Story2,23,64,D2
-Story2,24,69,D2
-Story1,1,1,D1
+Story2,15,43,From Shell Object
+Story2,16,44,From Shell Object
+Story2,17,45,From Shell Object
+Story2,18,46,From Shell Object
+Story2,19,47,From Shell Object
+Story2,29,50,D2
 Story1,2,2,D1
 Story1,3,3,D1
 Story1,4,4,D1
@@ -50,22 +33,29 @@ Story1,9,9,D1
 Story1,10,10,D1
 Story1,11,11,D1
 Story1,12,12,D1
-Story1,17,21,D1
-Story1,18,22,D1
-Story1,19,23,D1
-Story1,20,24,D1
-Story1,16,60,D1
-Story1,23,62,D1
-Story1,28,65,D1
-Story1,32,66,D1
-Story1,25,61,D1
-Story1,34,67,From Shell Object
-Story1,26,70,D1
-Base,1,13,From Shell Object
-Base,2,14,From Shell Object
-Base,3,15,From Shell Object
+Story1,13,15,From Shell Object
+Story1,1,1,From Shell Object
+Story1,14,55,From Shell Object
+Story1,15,59,From Shell Object
+Story1,18,48,From Shell Object
+Story1,19,49,From Shell Object
+Story1,20,56,From Shell Object
+Story1,21,57,From Shell Object
+Story1,22,58,From Shell Object
+Story1,23,60,From Shell Object
+Story1,24,61,From Shell Object
+Story1,25,62,From Shell Object
+Story1,26,63,From Shell Object
+Story1,27,34,From Shell Object
+Story1,30,51,D1
+Base,2,25,From Shell Object
+Base,3,24,From Shell Object
 Base,4,16,From Shell Object
-Base,5,17,From Shell Object
-Base,6,18,From Shell Object
-Base,7,19,From Shell Object
-Base,8,20,From Shell Object
+Base,5,19,From Shell Object
+Base,6,17,From Shell Object
+Base,7,20,From Shell Object
+Base,8,18,From Shell Object
+Base,9,21,From Shell Object
+Base,10,22,From Shell Object
+Base,11,23,From Shell Object
+Base,12,26,From Shell Object

@@ -1,0 +1,85 @@
+
+
+ ETABS Ultimate 64-bit 19.0.0 Build 2277 (Analysis Build 9827/64)               
+ File: E:\Apps\structural report\sls_tables\Bal Kumari Karki_SLS.OUT            
+                                                                     
+                                                                       
+
+ 3, CONSTR = RIGID, DOF = U1 U2 R3
+
+                     LOCAL COORDINATE SYSTEM FOR CONSTRAINT MASTER
+  GLOBAL          U1          U2          U3          R1          R2          R3
+     X      1.000000     .000000     .000000    1.000000     .000000     .000000
+     Y       .000000    1.000000     .000000     .000000    1.000000     .000000
+     Z       .000000     .000000    1.000000     .000000     .000000    1.000000
+
+                     TRANSLATIONAL MASS AND MASS MOMENTS OF INERTIA
+                  U1          U2          U3          R1          R2          R3
+            7.115801    7.115801     .000000     .000000     .000000  7.3106E+07
+
+                     CENTER OF MASS
+  GLOBAL          U1          U2          U3
+     X      4343.400    4343.400    4343.400
+     Y      6972.300    6972.300    6972.300
+     Z      9525.000    9525.000    9525.000
+
+ 5, CONSTR = RIGID, DOF = U1 U2 R3
+
+                     LOCAL COORDINATE SYSTEM FOR CONSTRAINT MASTER
+  GLOBAL          U1          U2          U3          R1          R2          R3
+     X      1.000000     .000000     .000000    1.000000     .000000     .000000
+     Y       .000000    1.000000     .000000     .000000    1.000000     .000000
+     Z       .000000     .000000    1.000000     .000000     .000000    1.000000
+
+                     TRANSLATIONAL MASS AND MASS MOMENTS OF INERTIA
+                  U1          U2          U3          R1          R2          R3
+           37.626889   37.626889     .000000     .000000     .000000  7.4793E+08
+
+                     CENTER OF MASS
+  GLOBAL          U1          U2          U3
+     X      4776.259    4776.259    4462.022
+     Y      6061.241    6061.241    5447.520
+     Z      6350.000    6350.000    6350.000
+
+ 7, CONSTR = RIGID, DOF = U1 U2 R3
+
+                     LOCAL COORDINATE SYSTEM FOR CONSTRAINT MASTER
+  GLOBAL          U1          U2          U3          R1          R2          R3
+     X      1.000000     .000000     .000000    1.000000     .000000     .000000
+     Y       .000000    1.000000     .000000     .000000    1.000000     .000000
+     Z       .000000     .000000    1.000000     .000000     .000000    1.000000
+
+                     TRANSLATIONAL MASS AND MASS MOMENTS OF INERTIA
+                  U1          U2          U3          R1          R2          R3
+           61.637896   61.637896     .000000     .000000     .000000  1.6705E+09
+
+                     CENTER OF MASS
+  GLOBAL          U1          U2          U3
+     X      5349.977    5349.977    5455.981
+     Y      5606.395    5606.395    4996.866
+     Z      3175.000    3175.000    3175.000
+
+ D I S P L A C E M E N T   D E G R E E S   O F   F R E E D O M
+
+         (A) = Active DOF, equilibrium equation
+         (-) = Restrained DOF, reaction computed
+         (+) = Constrained DOF
+         (>) = External substructure DOF
+         ( ) = Null DOF
+
+  JOINTS              UX  UY  UZ  RX  RY  RZ
+       1 TO       9    A   A   A   A   A   A
+      10 TO      20    +   +   A   A   A   +
+      21               A   A   A   A   A   A
+      22 TO      32    -   -   -   -   -   -
+      33               A   A   A   A   A   A
+      34 TO      43    +   +   A   A   A   +
+      44               A   A   A   A   A   A
+      45 TO      49    +   +   A   A   A   +
+      50 TO      57    A   A   A   A   A   A
+      61 TO      63    +   +   -   -   -   +
+     ~61 TO    ~255    A   A   A   A   A   A
+    NULL                                    
+
+  CONSTRAINTS         U1  U2  U3  R1  R2  R3
+ 3       TO 7          A   A               A

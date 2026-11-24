@@ -8,7 +8,6 @@ Analysis Options - Cracking Analysis Options
 Analysis Options - Design and Response Recovery Options
 Analysis Options - SAPFire Options
 Area Assignments - Auto Edge Constraints
-Area Assignments - Diaphragms
 Area Assignments - Floor Auto Mesh Options
 Area Assignments - Insertion Point
 Area Assignments - Section Properties
@@ -24,23 +23,12 @@ Column Bays
 Column Object Connectivity
 Composite Beam Design Preferences - AISC 360-10
 Composite Column Design Preferences - AISC 360-10
-Concrete Beam Design Summary - IS 456-2000
-Concrete Beam Flexure Envelope - IS 456-2000
-Concrete Beam Overwrites - IS 456-2000
-Concrete Beam Shear Envelope - IS 456-2000
-Concrete Column Design Summary - IS 456-2000
-Concrete Column Overwrites - IS 456-2000
-Concrete Column PMM Envelope - IS 456-2000
-Concrete Column Shear Envelope - IS 456-2000
 Concrete Frame Design Load Combination Data
 Concrete Frame Design Preferences - IS 456-2000
-Concrete Joint Design Summary - IS 456-2000
-Concrete Joint Envelope - IS 456-2000
 Concrete Slab Design Overwrites - Finite Element Based
 Concrete Slab Design Overwrites - Punching Shear - General
 Concrete Slab Design Preferences - IS 456-2000
-Design Forces - Beams
-Design Forces - Columns
+Deck Property Definitions
 Diaphragm Center Of Mass Displacements
 Diaphragm Definitions
 Diaphragm Max Over Avg Drifts
@@ -67,11 +55,13 @@ Frame Loads Assignments - Open Structure Wind Parameters
 Frame Section Property Definitions - Concrete Beam Reinforcing
 Frame Section Property Definitions - Concrete Column Reinforcing
 Frame Section Property Definitions - Concrete Rectangular
+Frame Section Property Definitions - Steel I/Wide Flange
 Frame Section Property Definitions - Summary
 Functions - Time History - User Defined
 Grid Definitions - General
 Grid Definitions - Grid Lines
 Grid Definitions - Reference Points
+Group Assignments
 Group Definitions
 Joint Assignments - Diaphragms
 Joint Assignments - Restraints
@@ -138,3 +128,4 @@ Story Stiffness
 Tendon Section Properties
 Tower and Base Story Definitions
 Tributary Area and LLRF
+Wall Property Definitions - Specified

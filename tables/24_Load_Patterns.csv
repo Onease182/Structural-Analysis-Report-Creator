@@ -1,18 +1,18 @@
 Name,IsAuto,Type,SelfWtMult,AutoLoad,GUID
-~LLRF,Yes,Other,0,,cfbd23ca-634f-423f-9d20-044b18f51b4c
-Dead,No,Dead,1,,f53ef624-dc52-43d8-9848-cbd251ed873f
-EQX-ULS,No,Seismic,0,User Coefficient,1525f804-ccf3-49cd-89c0-62c4cfee4608
-EQX-ULS(1/3),Yes,Seismic,0,User Coefficient,37a2290b-bce7-4354-b209-21e4468b4cf5
-EQX-ULS(2/3),Yes,Seismic,0,User Coefficient,aad7428e-c9a2-44f9-9cd3-670ae91444f8
-EQX-ULS(3/3),Yes,Seismic,0,User Coefficient,5c8666c9-edb7-402a-a45a-804fd9e70757
-EQY-ULS,No,Seismic,0,User Coefficient,9a4699a0-3052-4c43-bddc-e73c0111928b
-EQY-ULS(1/3),Yes,Seismic,0,User Coefficient,0ef540bf-1b23-467f-bd0b-3fc86b4de15b
-EQY-ULS(2/3),Yes,Seismic,0,User Coefficient,2e33c2eb-006f-4305-928b-92464ab40f02
-EQY-ULS(3/3),Yes,Seismic,0,User Coefficient,8f5b6012-d137-460e-90e7-da008c038109
-Floor Finish,No,Super Dead,0,,c4cf29c8-f36e-44aa-8731-890d29055f57
-Live,No,Live,0,,7ec5839a-8888-4fd8-8a22-39427549c1d9
-Roof Live,No,Roof Live,0,,7adade23-45e3-4ac8-a274-a42b58810710
-Stair Dead,No,Super Dead,0,,dabb59b0-32e2-4f7d-b99a-afc555f21cdb
-Stair Live,No,Live,0,,88390cb9-d639-4c1e-b7d2-b6c848b9ba5c
-Wall Load,No,Super Dead,0,,e5630a75-efdd-49bb-9a75-5d4c3c55139e
-Water Tank,No,Super Dead,0,,b21ccdde-9e59-414a-b0b2-417d409d7667
+~LLRF,Yes,Other,0,,4d7a5036-82bd-4a4e-bfce-ad5512199f95
+Dead,No,Dead,1,,f2384cb8-e880-4086-af37-1af487b46db6
+EQX-ULS,No,Seismic,0,User Coefficient,aa2b4cb6-97b3-41a1-9067-c7c3c6cbcb56
+EQX-ULS(1/3),Yes,Seismic,0,User Coefficient,be7f8d98-e6a4-44a0-b7f9-2da955526252
+EQX-ULS(2/3),Yes,Seismic,0,User Coefficient,dc090e49-f82a-4e50-908f-f6b5587e2df3
+EQX-ULS(3/3),Yes,Seismic,0,User Coefficient,bb4e2694-13b4-4e01-b6e4-d410f430d328
+EQY-ULS,No,Seismic,0,User Coefficient,e2fe7505-0325-4c04-9195-6de008e36089
+EQY-ULS(1/3),Yes,Seismic,0,User Coefficient,07048379-a3b7-4a7d-94a2-795e34a05f3e
+EQY-ULS(2/3),Yes,Seismic,0,User Coefficient,01f35972-c0ad-4e2b-8dd7-535db4466c66
+EQY-ULS(3/3),Yes,Seismic,0,User Coefficient,d951f5bd-dfc2-4f47-88d3-784b870865fe
+Floor Finish,No,Super Dead,0,,398ab2de-a91d-4f85-9774-a30e3f5f5e31
+Live,No,Live,0,,6068c71f-8b5a-4fa0-ad3c-c3edcbe504a9
+Roof Live,No,Roof Live,0,,a341384d-2580-4ca6-8677-f14745c5ac14
+Stair Dead,No,Super Dead,0,,4f61fe94-82ce-4247-8c0e-843ba977437c
+Stair Live,No,Live,0,,a32ce1b1-c4d0-465a-b03d-ad37918fc908
+Wall Load,No,Super Dead,0,,547b151a-cb43-4910-979a-9801ff7dab80
+Water Tank,No,Super Dead,0,,98f296ca-6936-4b3c-987a-7763b0296090
