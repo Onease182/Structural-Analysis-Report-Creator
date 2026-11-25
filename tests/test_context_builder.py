@@ -14,6 +14,7 @@ from src.context_builder import ContextBuilder
 from src.e2k_parser import E2KParser
 
 FIXTURE_E2K = ROOT / "tests" / "fixtures" / "sample.e2k"
+REAL_ULS = ROOT / "tables" / "Chatra Bahadur Ramel_ULS.e2k"
 
 
 class ContextBuilderTests(unittest.TestCase):
@@ -115,6 +116,27 @@ class ContextBuilderTests(unittest.TestCase):
         self.assertEqual(limits["uls_drift_ratio"], 0.025)
         self.assertEqual(limits["torsional_ratio"], 1.5)
         self.assertEqual(limits["min_column_steel_pct"], 1.0)
+
+    def test_real_uls_story_elevations_are_derived_bottom_up(self) -> None:
+        builder = ContextBuilder()
+        builder._read_e2k(REAL_ULS)
+        self.assertEqual(builder.ctx["building"]["story_elevations_m"], {"Story1": "3.175", "Story2": "6.350", "Story3": "9.525"})
+        self.assertEqual(builder.ctx["building"]["height_ground_floor_m"], "3.175")
+        self.assertEqual(builder.ctx["building"]["height_period_m"], "9.525")
+
+    def test_e2k_read_failure_is_loud(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            bad = Path(tmp) / "bad.e2k"
+            bad.write_text('$ STORIES IN SEQUENCE FROM TOP\nSTORY "Story1" HEIGHT not-a-number\n', encoding="utf-8")
+            with self.assertRaises(RuntimeError):
+                ContextBuilder()._read_e2k(bad)
+
+    def test_sls_joint_and_story_displacements_are_separate(self) -> None:
+        builder = ContextBuilder()
+        builder._read_sls_tables(ROOT / "sls_tables")
+        self.assertAlmostEqual(builder.ctx["drift"]["sls_max_displacement_mm"], 20.82, places=3)
+        self.assertAlmostEqual(builder.ctx["drift"]["sls_joint_max_displacement_mm"], 22.371, places=3)
+        self.assertFalse(any("higher-priority source retained" in item for item in builder.conflicts))
 
 
 if __name__ == "__main__":

@@ -18,6 +18,12 @@
       "column": "num_storeys_analysed",
       "filter": "not specified"
     },
+    "building.story_elevations_m": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "story_elevations_m",
+      "filter": "not specified"
+    },
     "building.num_basements": {
       "source": "e2k",
       "file": "e2k",
@@ -46,6 +52,54 @@
       "source": "e2k",
       "file": "e2k",
       "column": "total_height_m",
+      "filter": "not specified"
+    },
+    "building.height_period_m": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "height_period_m",
+      "filter": "not specified"
+    },
+    "building.span_x_m": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "span_x_m",
+      "filter": "not specified"
+    },
+    "building.span_y_m": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "span_y_m",
+      "filter": "not specified"
+    },
+    "materials.concrete_grade_used": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "concrete_grade_used",
+      "filter": "not specified"
+    },
+    "building.primary_frame_material": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "primary_frame_material",
+      "filter": "not specified"
+    },
+    "materials.rebar_grade_used": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "rebar_grade_used",
+      "filter": "not specified"
+    },
+    "building.diaphragm_type": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "diaphragm_type",
+      "filter": "not specified"
+    },
+    "foundation.point_restraint_cross_check": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "point_restraint_cross_check",
       "filter": "not specified"
     },
     "modal.modes_included_count": {
@@ -115,10 +169,10 @@
       "filter": "not specified"
     },
     "drift.sls_max_displacement_mm": {
-      "source": "etabs_csv",
-      "file": "etabs_csv",
-      "column": "sls_max_displacement_mm",
-      "filter": "not specified"
+      "source": "etabs_csv:S14_Story_Max_Avg_Displacements.csv",
+      "file": "S14_Story_Max_Avg_Displacements.csv",
+      "column": "Maximum",
+      "filter": "maximum over S14 story rows"
     },
     "drift.sls_max_x": {
       "source": "etabs_csv:S01_Story_Drifts.csv",
@@ -131,6 +185,12 @@
       "file": "S01_Story_Drifts.csv",
       "column": "sls_max_y",
       "filter": "not specified"
+    },
+    "drift.sls_joint_max_displacement_mm": {
+      "source": "etabs_csv:S13_Joint_Displacements.csv",
+      "file": "S13_Joint_Displacements.csv",
+      "column": "Ux",
+      "filter": "maximum over S13 joint rows"
     },
     "modal.empirical_period_unamplified_s": {
       "source": "computed: config/seismic_formulas.yaml",

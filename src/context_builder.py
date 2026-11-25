@@ -56,6 +56,13 @@ class ContextBuilder:
         with path.open("r", encoding="utf-8") as f:
             return yaml.safe_load(f) or {}
 
+    @staticmethod
+    def _repo_path(path: Path) -> str:
+        try:
+            return str(path.resolve().relative_to(ROOT))
+        except ValueError:
+            return str(path)
+
     def _unresolved(self, message: str) -> None:
         if message not in self.unresolved:
             self.unresolved.append(f"UNRESOLVED: {message}")
@@ -73,16 +80,17 @@ class ContextBuilder:
             return 1
         return 0
 
-    def _set(self, key: str, value: Any, source: str) -> None:
+    def _set(self, key: str, value: Any, source: str, source_column: str | None = None,
+             source_filter: str | None = None) -> None:
         if value is None or (isinstance(value, str) and not value.strip()):
             self._unresolved(f"{key}: source {source} supplied no value")
             return
         old_source = self.sources.get(key)
         if old_source and self._get(key) != value:
-            self.conflicts.append(
-                f"{key}: conflict between {old_source}={self._get(key)!r} and {source}={value!r}; "
-                "higher-priority source retained"
-            )
+            if self._source_rank(source) == self._source_rank(old_source):
+                self.conflicts.append(f"{key}: equal-priority conflict between {old_source}={self._get(key)!r} and {source}={value!r}; existing value retained")
+            else:
+                self.conflicts.append(f"{key}: conflict between {old_source}={self._get(key)!r} and {source}={value!r}; higher-priority source retained")
             if self._source_rank(source) <= self._source_rank(old_source):
                 return
         parts = key.split(".")
@@ -92,9 +100,11 @@ class ContextBuilder:
         d[parts[-1]] = value
         self.sources[key] = source
         source_file = source.split(":", 1)[1] if ":" in source else source
+        if source_file.startswith("/"):
+            source_file = self._repo_path(Path(source_file))
         self.source_details[key] = {"source": source, "file": source_file,
-                                    "column": key.rsplit(".", 1)[-1],
-                                    "filter": "not specified"}
+                                    "column": source_column or key.rsplit(".", 1)[-1],
+                                    "filter": source_filter or "not specified"}
 
     def _get(self, key: str, default: Any = None) -> Any:
         value: Any = self.ctx
@@ -150,7 +160,7 @@ class ContextBuilder:
 
     def _read_excel(self, path: Path) -> None:
         if not path.exists():
-            self._unresolved(f"input workbook not found: {path}")
+            self._unresolved(f"input workbook not found: {self._repo_path(path)}")
             return
         try:
             from src.input_workbook import InputWorkbook
@@ -179,7 +189,16 @@ class ContextBuilder:
                 return number / 1000.0 if abs(number) > 100 else number
             self._set("building.storeys_above_grade", len(above), "e2k")
             self._set("building.num_storeys_analysed", len(above), "e2k")
-            basements = [s for s in stories if length_m(s.get("Elevation", "0")) <= 0 and s.get("Story") != "Base"]
+            # ETABS writes upper stories top-down and often omits Elevation;
+            # derive elevations from Base=0 by accumulating heights bottom-up.
+            cumulative = 0.0
+            elevations: dict[str, float] = {"Base": 0.0}
+            for story in reversed(above):
+                cumulative += length_m(story.get("StoryHt", "0"))
+                elevations[story.get("Story", "")] = cumulative
+                story["Elevation"] = str(cumulative)
+            self._set("building.story_elevations_m", {name: self._fmt("building.story_height_m", value) for name, value in elevations.items() if name != "Base"}, "e2k")
+            basements = [s for s in stories if float(elevations.get(s.get("Story", ""), length_m(s.get("Elevation", "0")))) <= 0 and s.get("Story") != "Base"]
             self._set("building.num_basements", len(basements), "e2k")
             if above:
                 first = above[-1]
@@ -216,7 +235,7 @@ class ContextBuilder:
             if restraints:
                 self._set("foundation.point_restraint_cross_check", restraints[0], "e2k")
         except Exception as exc:
-            self._unresolved(f"error reading .e2k {path}: {exc}")
+            raise RuntimeError(f"error reading .e2k {path}") from exc
 
     def _read_csv_rows(self, path: Path) -> list[dict[str, Any]]:
         with path.open("r", encoding="utf-8", errors="replace", newline="") as f:
@@ -381,7 +400,11 @@ class ContextBuilder:
         vals = [self._number(r, col) for r in rows]
         vals = [abs(v) for v in vals if v is not None]
         if not vals: self._unresolved(f"{file}: no numeric displacement values"); return
-        self._set("drift.sls_max_displacement_mm", max(vals) * (1000 if max(vals) < 1 else 1), "etabs_csv")
+        value = max(vals) * (1000 if max(vals) < 1 else 1)
+        is_story_max = "s14" in file.lower() or "story_max" in file.lower()
+        key = "drift.sls_max_displacement_mm" if is_story_max else "drift.sls_joint_max_displacement_mm"
+        self._set(key, value, "etabs_csv:" + file, source_column=col,
+                 source_filter="maximum over S14 story rows" if is_story_max else "maximum over S13 joint rows")
 
     def _process_displacement_summary(self, rows: list[dict[str, Any]], file: str, prefix: str) -> None:
         if not rows or not self._require(rows, ("OutputCase", "Direction", "Maximum"), file):
@@ -477,7 +500,10 @@ class ContextBuilder:
         source_payload = {"source_priority": ["etabs_csv", "e2k", "excel", "computed"],
                           "values": self.source_details}
         (output_dir / "context_sources.json").write_text(json.dumps(source_payload, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
-        (output_dir / "conflicts.md").write_text("# Context Builder Conflicts\n\n" + ("\n".join(f"- {x}" for x in self.conflicts) if self.conflicts else "None.") + "\n", encoding="utf-8")
+        conflict_lines = list(self.conflicts)
+        if self._get("drift.sls_max_displacement_mm") is not None and self._get("drift.sls_joint_max_displacement_mm") is not None:
+            conflict_lines.append("SLS displacement quantities are separate, not a source-priority conflict: S14_Story_Max_Avg_Displacements.csv column Maximum (story maximum; used by the sample report) is drift.sls_max_displacement_mm, while S13_Joint_Displacements.csv column Ux/Uy (joint maximum; cross-reference) is drift.sls_joint_max_displacement_mm.")
+        (output_dir / "conflicts.md").write_text("# Context Builder Conflicts\n\n" + ("\n".join(f"- {x}" for x in conflict_lines) if conflict_lines else "None.") + "\n", encoding="utf-8")
         (output_dir / "unresolved.md").write_text("# Context Builder Unresolved Values\n\n" + ("\n".join(f"- {x}" for x in self.unresolved) if self.unresolved else "None.") + "\n", encoding="utf-8")
 
 

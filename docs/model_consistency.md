@@ -32,4 +32,4 @@ Computed from parsed real ULS and SLS e2k records. Every difference is listed by
 - `load_combinations` `1.2DL+0.3LL-EQY.load_cases`: ULS=[{'LoadCase': 'Dead', 'SF': '1.2'}, {'LoadCase': 'Live', 'SF': '0.3'}, {'LoadCase': 'EQY-ULS', 'SF': '-1'}]; SLS=[{'LoadCase': 'Dead', 'SF': '1.2'}, {'LoadCase': 'Live', 'SF': '0.3'}, {'LoadCase': 'EQY-SLS', 'SF': '-1'}]
 - `EQX` user coefficient: ULS SHEARCOEFF=0.1458; SLS SHEARCOEFF=0.14; ULS HEIGHTEXPONENT=1.004; SLS HEIGHTEXPONENT=1.004; ULS ECC=0.05; SLS ECC=0.05
 - `EQY` user coefficient: ULS SHEARCOEFF=0.1458; SLS SHEARCOEFF=0.14; ULS HEIGHTEXPONENT=1.004; SLS HEIGHTEXPONENT=1.004; ULS ECC=0.05; SLS ECC=0.05
-- Computed SLS coefficient: 0.20 * C(T=2.5) * Z=0.35 * I=1 / Omega_s=1.25 = 0.14000; ETABS SLS target=0.14000; difference=-0.00000
+- Computed SLS coefficient: 0.20 * Ch=2.5 * Z=0.35 * I=1 / Omega_s=1.25 = 0.14000; ETABS SLS target=0.14000; difference=-0.00000

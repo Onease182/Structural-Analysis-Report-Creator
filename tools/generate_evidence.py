@@ -164,7 +164,7 @@ def seismic_comparison(uls, sls):
     importance = float(seismic["importance_factor_i"])
     omega_s = float(sample["design"]["overstrength_serviceability"])
     calculated = 0.20 * c_t * z * importance / omega_s
-    lines.append(f"- Computed SLS coefficient: 0.20 * C(T={c_t:g}) * Z={z:g} * I={importance:g} / Omega_s={omega_s:g} = {calculated:.5f}; ETABS SLS target=0.14000; difference={calculated - 0.14:+.5f}")
+    lines.append(f"- Computed SLS coefficient: 0.20 * Ch={c_t:g} * Z={z:g} * I={importance:g} / Omega_s={omega_s:g} = {calculated:.5f}; ETABS SLS target=0.14000; difference={calculated - 0.14:+.5f}")
     return lines
 
 
