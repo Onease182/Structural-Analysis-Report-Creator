@@ -22,6 +22,7 @@ _SECTION_ALIASES = {
     "FRAMEOBJ": "frames", "FRAMEOBJECTS": "frames",
     "AREAOBJ": "areas", "AREAOBJECTS": "areas",
     "FRAMESECTIONS": "frame_sections", "AREASECTIONS": "area_sections",
+    "CONCRETESECTIONS": "concrete_sections",
     "MATERIALS": "materials", "MATERIALPROPERTIES": "materials",
     "PROPMODIFIERS": "property_modifiers", "DIAPHRAGMS": "diaphragms",
     "DIAPHRAGMNAMES": "diaphragms", "POINTRESTRAINTS": "restraints",
@@ -34,6 +35,19 @@ _SECTION_ALIASES = {
     "LINEASSIGNS": "line_assignments", "AREAASSIGNS": "area_assignments",
     "LOADCASES": "load_cases", "FUNCTIONS": "functions", "MASSOURCE": "mass_source",
     "PROJECTINFORMATION": "project_information", "ANALYSISOPTIONS": "analysis_options",
+    "CONTROLS": "controls", "PROGRAMINFORMATION": "program_information",
+    "POINTOBJECTLOADS": "point_object_loads", "FRAMEOBJECTLOADS": "frame_object_loads",
+    "SHELLOBJECTLOADS": "shell_object_loads", "LOADCOMBINATIONS": "load_combinations",
+    "STEELDESIGNPREFERENCES": "steel_design_preferences",
+    "CONCRETEDESIGNPREFERENCES": "concrete_design_preferences",
+    "COMPOSITEDESIGNPREFERENCES": "composite_design_preferences",
+    "COMPOSITECOLUMNDESIGNPREFERENCES": "composite_column_design_preferences",
+    "WALLDESIGNPREFERENCES": "wall_design_preferences",
+    "CONCRETESLABDESIGNPREFERENCES": "concrete_slab_design_preferences",
+    "TENDONSECTIONS": "tendon_sections", "SECTIONDESIGNERSECTIONS": "section_designer_sections",
+    "LINKPROPERTIES": "link_properties", "PANELZONEPROPERTIES": "panel_zone_properties",
+    "PIERSPANDRELNAMES": "pier_spandrel_names", "GENERALIZEDDISPLACEMENTS": "generalized_displacements",
+    "DIMENSIONLINES": "dimension_lines", "TABLESETS": "table_sets",
 }
 
 
@@ -56,16 +70,10 @@ def _kv(tokens: list[str]) -> dict[str, str]:
     their all-caps spelling, while object command words are excluded.
     """
     out: dict[str, str] = {}
-    commands = {
-        "STORY", "GRID", "MATERIAL", "FRAMESECTION", "CONCRETESECTION",
-        "SHELLPROP", "POINT", "LINE", "AREA", "POINTASSIGN", "LINEASSIGN",
-        "AREAASSIGN", "LOADPATTERN", "LOADCASE", "COMBO", "MASSSOURCE",
-        "MASSSOURCELOAD", "SEISMIC", "LINELOAD", "AREALOAD", "REBARDEFINITION",
-    }
     i = 0
     while i + 1 < len(tokens):
         key = _unquote(tokens[i])
-        if key.upper() not in commands and re.match(r"^[A-Za-z][A-Za-z0-9_%]*$", key):
+        if re.match(r"^[A-Za-z][A-Za-z0-9_%]*$", key):
             out[key] = _unquote(tokens[i + 1]); i += 2
         else:
             i += 1
@@ -108,7 +116,9 @@ class E2KParser:
     def _process_section(self, name: str, lines: list[str]) -> None:
         key = self.SECTION_MAP.get(name)
         if key is None or name in {"FILE", "ETABSNINETYDAYFREELICENSE", "FOREDUCATIONALUSEONLY", "LOG", "ENDOFMODELFILE"}:
-            self.unparsed.append(f"{("UNPARSED_SECTION" if name == "UNPARSEDSECTION" else name)}: no structured parser registered\n" + "\n".join(lines))
+            reasons = {"FILE": "file metadata/header, not model data", "ETABSNINETYDAYFREELICENSE": "ETABS license banner, not model data", "FOREDUCATIONALUSEONLY": "ETABS license banner, not model data", "LOG": "ETABS export/application log, not model data", "ENDOFMODELFILE": "ETABS end-of-file marker, not model data"}
+            reason = reasons.get(name, "file metadata/header, not model data" if name.startswith("FILE") else "no structured parser registered for this section")
+            self.unparsed.append(f"{('UNPARSED_SECTION' if name == 'UNPARSEDSECTION' else name)}: {reason}\n" + "\n".join(lines))
             return
         if not lines: self.data.setdefault(key, []); return
         # Legacy fixture sections have a simple header row. Keep its exact
@@ -119,7 +129,24 @@ class E2KParser:
             self.data[key] = self._legacy_table(lines); return
         handler = getattr(self, f"_parse_{key}", self._parse_command_rows)
         rows = handler(lines)
-        if rows is not None: self.data[key] = rows
+        if rows is not None:
+            self.data[key] = rows
+            if key == "point_assignments":
+                restraints = [r for r in rows if "RESTRAINT" in r]
+                if restraints:
+                    self.data["restraints"] = restraints
+            if key == "frame_sections":
+                modifiers = []
+                for row in rows:
+                    if "I2MOD" in row or "I3MOD" in row:
+                        modifiers.append({"Section": row.get("Section", ""),
+                                          "I2MOD": row.get("I2MOD", ""),
+                                          "I3MOD": row.get("I3MOD", "")})
+                if modifiers:
+                    self.data["frame_modifiers"] = modifiers
+                    self.data["property_modifiers"] = modifiers
+            if key == "slab_properties":
+                self.data["area_sections"] = rows
 
     @staticmethod
     def _legacy_table(lines: list[str]) -> list[dict[str, str]]:
@@ -133,12 +160,18 @@ class E2KParser:
 
     @staticmethod
     def _parse_command_rows(lines: list[str]) -> list[dict[str, str]]:
+        named_commands = {"STORY", "GRID", "MATERIAL", "FRAMESECTION", "CONCRETESECTION",
+                          "SHELLPROP", "POINT", "LINE", "AREA", "POINTASSIGN", "LINEASSIGN",
+                          "AREAASSIGN", "LOADPATTERN", "LOADCASE", "COMBO", "MASSSOURCE",
+                          "MASSSOURCELOAD", "SEISMIC", "LINELOAD", "AREALOAD", "POINTLOAD",
+                          "REBARDEFINITION"}
         rows = []
         for line in lines:
             tok = _tokens(line)
             if not tok: continue
             row = {"_command": _unquote(tok[0])}
-            row.update(_kv(tok[1:]))
+            start = 2 if tok[0].upper() in named_commands else 1
+            row.update(_kv(tok[start:]))
             rows.append(row)
         return rows
 
@@ -183,12 +216,31 @@ class E2KParser:
             if "B" in k: r["t2"]=k["B"]
         return list(rows.values())
 
+    def _parse_concrete_sections(self, lines: list[str]) -> list[dict[str, str]]:
+        rows = []
+        for line in lines:
+            t = _tokens(line)
+            if len(t) < 2 or t[0].upper() != "CONCRETESECTION":
+                continue
+            name = _unquote(t[1]); k = _kv(t[2:])
+            rows.append({"Section": name, **k, "Type": k.get("TYPE", "")})
+        return rows
+
     def _parse_area_sections(self, lines: list[str]) -> list[dict[str, str]]:
         out=[]
         for line in lines:
             t=_tokens(line)
             if t and t[0].upper()=="SHELLPROP":
                 k=_kv(t[2:]); out.append({"Section":_unquote(t[1]), "Type":k.get("PROPTYPE", ""), "Material":k.get("MATERIAL", ""), "Thickness":k.get("SLABTHICKNESS", "")})
+        return out
+
+    def _parse_slab_properties(self, lines: list[str]) -> list[dict[str, str]]:
+        out=[]
+        for line in lines:
+            t=_tokens(line)
+            if t and t[0].upper()=="SHELLPROP" and len(t)>1:
+                k=_kv(t[2:])
+                out.append({"Section":_unquote(t[1]), "Type":k.get("PROPTYPE", ""), "Material":k.get("MATERIAL", ""), "Thickness":k.get("SLABTHICKNESS", ""), **k})
         return out
 
     def _parse_points(self, lines: list[str]) -> list[dict[str, str]]:
@@ -211,8 +263,8 @@ class E2KParser:
         out=[]
         for line in lines:
             t=_tokens(line)
-            if t and t[0].upper()=="POINTASSIGN" and "U1" in line.upper():
-                k=_kv(t[2:]); out.append({"Point":_unquote(t[1]), **k})
+            if t and t[0].upper()=="POINTASSIGN" and "RESTRAINT" in line.upper():
+                k=_kv(t[2:]); out.append({"Point":_unquote(t[1]), "Story":_unquote(t[2]) if len(t) > 2 else "", **k})
         return out
 
     def _parse_load_patterns(self, lines: list[str]) -> list[dict[str, str]]:
@@ -233,17 +285,81 @@ class E2KParser:
                 r={"Combo":_unquote(t[1])}; k=_kv(t[2:]); r.update(k); out.append(r)
         return out
 
+    def _parse_load_combinations(self, lines: list[str]) -> list[dict[str, Any]]:
+        """Group command-style COMBO records into one row per combination."""
+        groups: dict[str, dict[str, Any]] = {}
+        for line in lines:
+            t = _tokens(line)
+            if len(t) < 2 or t[0].upper() != "COMBO":
+                continue
+            name = _unquote(t[1])
+            row = groups.setdefault(name, {"Combo": name, "load_cases": [], "load_combos": []})
+            k = _kv(t[2:])
+            for key, value in k.items():
+                if key not in {"LOADCASE", "LOADCOMBO", "SF"}:
+                    row[key] = value
+            if "TYPE" in k: row["Type"] = k["TYPE"]
+            if "DESIGN" in k: row["Design"] = k["DESIGN"]
+            if "COMBOTYPE" in k: row["ComboType"] = k["COMBOTYPE"]
+            if "LOADCASE" in k:
+                row["load_cases"].append({"LoadCase": k["LOADCASE"], "SF": k.get("SF", "")})
+            if "LOADCOMBO" in k:
+                row["load_combos"].append({"LoadCombo": k["LOADCOMBO"], "SF": k.get("SF", "")})
+        return list(groups.values())
+
     def _parse_mass_source(self, lines: list[str]) -> list[dict[str, str]]:
         out=[]
         for line in lines:
             t=_tokens(line)
             if t and t[0].upper() in {"MASSSOURCE","MASSSOURCELOAD"}:
-                r={"_command":t[0]}; r.update(_kv(t[1:])); out.append(r)
+                r={"_command":t[0], "Name": _unquote(t[1]) if len(t) > 1 else ""}; r.update(_kv(t[2:])); out.append(r)
         return out
+
+    def _parse_controls(self, lines): return self._parse_command_rows(lines)
+    def _parse_program_information(self, lines): return self._parse_command_rows(lines)
+
+    @staticmethod
+    def _parse_object_loads(lines, command):
+        rows = []
+        for line in lines:
+            t = _tokens(line)
+            if not t or t[0].upper() != command:
+                continue
+            row = {"_command": t[0], "Object": _unquote(t[1]) if len(t) > 1 else "",
+                   "Story": _unquote(t[2]) if len(t) > 2 else ""}
+            row.update(_kv(t[3:])); rows.append(row)
+        return rows
+
+    def _parse_point_object_loads(self, lines): return self._parse_object_loads(lines, "POINTLOAD")
+    def _parse_frame_object_loads(self, lines): return self._parse_object_loads(lines, "LINELOAD")
+    def _parse_shell_object_loads(self, lines): return self._parse_object_loads(lines, "AREALOAD")
+
+    @staticmethod
+    def _parse_preference_rows(lines, command):
+        rows = []
+        for line in lines:
+            t = _tokens(line)
+            if t and t[0].upper() == command:
+                row = {"_command": t[0]}; row.update(_kv(t[1:])); rows.append(row)
+        return rows
+
+    def _parse_steel_design_preferences(self, lines): return self._parse_preference_rows(lines, "STEELPREFERENCE")
+    def _parse_concrete_design_preferences(self, lines): return self._parse_preference_rows(lines, "CONCRETEPREFERENCE")
+    def _parse_composite_design_preferences(self, lines): return self._parse_preference_rows(lines, "COMPOSITEPREFERENCE")
+    def _parse_composite_column_design_preferences(self, lines): return self._parse_preference_rows(lines, "COMPOSITECOLUMNPREFERENCE")
+    def _parse_wall_design_preferences(self, lines): return self._parse_preference_rows(lines, "WALLPREFERENCE")
+    def _parse_concrete_slab_design_preferences(self, lines): return self._parse_preference_rows(lines, "CONCRETESLABPREFERENCE")
 
     def _parse_line_connectivities(self, lines): return self._parse_command_rows(lines)
     def _parse_area_connectivities(self, lines): return self._parse_command_rows(lines)
-    def _parse_point_assignments(self, lines): return self._parse_command_rows(lines)
+    def _parse_point_assignments(self, lines):
+        rows=[]
+        for line in lines:
+            t=_tokens(line)
+            if t and t[0].upper()=="POINTASSIGN" and len(t)>=3:
+                row={"_command":t[0], "Point":_unquote(t[1]), "Story":_unquote(t[2])}
+                row.update(_kv(t[3:])); rows.append(row)
+        return rows
     def _parse_line_assignments(self, lines): return self._parse_command_rows(lines)
     def _parse_area_assignments(self, lines): return self._parse_command_rows(lines)
     def _parse_load_cases(self, lines): return self._parse_command_rows(lines)
@@ -251,7 +367,14 @@ class E2KParser:
     def _parse_project_information(self, lines): return self._parse_command_rows(lines)
     def _parse_analysis_options(self, lines): return self._parse_command_rows(lines)
     def _parse_rebar_definitions(self, lines): return self._parse_command_rows(lines)
-    def _parse_slab_properties(self, lines): return self._parse_command_rows(lines)
+    def _parse_slab_properties(self, lines):
+        out=[]
+        for line in lines:
+            t=_tokens(line)
+            if t and t[0].upper()=="SHELLPROP" and len(t)>1:
+                k=_kv(t[2:])
+                out.append({"Section":_unquote(t[1]), "Type":k.get("PROPTYPE", ""), "Material":k.get("MATERIAL", ""), "Thickness":k.get("SLABTHICKNESS", ""), **k})
+        return out
     def _parse_property_modifiers(self, lines): return self._parse_command_rows(lines)
     def _parse_stiffness(self, lines): return self._parse_command_rows(lines)
 

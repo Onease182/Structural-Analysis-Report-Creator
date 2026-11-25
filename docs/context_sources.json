@@ -1,21 +1,160 @@
 {
   "source_priority": [
-    "etabs_api",
     "etabs_csv",
     "e2k",
     "excel",
     "computed"
   ],
-  "models": {
-    "ULS": {
-      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
-      "section_count": 45,
-      "unparsed_count": 24
+  "values": {
+    "building.storeys_above_grade": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "storeys_above_grade",
+      "filter": "not specified"
     },
-    "SLS": {
-      "file": "sls_tables/Chatra Bahadur Ramel_SLS.e2k",
-      "section_count": 45,
-      "unparsed_count": 24
+    "building.num_storeys_analysed": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "num_storeys_analysed",
+      "filter": "not specified"
+    },
+    "building.num_basements": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "num_basements",
+      "filter": "not specified"
+    },
+    "building.story_height_m": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "story_height_m",
+      "filter": "not specified"
+    },
+    "building.height_ground_floor_m": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "height_ground_floor_m",
+      "filter": "not specified"
+    },
+    "building.height_typical_floor_m": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "height_typical_floor_m",
+      "filter": "not specified"
+    },
+    "building.total_height_m": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "total_height_m",
+      "filter": "not specified"
+    },
+    "modal.modes_included_count": {
+      "source": "etabs_csv",
+      "file": "etabs_csv",
+      "column": "modes_included_count",
+      "filter": "not specified"
+    },
+    "modal.modal_data": {
+      "source": "etabs_csv",
+      "file": "etabs_csv",
+      "column": "modal_data",
+      "filter": "not specified"
+    },
+    "modal.base_shear_etabs_x": {
+      "source": "etabs_csv:03_Base_Reactions.csv",
+      "file": "03_Base_Reactions.csv",
+      "column": "base_shear_etabs_x",
+      "filter": "not specified"
+    },
+    "modal.base_shear_etabs_y": {
+      "source": "etabs_csv:03_Base_Reactions.csv",
+      "file": "03_Base_Reactions.csv",
+      "column": "base_shear_etabs_y",
+      "filter": "not specified"
+    },
+    "modal.base_shear_etabs": {
+      "source": "etabs_csv:03_Base_Reactions.csv",
+      "file": "03_Base_Reactions.csv",
+      "column": "base_shear_etabs",
+      "filter": "not specified"
+    },
+    "drift.data": {
+      "source": "etabs_csv",
+      "file": "etabs_csv",
+      "column": "data",
+      "filter": "not specified"
+    },
+    "analysis.story_force_data": {
+      "source": "etabs_csv",
+      "file": "etabs_csv",
+      "column": "story_force_data",
+      "filter": "not specified"
+    },
+    "design.column.max_provided_pct": {
+      "source": "etabs_csv",
+      "file": "etabs_csv",
+      "column": "max_provided_pct",
+      "filter": "not specified"
+    },
+    "irregularity.torsion_ratio": {
+      "source": "etabs_csv",
+      "file": "etabs_csv",
+      "column": "torsion_ratio",
+      "filter": "not specified"
+    },
+    "drift.uls_max_x_mm": {
+      "source": "etabs_csv:33_Story_Max_Avg_Displacements.csv",
+      "file": "33_Story_Max_Avg_Displacements.csv",
+      "column": "uls_max_x_mm",
+      "filter": "not specified"
+    },
+    "drift.uls_max_y_mm": {
+      "source": "etabs_csv:33_Story_Max_Avg_Displacements.csv",
+      "file": "33_Story_Max_Avg_Displacements.csv",
+      "column": "uls_max_y_mm",
+      "filter": "not specified"
+    },
+    "drift.sls_max_displacement_mm": {
+      "source": "etabs_csv",
+      "file": "etabs_csv",
+      "column": "sls_max_displacement_mm",
+      "filter": "not specified"
+    },
+    "drift.sls_max_x": {
+      "source": "etabs_csv:S01_Story_Drifts.csv",
+      "file": "S01_Story_Drifts.csv",
+      "column": "sls_max_x",
+      "filter": "not specified"
+    },
+    "drift.sls_max_y": {
+      "source": "etabs_csv:S01_Story_Drifts.csv",
+      "file": "S01_Story_Drifts.csv",
+      "column": "sls_max_y",
+      "filter": "not specified"
+    },
+    "modal.empirical_period_unamplified_s": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "empirical_period_unamplified_s",
+      "filter": "not specified"
+    },
+    "modal.empirical_period_s": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "empirical_period_s",
+      "filter": "not specified"
+    },
+    "modal.empirical_period_amplification_factor": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "empirical_period_amplification_factor",
+      "filter": "not specified"
+    },
+    "irregularity.torsion_result": {
+      "source": "computed",
+      "file": "computed",
+      "column": "torsion_result",
+      "filter": "not specified"
     }
   }
 }

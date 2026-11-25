@@ -41,6 +41,7 @@ class ContextBuilder:
     def __init__(self) -> None:
         self.ctx: dict[str, Any] = {}
         self.sources: dict[str, str] = {}
+        self.source_details: dict[str, dict[str, Any]] = {}
         self.conflicts: list[str] = []
         self.unresolved: list[str] = []
         self.config = self._load_yaml(FORMATS)
@@ -90,6 +91,10 @@ class ContextBuilder:
             d = d.setdefault(p, {})
         d[parts[-1]] = value
         self.sources[key] = source
+        source_file = source.split(":", 1)[1] if ":" in source else source
+        self.source_details[key] = {"source": source, "file": source_file,
+                                    "column": key.rsplit(".", 1)[-1],
+                                    "filter": "not specified"}
 
     def _get(self, key: str, default: Any = None) -> Any:
         value: Any = self.ctx
@@ -469,7 +474,9 @@ class ContextBuilder:
     def _write_outputs(self, output_dir: Path) -> None:
         output_dir.mkdir(parents=True, exist_ok=True)
         (output_dir / "context.json").write_text(json.dumps(self.ctx, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
-        (output_dir / "context_sources.json").write_text(json.dumps(self.sources, indent=2, ensure_ascii=False), encoding="utf-8")
+        source_payload = {"source_priority": ["etabs_csv", "e2k", "excel", "computed"],
+                          "values": self.source_details}
+        (output_dir / "context_sources.json").write_text(json.dumps(source_payload, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
         (output_dir / "conflicts.md").write_text("# Context Builder Conflicts\n\n" + ("\n".join(f"- {x}" for x in self.conflicts) if self.conflicts else "None.") + "\n", encoding="utf-8")
         (output_dir / "unresolved.md").write_text("# Context Builder Unresolved Values\n\n" + ("\n".join(f"- {x}" for x in self.unresolved) if self.unresolved else "None.") + "\n", encoding="utf-8")
 
