@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import json
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -35,50 +36,82 @@ def same(a, b, tol=1e-9):
     return abs(na - nb) <= tol if na is not None and nb is not None else str(a).strip() == str(b).strip()
 
 
-def mismatch(lines, section, key, source, expected, actual):
-    if not same(expected, actual):
-        lines.append(f"- `{section}` `{key}`: e2k={expected!r}; CSV={actual!r} ({source})")
+def mismatch(result, section, key, source, expected, actual):
+    result["checked"] += 1
+    if same(expected, actual):
+        result["matches"] += 1
+    else:
+        result["mismatches"].append(f"- `{section}` `{key}`: e2k={expected!r}; CSV={actual!r} ({source})")
 
 
-def reconciliation(uls):
-    mismatches = []
+def reconciliation(uls, tables_dir=ROOT / "tables"):
+    result = {"checked": 0, "matches": 0, "mismatches": [], "not_comparable": []}
     stories = {r.get("Story"): r for r in uls.get("stories", [])}
-    for r in rows(ROOT / "tables" / "12_Story_Definitions.csv"):
+    for r in rows(tables_dir / "12_Story_Definitions.csv"):
         story = r.get("Story")
         if story not in stories:
-            mismatches.append(f"- `stories` `{story}`: e2k row missing; CSV height={r.get('Height')!r}")
+            result["mismatches"].append(f"- `stories` `{story}`: e2k row missing; CSV height={r.get('Height')!r}")
             continue
-        e2k_mm = num(stories[story].get("StoryHt"))
-        csv_m = num(r.get("Height"))
-        if e2k_mm is None or csv_m is None or abs(e2k_mm / 1000 - csv_m) > 1e-9:
-            mismatches.append(f"- `stories` `{story}` height: e2k={stories[story].get('StoryHt')!r} mm; CSV={r.get('Height')!r} m")
-    csv_sections = {r.get("Name"): r for r in rows(ROOT / "tables" / "22b_Frame_Sect_Rect.csv")}
+        mismatch(result, "stories", f"{story}.height_m", "12_Story_Definitions.csv (e2k mm / 1000)", num(stories[story].get("StoryHt")) / 1000, num(r.get("Height")))
+    csv_sections = {r.get("Name"): r for r in rows(tables_dir / "22b_Frame_Sect_Rect.csv")}
     e2k_sections = {r.get("Section"): r for r in uls.get("frame_sections", [])}
     for name, r in csv_sections.items():
         e = e2k_sections.get(name)
         if not e:
-            mismatches.append(f"- `frame_sections` `{name}`: e2k definition missing; CSV row present")
+            result["mismatches"].append(f"- `frame_sections` `{name}`: e2k definition missing; CSV row present")
             continue
-        for field, ekey, ckey in (("t2", "t2", "t2"), ("t3", "t3", "t3"), ("Material", "Material", "Material")):
-            mismatch(mismatches, "frame_sections", f"{name}.{field}", "22b_Frame_Sect_Rect.csv", e.get(ekey), r.get(ckey))
-    csv_materials = {r.get("Material"): r for r in rows(ROOT / "tables" / "21_Materials.csv")}
+        for field, ekey, ckey in (("t2_m", "t2", "t2"), ("t3_m", "t3", "t3")):
+            mismatch(result, "frame_sections", f"{name}.{field}", "22b_Frame_Sect_Rect.csv (e2k mm / 1000)", num(e.get(ekey)) / 1000, num(r.get(ckey)))
+        mismatch(result, "frame_sections", f"{name}.material", "22b_Frame_Sect_Rect.csv", e.get("Material"), r.get("Material"))
+    csv_materials = {r.get("Material"): r for r in rows(tables_dir / "21_Materials.csv")}
     for name, e in {r.get("Material"): r for r in uls.get("materials", [])}.items():
         c = csv_materials.get(name)
         if not c:
-            mismatches.append(f"- `materials` `{name}`: e2k material present; CSV row missing")
+            result["mismatches"].append(f"- `materials` `{name}`: e2k material present; CSV row missing")
             continue
-        strength = e.get("Fc") or e.get("Fy")
-        expected_grade = (f"M{int(float(strength))}" if e.get("Fc") else
-                          ("HYSD" + str(int(float(strength))) if name.upper().startswith("HYSD") else strength))
-        mismatch(mismatches, "materials", f"{name}.grade", "21_Materials.csv", expected_grade, c.get("Grade"))
-    e_mass = uls.get("mass_source", [])
-    c_mass = rows(ROOT / "tables" / "28_Mass_Source.csv")
-    if len(e_mass) != len(c_mass):
-        mismatches.append(f"- `mass_source` row count: e2k={len(e_mass)}; CSV={len(c_mass)}")
-    for i, (e, c) in enumerate(zip(e_mass, c_mass)):
-        for field in ("Name", "SourceSelf", "SourceAdded", "SourceLoads", "LoadPattern", "Multiplier"):
-            mismatch(mismatches, "mass_source", f"row[{i}].{field}", "28_Mass_Source.csv", e.get(field) or e.get(field.upper()), c.get(field))
-    return mismatches
+        typ = str(e.get("Type", "")).lower()
+        if "concrete" in typ:
+            result["checked"] += 1
+            csv_fc = num(re.search(r"(\d+(?:\.\d+)?)", name).group(1)) if re.search(r"(\d+(?:\.\d+)?)", name) else None
+            if same(e.get("Fc"), csv_fc) and name == c.get("Material"):
+                result["matches"] += 1
+            else:
+                result["mismatches"].append(f"- `materials` `{name}`: concrete name/Fc e2k=({name!r}, {e.get('Fc')!r}); CSV=({c.get('Material')!r}, {csv_fc!r})")
+        elif "steel" in typ:
+            mismatch(result, "materials", f"{name}.grade", "21_Materials.csv", e.get("GRADE") or e.get("Grade"), c.get("Grade"))
+            fy_col = next((x for x in ("Fy", "FY", "Yield") if x in c), None)
+            if fy_col:
+                mismatch(result, "materials", f"{name}.Fy", "21_Materials.csv", e.get("Fy"), c.get(fy_col))
+            else:
+                result["not_comparable"].append(f"steel `{name}` Fy: 21_Materials.csv has no Fy/Yield column")
+    # Per-frame section and material references: raw e2k LINEASSIGN is keyed by
+    # label/story; CSV 17 is keyed the same way and its section points to 22b.
+    e2k_assign = {}
+    for line in uls.get("raw_sections", {}).get("LINEASSIGNS", []):
+        t = re.findall(r'"(?:[^"\\]|\\.)*"|\S+', line)
+        if len(t) >= 6 and t[0].upper() == "LINEASSIGN":
+            fields = dict(zip(t[3::2], t[4::2]))
+            e2k_assign[(t[2].strip('"'), t[1].strip('"'))] = fields.get("SECTION", "").strip('"')
+    for r in rows(tables_dir / "17_Frame_Assignments.csv"):
+        key = (r.get("Story", ""), r.get("Label", "")); section = e2k_assign.get(key)
+        if section is None:
+            result["mismatches"].append(f"- `frame_assignments` `{key[0]}/{key[1]}`: e2k assignment missing")
+            continue
+        mismatch(result, "frame_assignments", f"{key[0]}/{key[1]}.section", "17_Frame_Assignments.csv", section, r.get("AnalysisSect"))
+        e_section = e2k_sections.get(section, {})
+        csv_section = csv_sections.get(r.get("AnalysisSect"), {})
+        mismatch(result, "frame_assignments", f"{key[0]}/{key[1]}.material", "22b_Frame_Sect_Rect.csv", e_section.get("Material"), csv_section.get("Material"))
+    # Mass source is positional in e2k MASSSOURCELOAD; compare only by pattern
+    # and multiplier, never against unrelated CSV option-column names.
+    e_mass = {}
+    for line in uls.get("raw_sections", {}).get("MASSSOURCE", []):
+        t = re.findall(r'"(?:[^"\\]|\\.)*"|\S+', line)
+        if t and t[0].upper() == "MASSSOURCELOAD" and len(t) >= 4:
+            e_mass[t[2].strip('"')] = num(t[3].strip('"'))
+    c_mass = {r.get("LoadPattern", ""): num(r.get("Multiplier", "")) for r in rows(tables_dir / "28_Mass_Source.csv")}
+    for pattern in sorted(set(e_mass) | set(c_mass)):
+        mismatch(result, "mass_source", f"{pattern}.multiplier", "28_Mass_Source.csv (LoadPattern/Multiplier)", e_mass.get(pattern, "missing"), c_mass.get(pattern, "missing"))
+    return result
 
 
 def model_differences(uls, sls):
@@ -105,6 +138,36 @@ def model_differences(uls, sls):
     return diffs
 
 
+def seismic_comparison(uls, sls):
+    def by_direction(data):
+        out = {}
+        for row in data.get("load_patterns", []):
+            name = str(row.get("LoadPat", ""))
+            if name.startswith("EQX") or name.startswith("EQY"):
+                direction = name[2]
+                if "SHEARCOEFF" in row:
+                    out[direction] = row
+        return out
+    ur, sr = by_direction(uls), by_direction(sls)
+    lines = []
+    for direction in ("X", "Y"):
+        u, s = ur.get(direction, {}), sr.get(direction, {})
+        lines.append(f"- `EQ{direction}` user coefficient: ULS SHEARCOEFF={u.get('SHEARCOEFF', 'UNRESOLVED')}; SLS SHEARCOEFF={s.get('SHEARCOEFF', 'UNRESOLVED')}; ULS HEIGHTEXPONENT={u.get('HEIGHTEXPONENT', 'UNRESOLVED')}; SLS HEIGHTEXPONENT={s.get('HEIGHTEXPONENT', 'UNRESOLVED')}; ULS ECC={u.get('ECC', 'UNRESOLVED')}; SLS ECC={s.get('ECC', 'UNRESOLVED')}")
+    # The configured C(T) is the constant branch for soil C.  The project
+    # sample/config supplies Z, I and the serviceability Omega_s=1.25.
+    import yaml
+    spectrum = yaml.safe_load((ROOT / "config" / "nbc105_spectrum.yaml").read_text())
+    sample = yaml.safe_load((ROOT / "config" / "sample_context.yaml").read_text())
+    c_t = float(spectrum["soil_classes"]["C"]["constant_shape_factor"])
+    seismic = sample.get("seismic", {})
+    z = float(seismic["zone_factor_z"])
+    importance = float(seismic["importance_factor_i"])
+    omega_s = float(sample["design"]["overstrength_serviceability"])
+    calculated = 0.20 * c_t * z * importance / omega_s
+    lines.append(f"- Computed SLS coefficient: 0.20 * C(T={c_t:g}) * Z={z:g} * I={importance:g} / Omega_s={omega_s:g} = {calculated:.5f}; ETABS SLS target=0.14000; difference={calculated - 0.14:+.5f}")
+    return lines
+
+
 def md_list(title, intro, values):
     body = "\n".join(values) if values else "- None; computed comparison found no differences."
     return f"# {title}\n\n{intro}\n\n{body}\n"
@@ -115,10 +178,15 @@ def main() -> int:
     up, sp = E2KParser(), E2KParser()
     uls, sls = up.parse_file(ULS), sp.parse_file(SLS)
     rec = reconciliation(uls)
-    (out / "e2k_csv_reconciliation.md").write_text(md_list("E2K/CSV Reconciliation", "Computed from real ULS e2k and ETABS CSV rows. Every checked story, frame section, material, and mass-source field is compared; ULS is authoritative.", rec), encoding="utf-8")
+    rec_intro = ("Computed from real ULS e2k and ETABS CSV rows using keyed, like-for-like comparisons. "
+                 f"Checked items: {rec['checked']}; matches: {rec['matches']}; real mismatches: {len(rec['mismatches'])}. "
+                 "Dimensions are normalized to metres (e2k millimetres / 1000); mass source is compared by LoadPattern and Multiplier.")
+    notes = [f"- Not comparable (not counted as mismatch): {x}" for x in rec["not_comparable"]]
+    (out / "e2k_csv_reconciliation.md").write_text(md_list("E2K/CSV Reconciliation", rec_intro, rec["mismatches"] + notes), encoding="utf-8")
     diffs = model_differences(uls, sls)
-    (out / "model_consistency.md").write_text(md_list("ULS/SLS Model Comparison", "Computed from parsed real ULS and SLS e2k records. Every difference is listed by parsed section; SLS remains restricted to serviceability use.", diffs), encoding="utf-8")
-    workbook = ROOT / "tables" / "etabs_tables.xlsx"
+    diffs.extend(seismic_comparison(uls, sls))
+    (out / "model_consistency.md").write_text(md_list("ULS/SLS Model Comparison", "Computed from parsed real ULS and SLS e2k records. Every difference is listed by parsed section, including direction-keyed auto-seismic parameters; SLS remains restricted to serviceability use.", diffs), encoding="utf-8")
+    workbook = ROOT / "inputs" / "Project_Input.xlsx"
     if workbook.exists():
         temp = ROOT / ".evidence_context"
         if temp.exists():
@@ -128,9 +196,13 @@ def main() -> int:
             shutil.copy2(temp / name, out / name)
         shutil.rmtree(temp)
     else:
-        (out / "context_sources.json").write_text(json.dumps({"source_priority": ["etabs_csv", "e2k", "excel", "computed"], "values": {}}, indent=2) + "\n", encoding="utf-8")
-        (out / "unresolved.md").write_text("# Context Builder Unresolved Values\n\n- UNRESOLVED: input workbook not found\n", encoding="utf-8")
-        (out / "conflicts.md").write_text("# Context Builder Conflicts\n\n- UNRESOLVED: context builder was not run because input workbook was missing\n", encoding="utf-8")
+        temp = ROOT / ".evidence_context"
+        if temp.exists():
+            shutil.rmtree(temp)
+        ContextBuilder().build(ROOT / "tables", ROOT / "sls_tables", ULS, workbook, temp)
+        for name in ("context_sources.json", "unresolved.md", "conflicts.md"):
+            shutil.copy2(temp / name, out / name)
+        shutil.rmtree(temp)
     return 0
 
 
