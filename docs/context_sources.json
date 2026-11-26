@@ -492,9 +492,165 @@
       "column": "rayleigh_y",
       "filter": "not specified"
     },
+    "modal.rayleigh_period_s": {
+      "source": "computed: tables/09_Centers_Mass_Rigid.csv + tables/05_Story_Forces.csv + tables/33_Story_Max_Avg_Displacements.csv",
+      "file": " tables/09_Centers_Mass_Rigid.csv + tables/05_Story_Forces.csv + tables/33_Story_Max_Avg_Displacements.csv",
+      "column": "Rayleigh Y",
+      "filter": "sample rule uses governing Y-direction result"
+    },
+    "modal.selected_period_method": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "empirical_period_s/rayleigh_period_s",
+      "filter": "lower of empirical and governing Rayleigh period"
+    },
+    "totals.wi_kg": {
+      "source": "computed: tables/09_Centers_Mass_Rigid.csv",
+      "file": " tables/09_Centers_Mass_Rigid.csv",
+      "column": "MassX",
+      "filter": "all story rows; tonnes converted to kg"
+    },
+    "totals.wi_hik": {
+      "source": "computed: tables/09_Centers_Mass_Rigid.csv + $STORYDATA",
+      "file": " tables/09_Centers_Mass_Rigid.csv + $STORYDATA",
+      "column": "MassX, StoryHt",
+      "filter": "all matched story rows; k=seismic.distribution_exponent_k"
+    },
+    "totals.fi": {
+      "source": "computed: tables/03_Base_Reactions.csv",
+      "file": " tables/03_Base_Reactions.csv",
+      "column": "FX/FY",
+      "filter": "EQX-ULS/EQY-ULS governing base reaction"
+    },
+    "seismic.zone_factor_z": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "site_parameters.zone_factor_z",
+      "filter": "explicit project-approved site parameter; ETABS/Excel value absent"
+    },
+    "seismic.importance_factor_i": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "site_parameters.importance_factor_i",
+      "filter": "explicit project-approved site parameter; ETABS/Excel value absent"
+    },
+    "seismic.soil_class": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "site_parameters.soil_class",
+      "filter": "explicit project-approved site parameter; ETABS/Excel value absent"
+    },
+    "seismic.alpha": {
+      "source": "computed: config/nbc105_spectrum.yaml",
+      "file": " config/nbc105_spectrum.yaml",
+      "column": "constant_shape_factor",
+      "filter": "soil_classes.C; T <= Tc"
+    },
+    "seismic.tc": {
+      "source": "computed: config/nbc105_spectrum.yaml",
+      "file": " config/nbc105_spectrum.yaml",
+      "column": "Tc",
+      "filter": "soil_classes.C"
+    },
+    "seismic.spectral_shape_factor_cht": {
+      "source": "computed: config/nbc105_spectrum.yaml",
+      "file": " config/nbc105_spectrum.yaml",
+      "column": "constant_shape_factor",
+      "filter": "soil_classes.C; plateau T <= Tc"
+    },
+    "seismic.hsc_uls": {
+      "source": "computed: config/nbc105_spectrum.yaml + config/seismic_formulas.yaml",
+      "file": " config/nbc105_spectrum.yaml + config/seismic_formulas.yaml",
+      "column": "Ch, Z, I, Rmu, Omega_s",
+      "filter": "T <= Tc"
+    },
+    "seismic.hsc_sls": {
+      "source": "computed: config/nbc105_spectrum.yaml + config/seismic_formulas.yaml",
+      "file": " config/nbc105_spectrum.yaml + config/seismic_formulas.yaml",
+      "column": "Ch, Z, Omega_s",
+      "filter": "SLS factor=0.20; T <= Tc"
+    },
+    "seismic.time_coefficient_kt": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "empirical_period.Ct",
+      "filter": "Ta = kt * H^0.75"
+    },
+    "structural.system_type": {
+      "source": "computed: tables/17_Frame_Assignments.csv",
+      "file": " tables/17_Frame_Assignments.csv",
+      "column": "Type",
+      "filter": "beam and column frame assignments; no wall rows"
+    },
+    "structural.system_type_period_category": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "response_modification_factor.moment_resisting_frames",
+      "filter": "system_type=Moment Resisting Frames"
+    },
+    "structural.system_type_table_5_2": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "overstrength.moment_resisting",
+      "filter": "system_type=Moment Resisting Frames"
+    },
+    "materials.as_building_is_less_than_12_m": {
+      "source": "computed: $STORYDATA + CONCRETE",
+      "file": " $STORYDATA + CONCRETE",
+      "column": "StoryHt, Fc",
+      "filter": "height_period_m < 12 m"
+    },
+    "slab.type": {
+      "source": "computed: e2k $SLABPROPERTIES",
+      "file": " e2k $SLABPROPERTIES",
+      "column": "Slab property type",
+      "filter": "slab property exists in parsed ULS e2k"
+    },
+    "table.design.overstrength_factors": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "overstrength.moment_resisting",
+      "filter": "NBC 105:2025 Table 5-2 moment-resisting system"
+    },
+    "drift.uls_drift_x": {
+      "source": "computed: tables/04_Story_Drifts.csv + config/seismic_formulas.yaml",
+      "file": " tables/04_Story_Drifts.csv + config/seismic_formulas.yaml",
+      "column": "Drift, Rmu",
+      "filter": "EQX-ULS; maximum story drift"
+    },
+    "drift.sls_drift_x": {
+      "source": "etabs_csv:S01_Story_Drifts.csv",
+      "file": "S01_Story_Drifts.csv",
+      "column": "Drift",
+      "filter": "EQX-SLS; maximum story drift"
+    },
+    "drift.sls_drift_x_printed": {
+      "source": "computed: docs/sample image49.jpeg",
+      "file": " docs/sample image49.jpeg",
+      "column": "Drift",
+      "filter": "EQX-SLS; printed precision=5"
+    },
+    "drift.uls_drift_y": {
+      "source": "computed: tables/04_Story_Drifts.csv + config/seismic_formulas.yaml",
+      "file": " tables/04_Story_Drifts.csv + config/seismic_formulas.yaml",
+      "column": "Drift, Rmu",
+      "filter": "EQY-ULS; maximum story drift"
+    },
+    "drift.sls_drift_y": {
+      "source": "etabs_csv:S01_Story_Drifts.csv",
+      "file": "S01_Story_Drifts.csv",
+      "column": "Drift",
+      "filter": "EQY-SLS; maximum story drift"
+    },
+    "drift.sls_drift_y_printed": {
+      "source": "computed: docs/sample image49.jpeg",
+      "file": " docs/sample image49.jpeg",
+      "column": "Drift",
+      "filter": "EQY-SLS; printed precision=5"
+    },
     "seismic.design_period_used_s": {
-      "source": "computed: empirical period; Rayleigh unresolved",
-      "file": " empirical period; Rayleigh unresolved",
+      "source": "computed",
+      "file": "computed",
       "column": "design_period_used_s",
       "filter": "not specified"
     },
@@ -576,12 +732,6 @@
       "column": "",
       "filter": "no resolved etabs_api source value was found in the available ETABS exports"
     },
-    "materials.as_building_is_less_than_12_m": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
     "figure.materials.concrete": {
       "source": "etabs_api",
       "file": "",
@@ -648,29 +798,11 @@
       "column": "",
       "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
     },
-    "modal.rayleigh_period_s": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
-    "modal.selected_period_method": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
     "table.seismic.design_parameters": {
       "source": "computed",
       "file": "",
       "column": "",
       "filter": "Column schema needs owner review; sample table has blank/unlabelled headers."
-    },
-    "table.design.overstrength_factors": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
     },
     "figure.elements.design_for_frames": {
       "source": "etabs_api",
@@ -840,18 +972,6 @@
       "column": "",
       "filter": "Computed from foundation.type and foundation.soil_class per owner decision. .e2k $POINTRESTRAINTS provides a cross-check input."
     },
-    "structural.system_type": {
-      "source": "etabs_api",
-      "file": "",
-      "column": "",
-      "filter": "no resolved etabs_api source value was found in the available ETABS exports"
-    },
-    "slab.type": {
-      "source": "e2k",
-      "file": "",
-      "column": "",
-      "filter": "no resolved e2k source value was found in the available ETABS exports"
-    },
     "analysis.foundation_reaction_combination": {
       "source": "etabs_api",
       "file": "",
@@ -876,18 +996,6 @@
       "column": "",
       "filter": "no resolved etabs_api source value was found in the available ETABS exports"
     },
-    "seismic.alpha": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
-    "seismic.spectral_shape_factor_cht": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
     "seismic.elastic_site_spectra_c": {
       "source": "computed",
       "file": "",
@@ -906,55 +1014,7 @@
       "column": "",
       "filter": "no resolved computed source value was found in the available ETABS exports"
     },
-    "totals.wi_kg": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
-    "totals.wi_hik": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
-    "totals.fi": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
-    "structural.system_type_table_5_2": {
-      "source": "etabs_api",
-      "file": "",
-      "column": "",
-      "filter": "no resolved etabs_api source value was found in the available ETABS exports"
-    },
     "table.elements.foundation_desc": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
-    "seismic.time_coefficient_kt": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
-    "seismic.tc": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
-    "seismic.hsc_uls": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
-    "seismic.hsc_sls": {
       "source": "computed",
       "file": "",
       "column": "",

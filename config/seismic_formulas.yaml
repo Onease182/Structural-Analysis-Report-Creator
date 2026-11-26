@@ -1,5 +1,9 @@
 # NBC 105:2025 formula inputs used by src/context_builder.py.
 # Values are explicit configuration, never silent code defaults.
+site_parameters:
+  zone_factor_z: 0.35
+  importance_factor_i: 1.0
+  soil_class: C
 empirical_period:
   formula: "Ta = Ct * H^0.75"
   clause: "NBC 105:2025 Cl. 5.3 / project-approved RC-frame parameter"

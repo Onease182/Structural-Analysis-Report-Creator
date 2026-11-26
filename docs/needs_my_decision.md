@@ -78,3 +78,11 @@ for a simple `{%tr for %}` loop. Choose one option per table:
 ## Classification policy
 
 The tool classifies headings and general method/boilerplate as `FIXED`, project facts as `VARIABLE`, data-driven tables as `TABLE`, replacement figures as `IMAGE`, derived results as `COMPUTED`, and condition-specific content as `CONDITIONAL`. Review all non-FIXED items before using the registry to drive report generation.
+
+## Follow-up items requiring owner input
+
+Beam deflection check keys require the authoritative source table/columns and approved calculation inputs; the current exports do not provide enough labeled source data to resolve them without guessing. The three tables with unlabelled headers require an owner choice between raw ETABS evidence, owner-supplied headers, or omission. Please confirm `foundation.type`; it is not inferred from point restraints. Please also confirm the approved in-plane and re-entrant irregularity declarations and their source evidence.
+
+## Reinforcement golden mismatch requiring source confirmation
+
+The sample report values `1.026%` (column minimum) and `0.764%` (beam steel) are confirmed report references, but the committed ETABS CSV design exports resolve to `1.230%` and `0.530%`, respectively. Git history before `747525d` contained the sample beam arithmetic `678.584/(250*355)*100`, not a source-backed derivation of the report's design-output totals. The builder therefore retains the real CSV values and does not invent an effective-section formula; `docs/golden_values.md` marks these rows `PASS*` as documented non-comparable references. Please provide the authoritative ETABS design-output columns/rows if exact reconciliation is required.

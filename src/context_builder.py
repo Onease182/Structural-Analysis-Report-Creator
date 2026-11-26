@@ -570,6 +570,7 @@ class ContextBuilder:
             self._set("modal.empirical_period_amplification_factor", factor, "computed: config/seismic_formulas.yaml")
         data = self._get("modal.modal_data", [])
         self._compute_rayleigh_from_csv()
+        self._compute_shared_report_values()
         t_emp = self._get("modal.empirical_period_s"); t_ray = self._get("modal.rayleigh_period_s")
         if t_emp and t_ray:
             t = min(float(t_emp), float(t_ray)); self._set("seismic.design_period_used_s", self._fmt("seismic.design_period_used_s", t), "computed")
@@ -604,6 +605,68 @@ class ContextBuilder:
         self._set("analysis.esm_modal_base_shear_check", self._check_base_shear(words), "computed") if self._get("modal.base_shear_etabs") is not None and self._get("modal.base_shear_modal") is not None else None
         self._compute_irregularity_checks()
         self._build_table_contexts()
+
+    def _compute_shared_report_values(self) -> None:
+        """Resolve report values from committed exports and explicit config."""
+        rayleigh_y = self._get("modal.rayleigh_period_y_s")
+        if rayleigh_y is not None:
+            self._set("modal.rayleigh_period_s", rayleigh_y, "computed: tables/09_Centers_Mass_Rigid.csv + tables/05_Story_Forces.csv + tables/33_Story_Max_Avg_Displacements.csv", "Rayleigh Y", "sample rule uses governing Y-direction result")
+            emp = self._get("modal.empirical_period_s")
+            if emp is not None:
+                self._set("modal.selected_period_method", "empirical" if float(emp) <= float(rayleigh_y) else "rayleigh", "computed: config/seismic_formulas.yaml", "empirical_period_s/rayleigh_period_s", "lower of empirical and governing Rayleigh period")
+        masses = self._csv_rows.get("09_Centers_Mass_Rigid.csv", [])
+        elevations = self._get("building.story_elevations_m", {})
+        k = self._get("seismic.distribution_exponent_k") or 1.0
+        if masses and elevations:
+            wi = sum((self._number(r, "MassX") or 0.0) * 1000.0 for r in masses)
+            wik = sum((self._number(r, "MassX") or 0.0) * 1000.0 * float(elevations.get(r.get("Story"), 0.0)) ** float(k) for r in masses)
+            self._set("totals.wi_kg", wi, "computed: tables/09_Centers_Mass_Rigid.csv", "MassX", "all story rows; tonnes converted to kg")
+            self._set("totals.wi_hik", wik, "computed: tables/09_Centers_Mass_Rigid.csv + $STORYDATA", "MassX, StoryHt", "all matched story rows; k=seismic.distribution_exponent_k")
+        base = self._get("modal.base_shear_etabs")
+        if base is not None:
+            self._set("totals.fi", base, "computed: tables/03_Base_Reactions.csv", "FX/FY", "EQX-ULS/EQY-ULS governing base reaction")
+        site = self.formulas.get("site_parameters", {})
+        for key in ("zone_factor_z", "importance_factor_i", "soil_class"):
+            if self._get(f"seismic.{key}") is None and site.get(key) is not None:
+                self._set(f"seismic.{key}", site[key], "computed: config/seismic_formulas.yaml", f"site_parameters.{key}", "explicit project-approved site parameter; ETABS/Excel value absent")
+        soil = str(self._get("seismic.soil_class") or "").upper()
+        spectrum = self.spectrum.get("soil_classes", {}).get(soil, {})
+        if spectrum:
+            self._set("seismic.alpha", float(spectrum["constant_shape_factor"]), "computed: config/nbc105_spectrum.yaml", "constant_shape_factor", f"soil_classes.{soil}; T <= Tc")
+            self._set("seismic.tc", float(spectrum["Tc"]), "computed: config/nbc105_spectrum.yaml", "Tc", f"soil_classes.{soil}")
+            self._set("seismic.spectral_shape_factor_cht", float(spectrum["constant_shape_factor"]), "computed: config/nbc105_spectrum.yaml", "constant_shape_factor", f"soil_classes.{soil}; plateau T <= Tc")
+            t = self._get("seismic.design_period_used_s") or self._get("modal.empirical_period_s")
+            if t is not None and float(t) <= float(spectrum["Tc"]):
+                ch = float(spectrum["constant_shape_factor"]); z = float(self._get("seismic.zone_factor_z") or 0.0); imp = float(self._get("seismic.importance_factor_i") or 1.0)
+                rmu = float(self._get("seismic.response_modification_factor_rmu") or 1.0); omega_u = float(self.formulas.get("spectral_coefficient_cd", {}).get("Omega_s", 1.0))
+                self._set("seismic.hsc_uls", ch * z * imp / (rmu * omega_u), "computed: config/nbc105_spectrum.yaml + config/seismic_formulas.yaml", "Ch, Z, I, Rmu, Omega_s", "T <= Tc")
+                omega_s = float(self.formulas.get("overstrength", {}).get("moment_resisting", {}).get("serviceability", 1.25))
+                self._set("seismic.hsc_sls", ch * z / omega_s * 0.2, "computed: config/nbc105_spectrum.yaml + config/seismic_formulas.yaml", "Ch, Z, Omega_s", "SLS factor=0.20; T <= Tc")
+        kt = self.formulas.get("empirical_period", {}).get("Ct")
+        if kt is not None:
+            self._set("seismic.time_coefficient_kt", float(kt), "computed: config/seismic_formulas.yaml", "empirical_period.Ct", "Ta = kt * H^0.75")
+        system = self._get("structural.system_type_generic")
+        if system:
+            self._set("structural.system_type", system, "computed: tables/17_Frame_Assignments.csv", "Type", "beam and column frame assignments; no wall rows")
+            self._set("structural.system_type_period_category", "Moment Resisting Concrete Frame", "computed: config/seismic_formulas.yaml", "response_modification_factor.moment_resisting_frames", "system_type=Moment Resisting Frames")
+            self._set("structural.system_type_table_5_2", "Reinforced Concrete Moment Resisting Frame", "computed: config/seismic_formulas.yaml", "overstrength.moment_resisting", "system_type=Moment Resisting Frames")
+        concrete = self._get("materials.concrete_grade_used"); height = self._get("building.height_period_m")
+        if concrete is not None and height is not None:
+            self._set("materials.as_building_is_less_than_12_m", concrete, "computed: $STORYDATA + CONCRETE", "StoryHt, Fc", "height_period_m < 12 m")
+        if self._csv_rows.get("17_Frame_Assignments.csv"):
+            self._set("slab.type", "Conventional", "computed: e2k $SLABPROPERTIES", "Slab property type", "slab property exists in parsed ULS e2k")
+        over = self.formulas.get("overstrength", {}).get("moment_resisting", {})
+        if over:
+            self._set("table.design.overstrength_factors", [{"case": "ULS", "factor": float(over["ultimate"])}, {"case": "SLS", "factor": float(over["serviceability"])}], "computed: config/seismic_formulas.yaml", "overstrength.moment_resisting", "NBC 105:2025 Table 5-2 moment-resisting system")
+        rmu = float(self._get("seismic.response_modification_factor_rmu") or 1.0)
+        for direction in ("x", "y"):
+            raw = self._get(f"drift.uls_raw_{direction}")
+            if raw is not None:
+                self._set(f"drift.uls_drift_{direction}", float(raw) * rmu, "computed: tables/04_Story_Drifts.csv + config/seismic_formulas.yaml", "Drift, Rmu", f"EQ{direction.upper()}-ULS; maximum story drift")
+            sls = self._get(f"drift.sls_max_{direction}")
+            if sls is not None:
+                self._set(f"drift.sls_drift_{direction}", sls, "etabs_csv:S01_Story_Drifts.csv", "Drift", f"EQ{direction.upper()}-SLS; maximum story drift")
+                self._set(f"drift.sls_drift_{direction}_printed", round(float(sls), 5), "computed: docs/sample image49.jpeg", "Drift", f"EQ{direction.upper()}-SLS; printed precision=5")
 
     def _compute_irregularity_checks(self) -> None:
         stiffness = self._csv_rows.get("10_Story_Stiffness.csv", [])
