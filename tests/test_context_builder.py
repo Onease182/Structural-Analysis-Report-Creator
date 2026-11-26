@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -137,6 +138,35 @@ class ContextBuilderTests(unittest.TestCase):
         self.assertAlmostEqual(builder.ctx["drift"]["sls_max_displacement_mm"], 20.82, places=3)
         self.assertAlmostEqual(builder.ctx["drift"]["sls_joint_max_displacement_mm"], 22.371, places=3)
         self.assertFalse(any("higher-priority source retained" in item for item in builder.conflicts))
+
+    def test_real_computed_groups_and_loop_tables(self) -> None:
+        builder = ContextBuilder()
+        with tempfile.TemporaryDirectory() as tmp:
+            ctx = builder.build(ROOT / "tables", ROOT / "sls_tables", REAL_ULS, ROOT / "missing.xlsx", Path(tmp) / "project")
+        self.assertAlmostEqual(float(ctx["modal"]["rayleigh_period_x_s"]), 0.602, places=3)
+        self.assertAlmostEqual(float(ctx["modal"]["rayleigh_period_y_s"]), 0.531, places=3)
+        self.assertAlmostEqual(float(ctx["drift"]["uls_max_x_mm"]), 122.296, places=3)
+        self.assertAlmostEqual(float(ctx["drift"]["uls_max_y_mm"]), 74.744, places=3)
+        self.assertAlmostEqual(float(ctx["irregularity"]["torsion_x_ratio"]), 1.469, places=3)
+        self.assertAlmostEqual(float(ctx["irregularity"]["torsion_y_ratio"]), 1.032, places=3)
+        self.assertEqual(ctx["seismic"]["spectral_coefficient_cd"], 0.1458)
+        self.assertTrue(ctx["table"]["modal"]["rayleigh_x"])
+        self.assertTrue(ctx["table"]["drift"]["sls_story_drift_figures_x_y"])
+
+    def test_every_non_excel_registry_key_is_value_or_explicit_unresolved(self) -> None:
+        builder = ContextBuilder()
+        with tempfile.TemporaryDirectory() as tmp:
+            ctx = builder.build(ROOT / "tables", ROOT / "sls_tables", REAL_ULS, ROOT / "missing.xlsx", Path(tmp) / "project")
+        registry = yaml.safe_load((ROOT / "config" / "placeholder_registry.yaml").read_text())["items"]
+        def lookup(key):
+            value = ctx
+            for part in key.split("."):
+                if not isinstance(value, dict) or part not in value:
+                    return None
+                value = value[part]
+            return value
+        target = [entry["key"] for entry in registry if entry.get("source") in {"e2k", "computed", "etabs_api"}]
+        self.assertEqual([key for key in target if lookup(key) is None], [])
 
 
 if __name__ == "__main__":

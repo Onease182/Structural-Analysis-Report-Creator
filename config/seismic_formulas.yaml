@@ -5,6 +5,10 @@ empirical_period:
   clause: "NBC 105:2025 Cl. 5.3 / project-approved RC-frame parameter"
   Ct: 0.075
   amplification_factor: 1.25
+response_modification_factor:
+  moment_resisting_frames: 4.0
+beam_design:
+  effective_depth_offset_mm: 75.0
 rayleigh_period:
   formula: "T = 2*pi*sqrt(sum(Wi*di^2)/(g*sum(Fi*di)))"
   clause: "NBC 105:2025 dynamic analysis period calculation"

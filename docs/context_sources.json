@@ -6,6 +6,48 @@
     "computed"
   ],
   "values": {
+    "seismic.eqx_eccentricity": {
+      "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
+      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
+      "column": "ECC",
+      "filter": "SEISMIC \"EQX-ULS\""
+    },
+    "seismic.eqx_shear_coefficient": {
+      "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
+      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
+      "column": "SHEARCOEFF",
+      "filter": "SEISMIC \"EQX-ULS\""
+    },
+    "seismic.eqx_height_exponent": {
+      "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
+      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
+      "column": "HEIGHTEXPONENT",
+      "filter": "SEISMIC \"EQX-ULS\""
+    },
+    "seismic.spectral_coefficient_cd": {
+      "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
+      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
+      "column": "SHEARCOEFF",
+      "filter": "SEISMIC \"EQY-ULS\""
+    },
+    "seismic.eqy_eccentricity": {
+      "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
+      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
+      "column": "ECC",
+      "filter": "SEISMIC \"EQY-ULS\""
+    },
+    "seismic.eqy_shear_coefficient": {
+      "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
+      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
+      "column": "SHEARCOEFF",
+      "filter": "SEISMIC \"EQY-ULS\""
+    },
+    "seismic.eqy_height_exponent": {
+      "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
+      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
+      "column": "HEIGHTEXPONENT",
+      "filter": "SEISMIC \"EQY-ULS\""
+    },
     "building.storeys_above_grade": {
       "source": "e2k",
       "file": "e2k",
@@ -114,6 +156,12 @@
       "column": "modal_data",
       "filter": "not specified"
     },
+    "table.modal.periods_mass_part": {
+      "source": "etabs_csv:02_Modal_Mass_Ratios.csv",
+      "file": "02_Modal_Mass_Ratios.csv",
+      "column": "Mode/Period/UX/UY",
+      "filter": "all modal rows"
+    },
     "modal.base_shear_etabs_x": {
       "source": "etabs_csv:03_Base_Reactions.csv",
       "file": "03_Base_Reactions.csv",
@@ -138,6 +186,18 @@
       "column": "data",
       "filter": "not specified"
     },
+    "drift.uls_raw_x": {
+      "source": "etabs_csv:04_Story_Drifts.csv",
+      "file": "04_Story_Drifts.csv",
+      "column": "Drift",
+      "filter": "OutputCase=EQX-ULS, Direction=X"
+    },
+    "drift.uls_raw_y": {
+      "source": "etabs_csv:04_Story_Drifts.csv",
+      "file": "04_Story_Drifts.csv",
+      "column": "Drift",
+      "filter": "OutputCase=EQY-ULS, Direction=Y"
+    },
     "analysis.story_force_data": {
       "source": "etabs_csv",
       "file": "etabs_csv",
@@ -145,34 +205,208 @@
       "filter": "not specified"
     },
     "design.column.max_provided_pct": {
-      "source": "etabs_csv",
-      "file": "etabs_csv",
-      "column": "max_provided_pct",
-      "filter": "not specified"
+      "source": "etabs_csv:07_Column_Design.csv",
+      "file": "07_Column_Design.csv",
+      "column": "RatioRebar",
+      "filter": "all column design rows"
+    },
+    "design.column.min_provided_pct": {
+      "source": "etabs_csv:07_Column_Design.csv",
+      "file": "07_Column_Design.csv",
+      "column": "RatioRebar",
+      "filter": "all column design rows"
+    },
+    "design.column.max_limit_pct": {
+      "source": "computed: config/formats.yaml",
+      "file": " config/formats.yaml",
+      "column": "limits.max_column_steel_pct",
+      "filter": "configured maximum"
+    },
+    "design.column.min_limit_pct": {
+      "source": "computed: config/formats.yaml",
+      "file": " config/formats.yaml",
+      "column": "limits.min_column_steel_pct",
+      "filter": "configured minimum"
+    },
+    "design.column.max_status": {
+      "source": "computed: config/formats.yaml",
+      "file": " config/formats.yaml",
+      "column": "status_words",
+      "filter": "max column steel check"
+    },
+    "design.column.min_status": {
+      "source": "computed: config/formats.yaml",
+      "file": " config/formats.yaml",
+      "column": "status_words",
+      "filter": "min column steel check"
+    },
+    "design.column.max_section_width_mm": {
+      "source": "etabs_csv:07_Column_Design.csv",
+      "file": "07_Column_Design.csv",
+      "column": "DesignSect",
+      "filter": "DesignSect=Column 355 x 355"
+    },
+    "design.column.max_section_depth_mm": {
+      "source": "etabs_csv:07_Column_Design.csv",
+      "file": "07_Column_Design.csv",
+      "column": "DesignSect",
+      "filter": "DesignSect=Column 355 x 355"
+    },
+    "design.column.max_rebar_area_mm2": {
+      "source": "computed: 07_Column_Design.csv",
+      "file": " 07_Column_Design.csv",
+      "column": "RatioRebar + DesignSect",
+      "filter": "governing DesignSect=Column 355 x 355"
+    },
+    "design.beam.max_rebar_area_mm2": {
+      "source": "etabs_csv:08_Beam_Design.csv",
+      "file": "08_Beam_Design.csv",
+      "column": "AsTop/AsBot",
+      "filter": "maximum over beam rows"
+    },
+    "design.beam.max_section_width_mm": {
+      "source": "etabs_csv:08_Beam_Design.csv",
+      "file": "08_Beam_Design.csv",
+      "column": "DesignSect",
+      "filter": "DesignSect=Beam 250 x 430"
+    },
+    "design.beam.max_section_depth_mm": {
+      "source": "etabs_csv:08_Beam_Design.csv",
+      "file": "08_Beam_Design.csv",
+      "column": "DesignSect",
+      "filter": "DesignSect=Beam 250 x 430; effective depth"
+    },
+    "design.beam.max_provided_pct": {
+      "source": "etabs_csv:08_Beam_Design.csv",
+      "file": "08_Beam_Design.csv",
+      "column": "AsTop/AsBot + DesignSect",
+      "filter": "maximum area divided by 250x355 mm effective section"
+    },
+    "design.beam.max_limit_pct": {
+      "source": "computed: config/formats.yaml",
+      "file": " config/formats.yaml",
+      "column": "limits.max_beam_steel_pct",
+      "filter": "configured maximum"
+    },
+    "design.beam.min_provided_pct": {
+      "source": "etabs_csv:08_Beam_Design.csv",
+      "file": "08_Beam_Design.csv",
+      "column": "AsTop/AsBot",
+      "filter": "minimum over beam rows"
+    },
+    "design.beam.min_limit_pct": {
+      "source": "computed: config/formats.yaml",
+      "file": " config/formats.yaml",
+      "column": "limits.min_beam_steel_pct",
+      "filter": "configured minimum"
+    },
+    "design.beam.maximum_reinforcement.status": {
+      "source": "computed: config/formats.yaml",
+      "file": " config/formats.yaml",
+      "column": "status_words",
+      "filter": "maximum beam steel check"
+    },
+    "design.beam.minimum_reinforcement.status": {
+      "source": "computed: config/formats.yaml",
+      "file": " config/formats.yaml",
+      "column": "status_words",
+      "filter": "minimum beam steel check"
+    },
+    "analysis.mass_data": {
+      "source": "etabs_csv:09_Centers_Mass_Rigid.csv",
+      "file": "09_Centers_Mass_Rigid.csv",
+      "column": "MassX/MassY",
+      "filter": "all story rows"
+    },
+    "analysis.story_stiffness_data": {
+      "source": "etabs_csv:10_Story_Stiffness.csv",
+      "file": "10_Story_Stiffness.csv",
+      "column": "StiffX/StiffY",
+      "filter": "EQX-ULS/EQY-ULS step 1"
+    },
+    "analysis.frame_assignments": {
+      "source": "etabs_csv:17_Frame_Assignments.csv",
+      "file": "17_Frame_Assignments.csv",
+      "column": "AnalysisSect/DesignSect",
+      "filter": "all frame rows"
+    },
+    "structural.system_type_generic": {
+      "source": "etabs_csv:17_Frame_Assignments.csv",
+      "file": "17_Frame_Assignments.csv",
+      "column": "Type",
+      "filter": "frame assignments contain beams and columns; no wall rows"
+    },
+    "seismic.response_modification_factor_rmu": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "response_modification_factor.moment_resisting_frames",
+      "filter": "Moment Resisting Frames"
+    },
+    "table.elements.beam_desc": {
+      "source": "etabs_csv:17_Frame_Assignments.csv",
+      "file": "17_Frame_Assignments.csv",
+      "column": "DesignSect",
+      "filter": "DesignSect=Beam 250 x 430"
+    },
+    "table.elements.col_desc": {
+      "source": "etabs_csv:17_Frame_Assignments.csv",
+      "file": "17_Frame_Assignments.csv",
+      "column": "DesignSect",
+      "filter": "DesignSect=Column 355 x 355"
+    },
+    "analysis.material_data": {
+      "source": "etabs_csv:21_Materials.csv",
+      "file": "21_Materials.csv",
+      "column": "Type/Grade",
+      "filter": "all material rows"
     },
     "irregularity.torsion_ratio": {
-      "source": "etabs_csv",
-      "file": "etabs_csv",
-      "column": "torsion_ratio",
-      "filter": "not specified"
+      "source": "etabs_csv:33_Story_Max_Avg_Displacements.csv",
+      "file": "33_Story_Max_Avg_Displacements.csv",
+      "column": "Ratio",
+      "filter": "maximum over supplied rows"
     },
     "drift.uls_max_x_mm": {
       "source": "etabs_csv:33_Story_Max_Avg_Displacements.csv",
       "file": "33_Story_Max_Avg_Displacements.csv",
-      "column": "uls_max_x_mm",
-      "filter": "not specified"
+      "column": "Maximum",
+      "filter": "OutputCase=EQX-ULS, Direction=X"
+    },
+    "irregularity.torsion_x_ratio": {
+      "source": "etabs_csv:33_Story_Max_Avg_Displacements.csv",
+      "file": "33_Story_Max_Avg_Displacements.csv",
+      "column": "Ratio",
+      "filter": "OutputCase=EQX-ULS, Direction=X"
     },
     "drift.uls_max_y_mm": {
       "source": "etabs_csv:33_Story_Max_Avg_Displacements.csv",
       "file": "33_Story_Max_Avg_Displacements.csv",
-      "column": "uls_max_y_mm",
-      "filter": "not specified"
+      "column": "Maximum",
+      "filter": "OutputCase=EQY-ULS, Direction=Y"
+    },
+    "irregularity.torsion_y_ratio": {
+      "source": "etabs_csv:33_Story_Max_Avg_Displacements.csv",
+      "file": "33_Story_Max_Avg_Displacements.csv",
+      "column": "Ratio",
+      "filter": "OutputCase=EQY-ULS, Direction=Y"
     },
     "drift.sls_max_displacement_mm": {
       "source": "etabs_csv:S14_Story_Max_Avg_Displacements.csv",
       "file": "S14_Story_Max_Avg_Displacements.csv",
       "column": "Maximum",
       "filter": "maximum over S14 story rows"
+    },
+    "drift.sls_max_displacement_x_mm": {
+      "source": "etabs_csv:S14_Story_Max_Avg_Displacements.csv",
+      "file": "S14_Story_Max_Avg_Displacements.csv",
+      "column": "Maximum",
+      "filter": "Direction=X; maximum over S14 story rows"
+    },
+    "drift.sls_max_displacement_y_mm": {
+      "source": "etabs_csv:S14_Story_Max_Avg_Displacements.csv",
+      "file": "S14_Story_Max_Avg_Displacements.csv",
+      "column": "Maximum",
+      "filter": "Direction=Y; maximum over S14 story rows"
     },
     "drift.sls_max_x": {
       "source": "etabs_csv:S01_Story_Drifts.csv",
@@ -210,11 +444,587 @@
       "column": "empirical_period_amplification_factor",
       "filter": "not specified"
     },
+    "modal.rayleigh_period_x_s": {
+      "source": "computed: tables/09_Centers_Mass_Rigid.csv + tables/05_Story_Forces.csv + tables/33_Story_Max_Avg_Displacements.csv",
+      "file": " tables/09_Centers_Mass_Rigid.csv + tables/05_Story_Forces.csv + tables/33_Story_Max_Avg_Displacements.csv",
+      "column": "MassX/MassY, VX/VY, Average",
+      "filter": "Story matched; OutputCase=EQX-ULS/EQY-ULS; StepNumber=1"
+    },
+    "totals.fi_di_x": {
+      "source": "computed: Rayleigh rows",
+      "file": " Rayleigh rows",
+      "column": "Fi*di",
+      "filter": "all matched stories"
+    },
+    "totals.wi_di2_x": {
+      "source": "computed: Rayleigh rows",
+      "file": " Rayleigh rows",
+      "column": "Wi*di²",
+      "filter": "all matched stories"
+    },
+    "table.modal.rayleigh_x": {
+      "source": "computed: Rayleigh rows",
+      "file": " Rayleigh rows",
+      "column": "rayleigh_x",
+      "filter": "not specified"
+    },
+    "modal.rayleigh_period_y_s": {
+      "source": "computed: tables/09_Centers_Mass_Rigid.csv + tables/05_Story_Forces.csv + tables/33_Story_Max_Avg_Displacements.csv",
+      "file": " tables/09_Centers_Mass_Rigid.csv + tables/05_Story_Forces.csv + tables/33_Story_Max_Avg_Displacements.csv",
+      "column": "MassX/MassY, VX/VY, Average",
+      "filter": "Story matched; OutputCase=EQX-ULS/EQY-ULS; StepNumber=1"
+    },
+    "totals.fi_di_y": {
+      "source": "computed: Rayleigh rows",
+      "file": " Rayleigh rows",
+      "column": "Fi*di",
+      "filter": "all matched stories"
+    },
+    "totals.wi_di2_y": {
+      "source": "computed: Rayleigh rows",
+      "file": " Rayleigh rows",
+      "column": "Wi*di²",
+      "filter": "all matched stories"
+    },
+    "table.modal.rayleigh_y": {
+      "source": "computed: Rayleigh rows",
+      "file": " Rayleigh rows",
+      "column": "rayleigh_y",
+      "filter": "not specified"
+    },
+    "seismic.design_period_used_s": {
+      "source": "computed: empirical period; Rayleigh unresolved",
+      "file": " empirical period; Rayleigh unresolved",
+      "column": "design_period_used_s",
+      "filter": "not specified"
+    },
+    "seismic.distribution_exponent_k": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "design_period_used_s",
+      "filter": "NBC 105 linear interpolation between 0.5 s and 2.5 s"
+    },
+    "design.overstrength_ultimate": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "overstrength_ultimate",
+      "filter": "not specified"
+    },
+    "design.overstrength_serviceability": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "overstrength_serviceability",
+      "filter": "not specified"
+    },
     "irregularity.torsion_result": {
       "source": "computed",
       "file": "computed",
       "column": "torsion_result",
       "filter": "not specified"
+    },
+    "analysis.soft_storey_result": {
+      "source": "computed: tables/10_Story_Stiffness.csv",
+      "file": " tables/10_Story_Stiffness.csv",
+      "column": "StiffX/StiffY",
+      "filter": "adjacent-storey stiffness ratio; threshold=0.70"
+    },
+    "analysis.mass_irregularity_result": {
+      "source": "computed: tables/09_Centers_Mass_Rigid.csv",
+      "file": " tables/09_Centers_Mass_Rigid.csv",
+      "column": "MassX/MassY",
+      "filter": "consecutive-storey relative mass change; threshold=0.50"
+    },
+    "table.seismic.empirical_period": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "empirical_period",
+      "filter": "not specified"
+    },
+    "table.seismic.vertical_force_dist": {
+      "source": "computed: 09_Centers_Mass_Rigid.csv + story elevations",
+      "file": " 09_Centers_Mass_Rigid.csv + story elevations",
+      "column": "vertical_force_dist",
+      "filter": "not specified"
+    },
+    "table.drift.uls_displacement_figures_x_y": {
+      "source": "etabs_csv:33_Story_Max_Avg_Displacements.csv",
+      "file": "33_Story_Max_Avg_Displacements.csv",
+      "column": "uls_displacement_figures_x_y",
+      "filter": "not specified"
+    },
+    "table.drift.sls_displacement_figures_x_y": {
+      "source": "etabs_csv:S14_Story_Max_Avg_Displacements.csv",
+      "file": "S14_Story_Max_Avg_Displacements.csv",
+      "column": "sls_displacement_figures_x_y",
+      "filter": "not specified"
+    },
+    "table.drift.uls_story_drift_figures_x_y": {
+      "source": "etabs_csv:04_Story_Drifts.csv",
+      "file": "04_Story_Drifts.csv",
+      "column": "uls_story_drift_figures_x_y",
+      "filter": "not specified"
+    },
+    "table.drift.sls_story_drift_figures_x_y": {
+      "source": "etabs_csv:S01_Story_Drifts.csv",
+      "file": "S01_Story_Drifts.csv",
+      "column": "sls_story_drift_figures_x_y",
+      "filter": "not specified"
+    },
+    "table.elements.sizes_and_materials": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "no resolved etabs_api source value was found in the available ETABS exports"
+    },
+    "materials.as_building_is_less_than_12_m": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "figure.materials.concrete": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.irregularity.eqx_eccentricity": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.irregularity.eqx_eccentricity_b": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.irregularity.acc_eccentricity": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.irregularity.acc_eccentricity_b": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "foundation.modeling_software": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "The software/version narrative is project-specific and may be omitted."
+    },
+    "table.loads.load_assessment": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Column schema needs owner review; sample table has blank/unlabelled headers."
+    },
+    "figure.loads.cases": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.project.mass_sources_considered": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.project.mass_sources_b": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.modal.uls_force_distribution": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "modal.rayleigh_period_s": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "modal.selected_period_method": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "table.seismic.design_parameters": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "Column schema needs owner review; sample table has blank/unlabelled headers."
+    },
+    "table.design.overstrength_factors": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "figure.elements.design_for_frames": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "table.design.slab_design_output": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Column schema needs owner review; sample table has blank/unlabelled headers."
+    },
+    "table.design.beam_deflection_check": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "figure.elements.beams_design": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.elements.beams_design_b": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.foundation.reaction_uls": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.foundation.reaction_uls_b": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.foundation.reaction_uls_c": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.foundation.design_main": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.foundation.design_b": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.foundation.design_c": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.foundation.design_d": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.drift.displacement": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.drift.displacement_b": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.irregularity.torsional": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.irregularity.soft_story": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.irregularity.soft_story_panel_b": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.irregularity.in_plane": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.irregularity.re_entrant_corners": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.irregularity.diaphragm": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.irregularity.out_of_plane_offset": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.elements.rebar_grid_a": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.elements.rebar_grid_b": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.elements.rebar_story1": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.elements.rebar_story2": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "figure.elements.rebar_story3": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Generated from ETABS or supplied by the user; the figure manager must resolve its source."
+    },
+    "foundation.type": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "foundation.support_condition": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "Computed from foundation.type and foundation.soil_class per owner decision. .e2k $POINTRESTRAINTS provides a cross-check input."
+    },
+    "structural.system_type": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "no resolved etabs_api source value was found in the available ETABS exports"
+    },
+    "slab.type": {
+      "source": "e2k",
+      "file": "",
+      "column": "",
+      "filter": "no resolved e2k source value was found in the available ETABS exports"
+    },
+    "analysis.foundation_reaction_combination": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "Caption text is variable; retain the existing foundation reaction image."
+    },
+    "analysis.in_plane_discontinuity_result": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "Select the result variant from computed project checks."
+    },
+    "analysis.reentrant_corner_result": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "Select the result variant from computed project checks."
+    },
+    "table.elements.slab_desc": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "no resolved etabs_api source value was found in the available ETABS exports"
+    },
+    "seismic.alpha": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "seismic.spectral_shape_factor_cht": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "seismic.elastic_site_spectra_c": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "seismic.elastic_site_spectra_cs": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "loads.slab_dead_load": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "totals.wi_kg": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "totals.wi_hik": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "totals.fi": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "structural.system_type_table_5_2": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "no resolved etabs_api source value was found in the available ETABS exports"
+    },
+    "table.elements.foundation_desc": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "seismic.time_coefficient_kt": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "seismic.tc": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "seismic.hsc_uls": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "seismic.hsc_sls": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "table.design.beam_effective_span": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "table.design.beam_overall_depth": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "table.design.beam_effective_depth": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "table.design.beam_basic_ld_ratio": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "table.design.beam_ast_req": {
+      "source": "etabs_api",
+      "file": "",
+      "column": "",
+      "filter": "no resolved etabs_api source value was found in the available ETABS exports"
+    },
+    "table.design.beam_pt": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "table.design.beam_fs": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "table.design.beam_mod_factor": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "table.design.beam_permissible_ld": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "table.design.beam_provided_ld": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
+    },
+    "table.design.beam_check_result": {
+      "source": "computed",
+      "file": "",
+      "column": "",
+      "filter": "no resolved computed source value was found in the available ETABS exports"
     }
   }
 }

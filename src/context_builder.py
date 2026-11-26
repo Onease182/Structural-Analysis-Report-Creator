@@ -10,6 +10,7 @@ import argparse
 import csv
 import json
 import math
+import re
 import sys
 from pathlib import Path
 from typing import Any, Iterable
@@ -27,12 +28,18 @@ SPECTRUM = ROOT / "config" / "nbc105_spectrum.yaml"
 try:
     from validate_extraction import EXPECTED_COLUMNS, load_csvs, validate_tables
 except ImportError:  # pragma: no cover - direct execution from another cwd
-    EXPECTED_COLUMNS, load_csvs, validate_tables = {}, None, None
+    try:
+        from validate_extraction import EXPECTED_COLUMNS, load_csvs, validate_tables
+    except ImportError:
+        EXPECTED_COLUMNS, load_csvs, validate_tables = {}, None, None
 
 try:
     from generate_sls_drift_report import build_stories, evaluate, tidy_joint_drifts, tidy_story_drifts
 except ImportError:  # pragma: no cover
-    build_stories = evaluate = tidy_joint_drifts = tidy_story_drifts = None
+    try:
+        from generate_sls_drift_report import build_stories, evaluate, tidy_joint_drifts, tidy_story_drifts
+    except ImportError:
+        build_stories = evaluate = tidy_joint_drifts = tidy_story_drifts = None
 
 
 class ContextBuilder:
@@ -48,6 +55,7 @@ class ContextBuilder:
         self.mapping = self._load_yaml(MAPPING)
         self.formulas = self._load_yaml(SEISMIC_FORMULAS)
         self.spectrum = self._load_yaml(SPECTRUM) if SPECTRUM.exists() else {}
+        self._csv_rows: dict[str, list[dict[str, Any]]] = {}
 
     @staticmethod
     def _load_yaml(path: Path) -> dict[str, Any]:
@@ -155,6 +163,7 @@ class ContextBuilder:
         else:
             self._unresolved(f"SLS tables directory not found: {sls_tables_dir}")
         self._compute()
+        self._ensure_registry_coverage()
         self._write_outputs(Path(output_dir))
         return self.ctx
 
@@ -180,6 +189,15 @@ class ContextBuilder:
         try:
             from src.e2k_parser import E2KParser
             data = E2KParser().parse_file(path)
+            seismic_text = path.read_text(encoding="utf-8", errors="replace")
+            for direction in ("X", "Y"):
+                match = re.search(rf'SEISMIC\s+"EQ{direction}-ULS".*?ECC\s+([0-9.]+).*?SHEARCOEFF\s+([0-9.]+)\s+HEIGHTEXPONENT\s+([0-9.]+)', seismic_text)
+                if match:
+                    ecc, coeff, exponent = (float(x) for x in match.groups())
+                    self._set(f"seismic.eq{direction.lower()}_eccentricity", ecc, f"e2k:{self._repo_path(path)}", "ECC", f'SEISMIC "EQ{direction}-ULS"')
+                    self._set(f"seismic.eq{direction.lower()}_shear_coefficient", coeff, f"e2k:{self._repo_path(path)}", "SHEARCOEFF", f'SEISMIC "EQ{direction}-ULS"')
+                    self._set(f"seismic.eq{direction.lower()}_height_exponent", exponent, f"e2k:{self._repo_path(path)}", "HEIGHTEXPONENT", f'SEISMIC "EQ{direction}-ULS"')
+                    self._set("seismic.spectral_coefficient_cd", coeff, f"e2k:{self._repo_path(path)}", "SHEARCOEFF", f'SEISMIC "EQ{direction}-ULS"')
             stories = data.get("stories", [])
             above = [s for s in stories if s.get("Story") != "Base"]
             # Real ETABS exports store geometry in the file units (mm for the
@@ -259,6 +277,7 @@ class ContextBuilder:
         for path in sorted(directory.glob("*.csv")):
             try:
                 rows = self._read_csv_rows(path)
+                self._csv_rows[path.name] = rows
                 name = path.stem.lower()
                 if "modal" in name and "mass" in name:
                     self._process_modal_mass(rows, path.name)
@@ -270,9 +289,19 @@ class ContextBuilder:
                     self._process_base_reactions(rows, path.name)
                 elif "column" in name and "design" in name:
                     self._process_column_design(rows, path.name)
+                elif "beam" in name and "design" in name:
+                    self._process_beam_design(rows, path.name)
                 elif "story" in name and "max_avg" in name:
                     self._process_torsion(rows, path.name)
                     self._process_displacement_summary(rows, path.name, "drift.uls")
+                elif name == "09_centers_mass_rigid":
+                    self._process_mass(rows, path.name)
+                elif name == "10_story_stiffness":
+                    self._process_stiffness(rows, path.name)
+                elif name == "17_frame_assignments":
+                    self._process_sections(rows, path.name)
+                elif name == "21_materials":
+                    self._process_materials(rows, path.name)
             except Exception as exc:
                 self.conflicts.append(f"Error reading {path.name}: {exc}")
 
@@ -292,6 +321,7 @@ class ContextBuilder:
         if modes:
             self._set("modal.modes_included_count", next((m["mode"] for m in modes if m["sum_ux"] >= .9 and m["sum_uy"] >= .9), modes[-1]["mode"]), "etabs_csv")
             self._set("modal.modal_data", modes, "etabs_csv")
+            self._set("table.modal.periods_mass_part", modes, "etabs_csv:02_Modal_Mass_Ratios.csv", "Mode/Period/UX/UY", "all modal rows")
 
     def _process_story_forces(self, rows: list[dict[str, Any]], file: str) -> None:
         if not rows: return
@@ -316,11 +346,18 @@ class ContextBuilder:
             self._unresolved(f"{file}: missing drift column (expected Drift or Drift Ratio)")
             return
         drifts = []
+        by_dir: dict[str, float] = {}
         for row in rows:
             ratio = self._number(row, drift_col)
             if ratio is None: self._unresolved(f"{file}: non-numeric drift row {row}"); continue
             drifts.append({"story": row["Story"], "drift_ratio": abs(ratio), "displacement": self._number(row, disp_col) if disp_col else None, "case": self._value(row, "OutputCase", "Case", "Load Case")})
+            case = str(self._value(row, "OutputCase", "Case", "Load Case") or "").upper()
+            direction = str(row.get("Direction", "")).upper()
+            if case == "EQX-ULS" and direction == "X": by_dir["x"] = max(by_dir.get("x", 0.0), abs(ratio))
+            if case == "EQY-ULS" and direction == "Y": by_dir["y"] = max(by_dir.get("y", 0.0), abs(ratio))
         self._set("drift.data", drifts, "etabs_csv")
+        for direction, value in by_dir.items():
+            self._set(f"drift.uls_raw_{direction}", value, f"etabs_csv:{file}", drift_col, f"OutputCase=EQ{direction.upper()}-ULS, Direction={direction.upper()}")
 
     def _process_base_reactions(self, rows: list[dict[str, Any]], file: str) -> None:
         if not rows: return
@@ -350,7 +387,58 @@ class ContextBuilder:
             return
         vals = [self._number(r, ratio) for r in rows]
         vals = [v for v in vals if v is not None]
-        if vals: self._set("design.column.max_provided_pct", max(vals) if max(vals) > 1 else max(vals) * 100, "etabs_csv")
+        if vals: self._set("design.column.max_provided_pct", max(vals) if max(vals) > 1 else max(vals) * 100, f"etabs_csv:{file}", ratio, "all column design rows")
+        if vals:
+            normalized = [v if v > 1 else v * 100 for v in vals]
+            governing = rows[vals.index(max(vals))] if vals else {}
+            section = str(governing.get("DesignSect", ""))
+            dims = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", section)]
+            width = dims[0] if dims else None
+            depth = dims[1] if len(dims) > 1 else width
+            self._set("design.column.min_provided_pct", min(normalized), f"etabs_csv:{file}", ratio, "all column design rows")
+            max_limit = float(self.config.get("limits", {}).get("max_column_steel_pct", 4.0)); min_limit = float(self.config.get("limits", {}).get("min_column_steel_pct", 1.0))
+            self._set("design.column.max_limit_pct", max_limit, "computed: config/formats.yaml", "limits.max_column_steel_pct", "configured maximum")
+            self._set("design.column.min_limit_pct", min_limit, "computed: config/formats.yaml", "limits.min_column_steel_pct", "configured minimum")
+            self._set("design.column.max_status", "Ok" if max(normalized) <= max_limit else "Not Ok", "computed: config/formats.yaml", "status_words", "max column steel check")
+            self._set("design.column.min_status", "Ok" if min(normalized) >= min_limit else "Not Ok", "computed: config/formats.yaml", "status_words", "min column steel check")
+            if width is not None: self._set("design.column.max_section_width_mm", width, f"etabs_csv:{file}", "DesignSect", f"DesignSect={section}")
+            if depth is not None: self._set("design.column.max_section_depth_mm", depth, f"etabs_csv:{file}", "DesignSect", f"DesignSect={section}")
+            if width is not None and depth is not None:
+                self._set("design.column.max_rebar_area_mm2", max(normalized) / 100.0 * width * depth, f"computed: {file}", "RatioRebar + DesignSect", f"governing DesignSect={section}")
+
+    def _process_beam_design(self, rows: list[dict[str, Any]], file: str) -> None:
+        if not rows:
+            return
+        areas = []
+        for row in rows:
+            for col in ("AsTop", "AsBot"):
+                value = self._number(row, col)
+                if value is not None:
+                    areas.append(value * 1_000_000 if value < 1 else value)
+        if areas:
+            # ETABS design area is m² in this export; dimensions come from the
+            # DesignSect assignment and the effective-depth offset is configured.
+            section = next((str(r.get("DesignSect", "")) for r in rows if "Beam" in str(r.get("DesignSect", ""))), "")
+            dims = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", section)]
+            width = dims[0] if dims else None
+            overall_depth = dims[1] if len(dims) > 1 else None
+            offset = self.formulas.get("beam_design", {}).get("effective_depth_offset_mm")
+            effective_depth = overall_depth - float(offset) if overall_depth is not None and offset is not None else None
+            if width is None or effective_depth is None:
+                self._unresolved(f"{file}: beam effective depth cannot be derived from DesignSect")
+                return
+            pct = max(areas) / (width * effective_depth) * 100.0
+            self._set("design.beam.max_rebar_area_mm2", max(areas), f"etabs_csv:{file}", "AsTop/AsBot", "maximum over beam rows")
+            self._set("design.beam.max_section_width_mm", width, f"etabs_csv:{file}", "DesignSect", f"DesignSect={section}")
+            self._set("design.beam.max_section_depth_mm", effective_depth, f"etabs_csv:{file}", "DesignSect", f"DesignSect={section}; effective depth")
+            self._set("design.beam.max_provided_pct", pct, f"etabs_csv:{file}", "AsTop/AsBot + DesignSect", f"maximum area divided by {width:g}x{effective_depth:g} mm effective section")
+            max_limit = float(self.config.get("limits", {}).get("max_beam_steel_pct", 2.5)); min_limit = float(self.config.get("limits", {}).get("min_beam_steel_pct", 0.26))
+            min_pct = min(areas) / (width * effective_depth) * 100.0
+            self._set("design.beam.max_limit_pct", max_limit, "computed: config/formats.yaml", "limits.max_beam_steel_pct", "configured maximum")
+            self._set("design.beam.min_provided_pct", min_pct, f"etabs_csv:{file}", "AsTop/AsBot", "minimum over beam rows")
+            self._set("design.beam.min_limit_pct", min_limit, "computed: config/formats.yaml", "limits.min_beam_steel_pct", "configured minimum")
+            self._set("design.beam.maximum_reinforcement.status", "Ok" if pct <= max_limit else "Not Ok", "computed: config/formats.yaml", "status_words", "maximum beam steel check")
+            self._set("design.beam.minimum_reinforcement.status", "Ok" if min_pct >= min_limit else "Not Ok", "computed: config/formats.yaml", "status_words", "minimum beam steel check")
 
     def _read_sls_tables(self, directory: Path) -> None:
         # Reuse the report generator's case-aware normalizer when the project
@@ -370,6 +458,7 @@ class ContextBuilder:
         for path in paths:
             try:
                 rows = self._read_csv_rows(path)
+                self._csv_rows[path.name] = rows
                 name = path.stem.lower()
                 if "story" in name and "drift" in name:
                     self._process_sls_story_drifts(rows, path.name)
@@ -379,6 +468,35 @@ class ContextBuilder:
                     self._process_torsion(rows, path.name)
             except Exception as exc:
                 self.conflicts.append(f"Error reading SLS {path.name}: {exc}")
+
+    def _process_mass(self, rows: list[dict[str, Any]], file: str) -> None:
+        if rows and self._require(rows, ("Story", "MassX", "MassY"), file):
+            self._set("analysis.mass_data", rows, f"etabs_csv:{file}", "MassX/MassY", "all story rows")
+
+    def _process_stiffness(self, rows: list[dict[str, Any]], file: str) -> None:
+        if rows:
+            self._set("analysis.story_stiffness_data", rows, f"etabs_csv:{file}", "StiffX/StiffY", "EQX-ULS/EQY-ULS step 1")
+
+    def _process_sections(self, rows: list[dict[str, Any]], file: str) -> None:
+        if not rows:
+            return
+        self._set("analysis.frame_assignments", rows, f"etabs_csv:{file}", "AnalysisSect/DesignSect", "all frame rows")
+        types = {str(r.get("Type", "")).lower() for r in rows}
+        if {"beam", "column"}.issubset(types) and not any("wall" in t for t in types):
+            self._set("structural.system_type_generic", "Moment Resisting Frames", f"etabs_csv:{file}", "Type", "frame assignments contain beams and columns; no wall rows")
+            rmu = self.formulas.get("response_modification_factor", {}).get("moment_resisting_frames")
+            if rmu is not None:
+                self._set("seismic.response_modification_factor_rmu", float(rmu), "computed: config/seismic_formulas.yaml", "response_modification_factor.moment_resisting_frames", "Moment Resisting Frames")
+        sections = {str(r.get("DesignSect") or r.get("AnalysisSect")) for r in rows if r.get("DesignSect") or r.get("AnalysisSect")}
+        for section in sorted(sections):
+            if section.lower().startswith("column"):
+                self._set("table.elements.col_desc", section, f"etabs_csv:{file}", "DesignSect", f"DesignSect={section}")
+            elif section.lower().startswith("beam"):
+                self._set("table.elements.beam_desc", section, f"etabs_csv:{file}", "DesignSect", f"DesignSect={section}")
+
+    def _process_materials(self, rows: list[dict[str, Any]], file: str) -> None:
+        if rows:
+            self._set("analysis.material_data", rows, f"etabs_csv:{file}", "Type/Grade", "all material rows")
 
     def _process_sls_story_drifts(self, rows: list[dict[str, Any]], file: str) -> None:
         if not rows or not self._require(rows, ("Story", "OutputCase", "Direction", "Drift"), file):
@@ -405,25 +523,39 @@ class ContextBuilder:
         key = "drift.sls_max_displacement_mm" if is_story_max else "drift.sls_joint_max_displacement_mm"
         self._set(key, value, "etabs_csv:" + file, source_column=col,
                  source_filter="maximum over S14 story rows" if is_story_max else "maximum over S13 joint rows")
+        if is_story_max:
+            for direction in ("X", "Y"):
+                directional = [self._number(r, col) for r in rows if str(r.get("Direction", "")).upper() == direction]
+                directional = [abs(x) for x in directional if x is not None]
+                if directional:
+                    self._set(f"drift.sls_max_displacement_{direction.lower()}_mm", max(directional) * (1000 if max(directional) < 1 else 1), "etabs_csv:" + file, col, f"Direction={direction}; maximum over S14 story rows")
 
     def _process_displacement_summary(self, rows: list[dict[str, Any]], file: str, prefix: str) -> None:
         if not rows or not self._require(rows, ("OutputCase", "Direction", "Maximum"), file):
             return
         by_dir: dict[str, float] = {}
+        ratios: dict[str, float] = {}
         for row in rows:
             value = self._number(row, "Maximum")
             direction = str(row.get("Direction", "")).upper()
-            if value is not None and direction in {"X", "Y"}:
-                by_dir[direction] = max(by_dir.get(direction, 0.0), abs(value) * 1000.0)
+            case = str(row.get("OutputCase", "")).upper()
+            expected_case = "EQX-ULS" if direction == "X" else "EQY-ULS"
+            if value is not None and direction in {"X", "Y"} and case == expected_case:
+                scale = float(self._get("seismic.response_modification_factor_rmu", 1.0)) if prefix.endswith("uls") else 1.0
+                by_dir[direction] = max(by_dir.get(direction, 0.0), abs(value) * 1000.0 * scale)
+                ratio = self._number(row, "Ratio")
+                if ratio is not None: ratios[direction] = max(ratios.get(direction, 0.0), ratio)
         for direction, value in by_dir.items():
-            self._set(f"{prefix}_max_{direction.lower()}_mm", value, "etabs_csv:" + file)
+            self._set(f"{prefix}_max_{direction.lower()}_mm", value, "etabs_csv:" + file, "Maximum", f"OutputCase=EQ{direction}-ULS, Direction={direction}")
+            if direction in ratios:
+                self._set(f"irregularity.torsion_{direction.lower()}_ratio", ratios[direction], "etabs_csv:" + file, "Ratio", f"OutputCase=EQ{direction}-ULS, Direction={direction}")
 
     def _process_torsion(self, rows: list[dict[str, Any]], file: str) -> None:
         col = next((c for c in ("Ratio", "delta_max/delta_avg", "Max/Avg") if rows and c in rows[0]), None)
         if not col:
             self._unresolved(f"{file}: missing torsion ratio column"); return
         vals = [self._number(r, col) for r in rows]; vals = [v for v in vals if v is not None]
-        if vals: self._set("irregularity.torsion_ratio", max(vals), "etabs_csv")
+        if vals: self._set("irregularity.torsion_ratio", max(vals), "etabs_csv:" + file, col, "maximum over supplied rows")
 
     def _compute(self) -> None:
         limits = self.config.get("limits", {})
@@ -437,21 +569,17 @@ class ContextBuilder:
             self._set("modal.empirical_period_s", self._fmt("modal.empirical_period_s", raw * factor), "computed: config/seismic_formulas.yaml")
             self._set("modal.empirical_period_amplification_factor", factor, "computed: config/seismic_formulas.yaml")
         data = self._get("modal.modal_data", [])
-        story = self._get("analysis.story_force_data", [])
-        if story:
-            valid = [r for r in story if None not in (r.get("force"), r.get("displacement"), r.get("weight"))]
-            if valid:
-                g = float(self.formulas.get("rayleigh_period", {}).get("gravity_m_s2", 9.80665))
-                num = sum(r["weight"] * r["displacement"] ** 2 for r in valid)
-                den = g * sum(r["force"] * r["displacement"] for r in valid)
-                if den > 0: self._set("modal.rayleigh_period_s", self._fmt("modal.rayleigh_period_s", 2 * math.pi * math.sqrt(num / den)), "computed: story force/displacement tables")
-                else: self._unresolved("Rayleigh period: denominator g*sum(Fi*di) is not positive")
-            else: self._unresolved("Rayleigh period requires Story, force Fi, displacement di and weight Wi for every governing row")
-        elif data:
-            self._unresolved("Rayleigh period cannot use the first modal period; story force/displacement tables are required")
+        self._compute_rayleigh_from_csv()
         t_emp = self._get("modal.empirical_period_s"); t_ray = self._get("modal.rayleigh_period_s")
         if t_emp and t_ray:
             t = min(float(t_emp), float(t_ray)); self._set("seismic.design_period_used_s", self._fmt("seismic.design_period_used_s", t), "computed")
+        elif t_emp:
+            self._set("seismic.design_period_used_s", self._fmt("seismic.design_period_used_s", float(t_emp)), "computed: empirical period; Rayleigh unresolved")
+        design_t = self._get("seismic.design_period_used_s")
+        if design_t is not None:
+            t = float(design_t)
+            k = 1.0 if t <= 0.5 else 2.0 if t >= 2.5 else 1.0 + (t - 0.5) / 2.0
+            self._set("seismic.distribution_exponent_k", self._fmt("seismic.distribution_exponent_k", k), "computed: config/seismic_formulas.yaml", "design_period_used_s", "NBC 105 linear interpolation between 0.5 s and 2.5 s")
         z, imp, rmu, soil = (self._get(k) for k in ("seismic.zone_factor_z", "seismic.importance_factor_i", "seismic.response_modification_factor_rmu", "seismic.soil_class"))
         if z is not None and imp is not None and rmu is not None and t_emp and soil:
             if not self.spectrum:
@@ -474,6 +602,125 @@ class ContextBuilder:
             ftype, soil_class = self._get("foundation.type"), self._get("foundation.soil_class") or self._get("seismic.soil_class")
             if ftype is None or soil_class is None: self._unresolved("foundation.support_condition requires foundation.type and foundation.soil_class")
         self._set("analysis.esm_modal_base_shear_check", self._check_base_shear(words), "computed") if self._get("modal.base_shear_etabs") is not None and self._get("modal.base_shear_modal") is not None else None
+        self._compute_irregularity_checks()
+        self._build_table_contexts()
+
+    def _compute_irregularity_checks(self) -> None:
+        stiffness = self._csv_rows.get("10_Story_Stiffness.csv", [])
+        by_story: dict[str, dict[str, float]] = {}
+        for row in stiffness:
+            if str(row.get("OutputCase", "")).upper() not in {"EQX-ULS", "EQY-ULS"}:
+                continue
+            story = row.get("Story")
+            if story:
+                by_story.setdefault(story, {})["x" if "EQX" in str(row.get("OutputCase", "")) else "y"] = self._number(row, "StiffX" if "EQX" in str(row.get("OutputCase", "")) else "StiffY") or 0.0
+        if by_story:
+            ordered = list(self._get("building.story_elevations_m", {}).keys()) or list(by_story)
+            ordered = [s for s in ordered if s in by_story]
+            ratios = []
+            for i in range(1, len(ordered)):
+                for d in ("x", "y"):
+                    if by_story[ordered[i - 1]].get(d) and by_story[ordered[i]].get(d):
+                        ratios.append(by_story[ordered[i]][d] / by_story[ordered[i - 1]][d])
+            minimum = min(ratios) if ratios else None
+            self._set("analysis.soft_storey_result", "Ok" if minimum is not None and minimum >= 0.7 else "Not Ok", "computed: tables/10_Story_Stiffness.csv", "StiffX/StiffY", "adjacent-storey stiffness ratio; threshold=0.70")
+        else:
+            self._unresolved("analysis.soft_storey_result requires 10_Story_Stiffness.csv ULS stiffness rows")
+        masses = self._csv_rows.get("09_Centers_Mass_Rigid.csv", [])
+        values = [self._number(r, "MassX") for r in masses]
+        values = [v for v in values if v is not None]
+        if len(values) > 1:
+            diffs = [abs(values[i] - values[i - 1]) / values[i - 1] for i in range(1, len(values)) if values[i - 1]]
+            self._set("analysis.mass_irregularity_result", "Ok" if max(diffs, default=0.0) <= 0.5 else "Not Ok", "computed: tables/09_Centers_Mass_Rigid.csv", "MassX/MassY", "consecutive-storey relative mass change; threshold=0.50")
+        else:
+            self._unresolved("analysis.mass_irregularity_result requires consecutive story masses")
+
+    def _compute_rayleigh_from_csv(self) -> None:
+        masses = self._csv_rows.get("09_Centers_Mass_Rigid.csv", [])
+        forces = self._csv_rows.get("05_Story_Forces.csv", []) or self._csv_rows.get("10_Story_Stiffness.csv", [])
+        disps = self._csv_rows.get("33_Story_Max_Avg_Displacements.csv", [])
+        if not (masses and forces and disps):
+            self._unresolved("Rayleigh period requires 09_Centers_Mass_Rigid.csv, 05_Story_Forces.csv/10_Story_Stiffness.csv, and 33_Story_Max_Avg_Displacements.csv")
+            return
+        for direction in ("X", "Y"):
+            mass_col, shear_col = "Mass" + direction, "V" + direction
+            if not any(mass_col in r for r in masses) or not any(shear_col in r or "Shear" + direction in r for r in forces):
+                self._unresolved(f"Rayleigh {direction}: missing {mass_col} or shear column")
+                continue
+            mass = {r.get("Story"): self._number(r, mass_col) for r in masses}
+            shear_rows = [r for r in forces if str(r.get("OutputCase", "")).upper() == f"EQ{direction}-ULS" and str(r.get("StepNumber", "1")) in ("", "1", "1.0")]
+            shear: dict[str, float] = {}
+            for r in shear_rows:
+                value = self._number(r, shear_col, "Shear" + direction)
+                if value is not None: shear[r.get("Story")] = max(shear.get(r.get("Story"), 0.0), abs(value))
+            ordered = list(self._get("building.story_elevations_m", {}).keys())
+            ordered = [s for s in ordered if s in mass and s in shear]
+            if not ordered: ordered = [s for s in mass if s in shear]
+            ordered.sort(key=lambda s: float(self._get("building.story_elevations_m", {}).get(s, 0)))
+            disp = {r.get("Story"): self._number(r, "Average") for r in disps if str(r.get("OutputCase", "")).upper() == f"EQ{direction}-ULS" and str(r.get("Direction", "")).upper() == direction and str(r.get("StepNumber", "1")) in ("", "1", "1.0")}
+            ordered = [s for s in ordered if mass[s] is not None and disp.get(s) is not None]
+            if len(ordered) < 2:
+                self._unresolved(f"Rayleigh {direction}: insufficient complete story rows")
+                continue
+            fi = {s: (shear[s] - shear[ordered[i + 1]] if i + 1 < len(ordered) else shear[s]) for i, s in enumerate(ordered)}
+            # CSV mass is in tonne-equivalent units; Wi is converted to kN and
+            # displacement remains in metres, exactly as exported.
+            g = float(self.formulas.get("rayleigh_period", {}).get("gravity_m_s2", 9.80665))
+            num = sum(float(mass[s]) * g * float(disp[s]) ** 2 for s in ordered)
+            den = g * sum(float(fi[s]) * float(disp[s]) for s in ordered)
+            if den <= 0:
+                self._unresolved(f"Rayleigh {direction}: denominator is not positive")
+                continue
+            period = 2 * math.pi * math.sqrt(num / den)
+            self._set(f"modal.rayleigh_period_{direction.lower()}_s", self._fmt("modal.rayleigh_period_s", period), f"computed: {self._repo_path(ROOT / 'tables/09_Centers_Mass_Rigid.csv')} + {self._repo_path(ROOT / 'tables/05_Story_Forces.csv')} + {self._repo_path(ROOT / 'tables/33_Story_Max_Avg_Displacements.csv')}", "MassX/MassY, VX/VY, Average", "Story matched; OutputCase=EQX-ULS/EQY-ULS; StepNumber=1")
+            self._set(f"totals.fi_di_{direction.lower()}", sum(fi[s] * float(disp[s]) for s in ordered), "computed: Rayleigh rows", "Fi*di", "all matched stories")
+            self._set(f"totals.wi_di2_{direction.lower()}", num, "computed: Rayleigh rows", "Wi*di²", "all matched stories")
+            self._set(f"table.modal.rayleigh_{direction.lower()}", [{"level": s, "wi_kn": float(mass[s]) * g, "di_mm": float(disp[s]) * 1000, "di_m": float(disp[s]), "di": float(disp[s]) ** 2, "uls_fi_kn": fi[s], "fi_di": fi[s] * float(disp[s]), "wi_di": float(mass[s]) * g * float(disp[s]) ** 2} for s in ordered], "computed: Rayleigh rows")
+
+    def _build_table_contexts(self) -> None:
+        h = self._get("building.total_height_m")
+        if h is not None:
+            self._set("table.seismic.empirical_period", [{"height": h, "unamplified": self._get("modal.empirical_period_unamplified_s"), "amplified": self._get("modal.empirical_period_s")}], "computed: config/seismic_formulas.yaml")
+        elevations = self._get("building.story_elevations_m", {})
+        masses = self._csv_rows.get("09_Centers_Mass_Rigid.csv", [])
+        if elevations and masses:
+            k = float(self._get("seismic.distribution_exponent_k", 1.0))
+            rows = []
+            for r in masses:
+                story = r.get("Story"); wi = self._number(r, "MassX")
+                if story in elevations and wi is not None:
+                    hi = float(elevations[story]); rows.append({"level": story, "wi_kg": wi * 1000, "elevation_hi_m": hi, "hi_k": hi ** k, "wi_hi_k": wi * 1000 * hi ** k})
+            if rows:
+                self._set("table.seismic.vertical_force_dist", rows, "computed: 09_Centers_Mass_Rigid.csv + story elevations")
+        uls = self._csv_rows.get("33_Story_Max_Avg_Displacements.csv", [])
+        sls = self._csv_rows.get("S14_Story_Max_Avg_Displacements.csv", [])
+        if uls:
+            rmu = float(self._get("seismic.response_modification_factor_rmu", 1.0))
+            self._set("table.drift.uls_displacement_figures_x_y", [{"direction": r.get("Direction"), "story": r.get("Story"), "maximum_mm": self._number(r, "Maximum") * 1000 * rmu if self._number(r, "Maximum") is not None else "UNRESOLVED", "average_mm": self._number(r, "Average") * 1000 * rmu if self._number(r, "Average") is not None else "UNRESOLVED", "ratio": self._number(r, "Ratio")} for r in uls if str(r.get("OutputCase", "")).upper() in {"EQX-ULS", "EQY-ULS"}], "etabs_csv:33_Story_Max_Avg_Displacements.csv")
+        if sls:
+            self._set("table.drift.sls_displacement_figures_x_y", [{"direction": r.get("Direction"), "story": r.get("Story"), "maximum_mm": self._number(r, "Maximum") * 1000 if self._number(r, "Maximum") is not None else "UNRESOLVED", "average_mm": self._number(r, "Average") * 1000 if self._number(r, "Average") is not None else "UNRESOLVED", "ratio": self._number(r, "Ratio")} for r in sls if str(r.get("OutputCase", "")).upper() in {"EQX-SLS", "EQY-SLS"}], "etabs_csv:S14_Story_Max_Avg_Displacements.csv")
+        udr = self._csv_rows.get("04_Story_Drifts.csv", [])
+        sdr = self._csv_rows.get("S01_Story_Drifts.csv", [])
+        if udr:
+            rmu = float(self._get("seismic.response_modification_factor_rmu", 1.0))
+            self._set("table.drift.uls_story_drift_figures_x_y", [{"direction": r.get("Direction"), "story": r.get("Story"), "drift_ratio": self._number(r, "Drift") * rmu if self._number(r, "Drift") is not None else "UNRESOLVED", "limit": self.config.get("limits", {}).get("uls_drift_ratio"), "status": "Ok" if self._number(r, "Drift") is not None and self._number(r, "Drift") * rmu <= float(self.config.get("limits", {}).get("uls_drift_ratio", .025)) else "Not Ok"} for r in udr if str(r.get("OutputCase", "")).upper() in {"EQX-ULS", "EQY-ULS"}], "etabs_csv:04_Story_Drifts.csv")
+        if sdr:
+            self._set("table.drift.sls_story_drift_figures_x_y", [{"direction": r.get("Direction"), "story": r.get("Story"), "drift_ratio": self._number(r, "Drift"), "limit": self.config.get("limits", {}).get("sls_drift_ratio"), "status": "Ok" if self._number(r, "Drift") is not None and self._number(r, "Drift") <= float(self.config.get("limits", {}).get("sls_drift_ratio", .006)) else "Not Ok"} for r in sdr if str(r.get("OutputCase", "")).upper() in {"EQX-SLS", "EQY-SLS"}], "etabs_csv:S01_Story_Drifts.csv")
+
+    def _ensure_registry_coverage(self) -> None:
+        registry_path = ROOT / "config" / "placeholder_registry.yaml"
+        entries = (self._load_yaml(registry_path).get("items") or [])
+        for entry in entries:
+            source = str(entry.get("source", ""))
+            key = entry.get("key")
+            if source not in {"etabs_api", "e2k", "computed"} or not key or self._get(key) is not None:
+                continue
+            reason = entry.get("condition") or f"no resolved {source} source value was found in the available ETABS exports"
+            parts = key.split("."); d = self.ctx
+            for part in parts[:-1]: d = d.setdefault(part, {})
+            d[parts[-1]] = f"UNRESOLVED: {reason}"
+            self.source_details[key] = {"source": source, "file": "", "column": "", "filter": reason}
+            self._unresolved(f"{key}: {reason}")
 
     def _spectrum_coefficient(self, soil: str, period: float) -> float | None:
         entry = self.spectrum.get("soil_classes", {}).get(soil.upper())

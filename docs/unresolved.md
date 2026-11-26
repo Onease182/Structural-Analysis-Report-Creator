@@ -1,5 +1,80 @@
 # Context Builder Unresolved Values
 
 - UNRESOLVED: input workbook not found: inputs/Project_Input.xlsx
-- UNRESOLVED: Rayleigh period requires Story, force Fi, displacement di and weight Wi for every governing row
 - UNRESOLVED: foundation.support_condition requires foundation.type and foundation.soil_class
+- UNRESOLVED: table.elements.sizes_and_materials: no resolved etabs_api source value was found in the available ETABS exports
+- UNRESOLVED: materials.as_building_is_less_than_12_m: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: figure.materials.concrete: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.irregularity.eqx_eccentricity: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.irregularity.eqx_eccentricity_b: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.irregularity.acc_eccentricity: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.irregularity.acc_eccentricity_b: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: foundation.modeling_software: The software/version narrative is project-specific and may be omitted.
+- UNRESOLVED: table.loads.load_assessment: Column schema needs owner review; sample table has blank/unlabelled headers.
+- UNRESOLVED: figure.loads.cases: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.project.mass_sources_considered: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.project.mass_sources_b: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.modal.uls_force_distribution: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: modal.rayleigh_period_s: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: modal.selected_period_method: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: table.seismic.design_parameters: Column schema needs owner review; sample table has blank/unlabelled headers.
+- UNRESOLVED: table.design.overstrength_factors: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: figure.elements.design_for_frames: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: table.design.slab_design_output: Column schema needs owner review; sample table has blank/unlabelled headers.
+- UNRESOLVED: table.design.beam_deflection_check: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: figure.elements.beams_design: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.elements.beams_design_b: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.foundation.reaction_uls: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.foundation.reaction_uls_b: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.foundation.reaction_uls_c: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.foundation.design_main: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.foundation.design_b: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.foundation.design_c: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.foundation.design_d: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.drift.displacement: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.drift.displacement_b: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.irregularity.torsional: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.irregularity.soft_story: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.irregularity.soft_story_panel_b: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.irregularity.in_plane: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.irregularity.re_entrant_corners: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.irregularity.diaphragm: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.irregularity.out_of_plane_offset: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.elements.rebar_grid_a: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.elements.rebar_grid_b: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.elements.rebar_story1: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.elements.rebar_story2: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: figure.elements.rebar_story3: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
+- UNRESOLVED: foundation.type: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: foundation.support_condition: Computed from foundation.type and foundation.soil_class per owner decision. .e2k $POINTRESTRAINTS provides a cross-check input.
+- UNRESOLVED: structural.system_type: no resolved etabs_api source value was found in the available ETABS exports
+- UNRESOLVED: slab.type: no resolved e2k source value was found in the available ETABS exports
+- UNRESOLVED: analysis.foundation_reaction_combination: Caption text is variable; retain the existing foundation reaction image.
+- UNRESOLVED: analysis.in_plane_discontinuity_result: Select the result variant from computed project checks.
+- UNRESOLVED: analysis.reentrant_corner_result: Select the result variant from computed project checks.
+- UNRESOLVED: table.elements.slab_desc: no resolved etabs_api source value was found in the available ETABS exports
+- UNRESOLVED: seismic.alpha: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: seismic.spectral_shape_factor_cht: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: seismic.elastic_site_spectra_c: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: seismic.elastic_site_spectra_cs: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: loads.slab_dead_load: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: totals.wi_kg: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: totals.wi_hik: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: totals.fi: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: structural.system_type_table_5_2: no resolved etabs_api source value was found in the available ETABS exports
+- UNRESOLVED: table.elements.foundation_desc: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: seismic.time_coefficient_kt: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: seismic.tc: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: seismic.hsc_uls: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: seismic.hsc_sls: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: table.design.beam_effective_span: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: table.design.beam_overall_depth: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: table.design.beam_effective_depth: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: table.design.beam_basic_ld_ratio: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: table.design.beam_ast_req: no resolved etabs_api source value was found in the available ETABS exports
+- UNRESOLVED: table.design.beam_pt: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: table.design.beam_fs: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: table.design.beam_mod_factor: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: table.design.beam_permissible_ld: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: table.design.beam_provided_ld: no resolved computed source value was found in the available ETABS exports
+- UNRESOLVED: table.design.beam_check_result: no resolved computed source value was found in the available ETABS exports
