@@ -20,5 +20,5 @@ None.
 
 ## T6 status
 
-T6 has status=pending_implementation. Sample data in T6 cells
-counts as allowed 'pending' differences only while this status is set.
+T6 is implemented as a code-built 39x6 table from confirmed workbook inputs.
+Its arithmetic and structure are covered by independent Part 2 tests.

@@ -35,13 +35,6 @@ owner_approved:
     match_type: table_removed
     table_index: 15
 
-  # T6 pending implementation — owner-approved while status is set
-  - description: "T6 load assessment table pending code-built implementation"
-    match_type: table_pending
-    table_index: 6
-    status: pending_implementation
-    phase: "Phase 3b"
-
   # Loop table structure changes — owner-approved
   - description: "Loop table data rows replaced with template rows"
     match_type: loop_table

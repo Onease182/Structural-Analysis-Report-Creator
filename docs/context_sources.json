@@ -252,6 +252,12 @@
       "column": "date",
       "filter": "not specified"
     },
+    "table.loads.load_assessment": {
+      "source": "computed: src/input_workbook.py",
+      "file": " src/input_workbook.py",
+      "column": "workbook inputs",
+      "filter": "code-built 39x6 table; arithmetic from confirmed inputs"
+    },
     "seismic.eqx_eccentricity": {
       "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
       "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
@@ -995,12 +1001,6 @@
       "file": "",
       "column": "",
       "filter": "The software/version narrative is project-specific and may be omitted."
-    },
-    "table.loads.load_assessment": {
-      "source": "etabs_api",
-      "file": "",
-      "column": "",
-      "filter": "Column schema needs owner review; sample table has blank/unlabelled headers."
     },
     "figure.loads.cases": {
       "source": "etabs_api",

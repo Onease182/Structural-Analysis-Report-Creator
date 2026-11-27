@@ -250,56 +250,66 @@ class InputWorkbook:
         wb.save(str(output_path))
 
     def build_t6_load_assessment(self, ctx: dict[str, Any]) -> list[list[str]]:
-        """Build the T6 load assessment table from wall/floor-finish inputs.
+        """Build the sample-shaped T6 table from confirmed context inputs.
 
-        Returns a list of rows (each a list of cell strings) that can be
-        inserted into the template as a code-built table, reusing the
-        sample's formatting structure.
+        The output is deliberately 39 x 6, matching the sample table. Missing
+        inputs remain ``UNRESOLVED`` instead of receiving engineering defaults.
         """
-        loads = ctx.get("loads", {})
-        building = ctx.get("building", {})
+        loads = ctx.get("loads", {}) or {}
+        building = ctx.get("building", {}) or {}
 
-        wall_uw = loads.get("wall_unit_weight", 19.625)
-        wall_t = loads.get("wall_thickness_mm", 230)
-        wall_h = loads.get("wall_height_m", building.get("story_height_m", 3.175))
-        plaster_t = loads.get("plaster_thickness_mm", 12)
-        plaster_uw = loads.get("plaster_unit_weight", 20.4)
-        ff_t = loads.get("floor_finish_thickness_mm", 20)
-        ff_uw = loads.get("floor_finish_unit_weight", 24.0)
-        slab_t = loads.get("slab_thickness_mm", 125)
-        slab_uw = loads.get("slab_unit_weight", 24.0)
-        slab_dl = loads.get("slab_dead_load", round(slab_t / 1000 * slab_uw, 3))
-        ll_res = loads.get("live_load_residential", 2.0)
-        ll_corr = loads.get("live_load_corridor", 3.0)
-        ll_roof = loads.get("roof_live_load", 1.5)
+        def number(key: str) -> float | None:
+            raw = loads.get(key, building.get(key))
+            try:
+                return float(raw) if raw is not None and str(raw).strip() else None
+            except (TypeError, ValueError):
+                return None
 
-        # Compute wall load per meter
-        wall_load = round(wall_h * (wall_uw + 2 * plaster_t / 1000 * plaster_uw), 2)
-        ff_load = round(ff_t / 1000 * ff_uw, 2)
+        def cell(num: float | None, decimals: int = 3) -> str:
+            return "UNRESOLVED" if num is None else f"{num:.{decimals}f}"
 
-        rows = [
-            ["Wall Load", "", "", "", "", "", ""],
-            ["", f"Cement Plaster {plaster_uw} KN/M3", "", "", "", "", ""],
-            ["", f"Brick {wall_uw} KN/M3", "", "", "", "", ""],
-            ["", f"AVG {round((wall_uw + plaster_uw) / 2, 3)} KN/M3", "", "", "", "", ""],
-            ["", f"Floor Height {wall_h}m", "", "", f"Beam Depth 0.380m", "", "", ""],
-            ["", f"For {wall_t} mm wall", f"{wall_load} KN/M", "", "", "", ""],
-            ["", f"For {wall_t - 80} mm Wall", f"{round(wall_load * (wall_t - 80) / wall_t, 1)} KN/M", "", "", "", ""],
-            ["", "", "", "", "", "", ""],
-            ["FLOOR FINISH", "", "", "", "", "", ""],
-            ["", f"Cement Mortar Bed {plaster_uw} KN/M3", f"{ff_t / 1000}", f"{ff_load} KN/M2", "", "", ""],
-            ["", f"Floor Tile {ff_uw} KN/M3", f"{ff_t / 1000}", f"{round(ff_t / 1000 * ff_uw, 3)}", "", "", ""],
-            ["", "", "", "", "", "", ""],
-            ["ROOF LIVE", "", "", "", f"{ll_roof}", "", "", ""],
-            ["", "", "", "", "", "", ""],
-            ["Slab Dead Load", f"{slab_dl} KN/m2", "", "", "", "", ""],
-            ["Floor Finish", f"{ff_load} KN/M2", "", "", "", "", ""],
-            ["", "", "", "", "", "", ""],
-            ["LIVE LOADS", "", "", "", "", "", ""],
-            ["", "Dwelling houses", f"{ll_res} kN/m2", "", "", "", ""],
-            ["", "Corridors", f"{ll_corr} kN/m2", "", "", "", ""],
-            ["", "Roof", f"{ll_roof} kN/m2", "", "", "", ""],
-        ]
+        plaster_uw, brick_uw = number("plaster_unit_weight"), number("wall_unit_weight")
+        wall_h = number("wall_height_m") or number("story_height_m")
+        finish_t, finish_uw = number("floor_finish_thickness_mm"), number("floor_finish_unit_weight")
+        slab_t, slab_uw = number("slab_thickness_mm"), number("slab_unit_weight")
+        ll_corr, ll_roof = number("live_load_corridor"), number("roof_live_load")
+        avg_uw = (plaster_uw + brick_uw) / 2 if plaster_uw is not None and brick_uw is not None else None
+
+        def wall_load(thickness_mm: float) -> str:
+            if wall_h is None or avg_uw is None:
+                return "UNRESOLVED"
+            return cell(thickness_mm / 1000 * wall_h * avg_uw, 2)
+
+        finish_load = finish_t / 1000 * finish_uw if finish_t is not None and finish_uw is not None else None
+        slab_load = slab_t / 1000 * slab_uw if slab_t is not None and slab_uw is not None else None
+        rows = [[""] * 6 for _ in range(39)]
+        rows[1] = ["Wall Load"] * 6
+        rows[3] = ["Cement Plaster", cell(plaster_uw), "KN/M3", "", "", ""]
+        rows[4] = ["Brick", cell(brick_uw), "KN/M3", "", "", ""]
+        rows[5] = ["AVG", cell(avg_uw), "KN/M3", "", "", ""]
+        rows[7] = ["Rolling Shutter", "UNRESOLVED", "", "", "", ""]
+        rows[8] = ["", "UNRESOLVED", "KN/M3", "", "", ""]
+        rows[9] = ["RS", "UNRESOLVED", "KN/M", "", "", ""]
+        rows[11] = ["Floor Height", cell(wall_h), "m", "", "", ""]
+        rows[12] = ["Beam Depth", "UNRESOLVED", "m", "", "", ""]
+        rows[13] = ["Clear", "UNRESOLVED", "m", "", "", ""]
+        rows[14] = ["Parapet Height", "UNRESOLVED", "m", "", "", ""]
+        rows[17] = ["For 350 mm wall", "", "", wall_load(350), "KN/M", ""]
+        rows[18] = ["For 250 mm Wall", "", "", wall_load(250), "KN/M", ""]
+        rows[19] = ["For 250 mm Wall (Rat Trap Bond)", "", "", "UNRESOLVED", "KN/M", ""]
+        rows[20] = ["For 125 mm Wall", "", "", wall_load(125), "KN/M", ""]
+        rows[21] = ["For Parapet Wall", "", "", "UNRESOLVED", "KN/M", ""]
+        rows[22] = ["Deduct 30% for opening for 250 mm wall", "", "", cell(float(wall_load(250)) * 0.7, 1) if wall_load(250) != "UNRESOLVED" else "UNRESOLVED", "KN/M", ""]
+        rows[23] = ["Deduct 30% for opening for 125 mm wall", "", "", cell(float(wall_load(125)) * 0.7, 1) if wall_load(125) != "UNRESOLVED" else "UNRESOLVED", "KN/M", ""]
+        rows[25] = ["FLOOR FINISH"] * 5 + [""]
+        rows[26] = ["", "", "", "t", "Load", ""]
+        rows[27] = ["Floor Finish", cell(finish_uw), "KN/M3", cell(finish_t / 1000 if finish_t is not None else None), cell(finish_load), "KN/M2"]
+        rows[28] = ["Slab", cell(slab_uw), "KN/M3", cell(slab_t / 1000 if slab_t is not None else None), cell(slab_load), "KN/M2"]
+        rows[31] = ["ROOF LIVE", "", "", "", cell(ll_roof, 2), ""]
+        rows[33] = ["", "Per Step(Strip)", "RCC", "UDL", "", "KN/M"]
+        rows[34] = ["Staircase DL", "UNRESOLVED", "UNRESOLVED", "UNRESOLVED", "UNRESOLVED", "KN/M"]
+        rows[35] = ["Staircase LL", "", "", cell(ll_corr, 2), "UNRESOLVED", ""]
+        rows[37] = ["Water Tank", "UNRESOLVED", "UNRESOLVED", "UNRESOLVED", "UNRESOLVED", ""]
         return rows
 
     def read(self, input_path: str | Path) -> tuple[dict[str, Any], list[dict[str, str]]]:

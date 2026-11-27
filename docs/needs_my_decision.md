@@ -67,6 +67,8 @@ for a simple `{%tr for %}` loop. Choose one option per table:
 - **Option C**: Split into multiple tables — break into separate tables
   (wall loads, live loads, load cases, mass sources) each with its own loop.
 
+**Implementation record:** The owner-directed code-built approach is implemented in `src/input_workbook.py` as a 39×6 table using confirmed workbook inputs, with `UNRESOLVED` for unavailable engineering inputs. Independent structure and arithmetic tests pass; the former pending implementation allowance has been removed.
+
 ### T15 (Slab Design, 88×8)
 - ETABS slab design output with blank headers. 88 rows of raw ETABS data.
 - **Option A**: Code-built table — build programmatically from ETABS CSV data.

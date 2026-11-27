@@ -560,8 +560,8 @@ def write_report(diffs: list[dict[str, str]], leaks: list[str], path: Path) -> N
     lines += ["", "## Owner-approved differences", "",
               f"{len(owner)} differences classified as owner-approved.", ""]
     lines += ["## T6 status", "",
-              "T6 has status=pending_implementation. Sample data in T6 cells",
-              "counts as allowed 'pending' differences only while this status is set.", ""]
+              "T6 is implemented as a code-built 39x6 table from confirmed workbook inputs.",
+              "Its arithmetic and structure are covered by independent Part 2 tests.", ""]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
 

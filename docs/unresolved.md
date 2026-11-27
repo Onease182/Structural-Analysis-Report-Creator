@@ -77,7 +77,6 @@
 - UNRESOLVED: figure.irregularity.acc_eccentricity: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
 - UNRESOLVED: figure.irregularity.acc_eccentricity_b: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
 - UNRESOLVED: foundation.modeling_software: The software/version narrative is project-specific and may be omitted.
-- UNRESOLVED: table.loads.load_assessment: Column schema needs owner review; sample table has blank/unlabelled headers.
 - UNRESOLVED: figure.loads.cases: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
 - UNRESOLVED: figure.project.mass_sources_considered: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
 - UNRESOLVED: figure.project.mass_sources_b: Generated from ETABS or supplied by the user; the figure manager must resolve its source.

@@ -185,6 +185,10 @@ class ContextBuilder:
                         self._set(f"{key}.{sub}", item, "excel")
                 else:
                     self._set(key, value, "excel")
+            t6 = InputWorkbook().build_t6_load_assessment(data)
+            self._set("table.loads.load_assessment", t6,
+                      "computed: src/input_workbook.py", "workbook inputs",
+                      "code-built 39x6 table; arithmetic from confirmed inputs")
             for item in missing:
                 self._unresolved(f"missing Excel input: {item['sheet']} row {item['row']} key {item['key']}")
         except Exception as exc:
