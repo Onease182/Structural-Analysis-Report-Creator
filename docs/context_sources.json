@@ -6,6 +6,252 @@
     "computed"
   ],
   "values": {
+    "project.report_title": {
+      "source": "excel",
+      "file": "excel",
+      "column": "report_title",
+      "filter": "not specified"
+    },
+    "client.owner_name": {
+      "source": "excel",
+      "file": "excel",
+      "column": "owner_name",
+      "filter": "not specified"
+    },
+    "client.designer_name": {
+      "source": "excel",
+      "file": "excel",
+      "column": "designer_name",
+      "filter": "not specified"
+    },
+    "client.designer_nec_reg": {
+      "source": "excel",
+      "file": "excel",
+      "column": "designer_nec_reg",
+      "filter": "not specified"
+    },
+    "client.designer_contact": {
+      "source": "excel",
+      "file": "excel",
+      "column": "designer_contact",
+      "filter": "not specified"
+    },
+    "client.consultant_name": {
+      "source": "excel",
+      "file": "excel",
+      "column": "consultant_name",
+      "filter": "not specified"
+    },
+    "client.municipality_reg": {
+      "source": "excel",
+      "file": "excel",
+      "column": "municipality_reg",
+      "filter": "not specified"
+    },
+    "client.application_date": {
+      "source": "excel",
+      "file": "excel",
+      "column": "application_date",
+      "filter": "not specified"
+    },
+    "building.location": {
+      "source": "excel",
+      "file": "excel",
+      "column": "location",
+      "filter": "not specified"
+    },
+    "building.occupancy_class": {
+      "source": "excel",
+      "file": "excel",
+      "column": "occupancy_class",
+      "filter": "not specified"
+    },
+    "building.num_basements": {
+      "source": "e2k",
+      "file": "e2k",
+      "column": "num_basements",
+      "filter": "not specified"
+    },
+    "building.has_staircase": {
+      "source": "excel",
+      "file": "excel",
+      "column": "has_staircase",
+      "filter": "not specified"
+    },
+    "consultancy.name": {
+      "source": "excel",
+      "file": "excel",
+      "column": "name",
+      "filter": "not specified"
+    },
+    "consultancy.address": {
+      "source": "excel",
+      "file": "excel",
+      "column": "address",
+      "filter": "not specified"
+    },
+    "designer.name": {
+      "source": "excel",
+      "file": "excel",
+      "column": "name",
+      "filter": "not specified"
+    },
+    "designer.nec_no": {
+      "source": "excel",
+      "file": "excel",
+      "column": "nec_no",
+      "filter": "not specified"
+    },
+    "designer.nec_category": {
+      "source": "excel",
+      "file": "excel",
+      "column": "nec_category",
+      "filter": "not specified"
+    },
+    "foundation.soil_bearing": {
+      "source": "excel",
+      "file": "excel",
+      "column": "soil_bearing",
+      "filter": "not specified"
+    },
+    "seismic.soil_class": {
+      "source": "excel",
+      "file": "excel",
+      "column": "soil_class",
+      "filter": "not specified"
+    },
+    "seismic.site_soil_category": {
+      "source": "excel",
+      "file": "excel",
+      "column": "site_soil_category",
+      "filter": "not specified"
+    },
+    "seismic.zone_factor_z": {
+      "source": "excel",
+      "file": "excel",
+      "column": "zone_factor_z",
+      "filter": "not specified"
+    },
+    "seismic.structural_type": {
+      "source": "excel",
+      "file": "excel",
+      "column": "structural_type",
+      "filter": "not specified"
+    },
+    "codes.edition": {
+      "source": "excel",
+      "file": "excel",
+      "column": "edition",
+      "filter": "not specified"
+    },
+    "loads.wall_unit_weight": {
+      "source": "excel",
+      "file": "excel",
+      "column": "wall_unit_weight",
+      "filter": "not specified"
+    },
+    "loads.wall_thickness_mm": {
+      "source": "excel",
+      "file": "excel",
+      "column": "wall_thickness_mm",
+      "filter": "not specified"
+    },
+    "loads.wall_height_m": {
+      "source": "excel",
+      "file": "excel",
+      "column": "wall_height_m",
+      "filter": "not specified"
+    },
+    "loads.floor_finish_thickness_mm": {
+      "source": "excel",
+      "file": "excel",
+      "column": "floor_finish_thickness_mm",
+      "filter": "not specified"
+    },
+    "loads.floor_finish_unit_weight": {
+      "source": "excel",
+      "file": "excel",
+      "column": "floor_finish_unit_weight",
+      "filter": "not specified"
+    },
+    "loads.plaster_thickness_mm": {
+      "source": "excel",
+      "file": "excel",
+      "column": "plaster_thickness_mm",
+      "filter": "not specified"
+    },
+    "loads.plaster_unit_weight": {
+      "source": "excel",
+      "file": "excel",
+      "column": "plaster_unit_weight",
+      "filter": "not specified"
+    },
+    "loads.slab_thickness_mm": {
+      "source": "excel",
+      "file": "excel",
+      "column": "slab_thickness_mm",
+      "filter": "not specified"
+    },
+    "loads.slab_unit_weight": {
+      "source": "excel",
+      "file": "excel",
+      "column": "slab_unit_weight",
+      "filter": "not specified"
+    },
+    "loads.slab_dead_load": {
+      "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
+      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
+      "column": "SLABTHICKNESS, WEIGHTPERVOLUME",
+      "filter": "$SLABPROPERTIES Section=Slab 125; Material=M20"
+    },
+    "loads.live_load_residential": {
+      "source": "excel",
+      "file": "excel",
+      "column": "live_load_residential",
+      "filter": "not specified"
+    },
+    "loads.live_load_corridor": {
+      "source": "excel",
+      "file": "excel",
+      "column": "live_load_corridor",
+      "filter": "not specified"
+    },
+    "loads.roof_live_load": {
+      "source": "excel",
+      "file": "excel",
+      "column": "roof_live_load",
+      "filter": "not specified"
+    },
+    "structural.system_type_generic": {
+      "source": "etabs_csv:17_Frame_Assignments.csv",
+      "file": "17_Frame_Assignments.csv",
+      "column": "Type",
+      "filter": "frame assignments contain beams and columns; no wall rows"
+    },
+    "structural.system_type_period_category": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "response_modification_factor.moment_resisting_frames",
+      "filter": "system_type=Moment Resisting Frames"
+    },
+    "structural.system_type_table_5_2": {
+      "source": "computed: config/seismic_formulas.yaml",
+      "file": " config/seismic_formulas.yaml",
+      "column": "overstrength.moment_resisting",
+      "filter": "system_type=Moment Resisting Frames"
+    },
+    "slab.type": {
+      "source": "computed: e2k $SLABPROPERTIES",
+      "file": " e2k $SLABPROPERTIES",
+      "column": "Slab property type",
+      "filter": "slab property exists in parsed ULS e2k"
+    },
+    "signoff.date": {
+      "source": "excel",
+      "file": "excel",
+      "column": "date",
+      "filter": "not specified"
+    },
     "seismic.eqx_eccentricity": {
       "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
       "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
@@ -64,12 +310,6 @@
       "source": "e2k",
       "file": "e2k",
       "column": "story_elevations_m",
-      "filter": "not specified"
-    },
-    "building.num_basements": {
-      "source": "e2k",
-      "file": "e2k",
-      "column": "num_basements",
       "filter": "not specified"
     },
     "building.story_height_m": {
@@ -155,12 +395,6 @@
       "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
       "column": "Section/Thickness/Material",
       "filter": "$SLABPROPERTIES"
-    },
-    "loads.slab_dead_load": {
-      "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
-      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
-      "column": "SLABTHICKNESS, WEIGHTPERVOLUME",
-      "filter": "$SLABPROPERTIES Section=Slab 125; Material=M20"
     },
     "table.elements.sizes_and_materials": {
       "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
@@ -354,12 +588,6 @@
       "column": "AnalysisSect/DesignSect",
       "filter": "all frame rows"
     },
-    "structural.system_type_generic": {
-      "source": "etabs_csv:17_Frame_Assignments.csv",
-      "file": "17_Frame_Assignments.csv",
-      "column": "Type",
-      "filter": "frame assignments contain beams and columns; no wall rows"
-    },
     "seismic.response_modification_factor_rmu": {
       "source": "computed: config/seismic_formulas.yaml",
       "file": " config/seismic_formulas.yaml",
@@ -546,22 +774,10 @@
       "column": "FX/FY",
       "filter": "EQX-ULS/EQY-ULS governing base reaction"
     },
-    "seismic.zone_factor_z": {
-      "source": "computed: config/seismic_formulas.yaml",
-      "file": " config/seismic_formulas.yaml",
-      "column": "site_parameters.zone_factor_z",
-      "filter": "explicit project-approved site parameter; ETABS/Excel value absent"
-    },
     "seismic.importance_factor_i": {
       "source": "computed: config/seismic_formulas.yaml",
       "file": " config/seismic_formulas.yaml",
       "column": "site_parameters.importance_factor_i",
-      "filter": "explicit project-approved site parameter; ETABS/Excel value absent"
-    },
-    "seismic.soil_class": {
-      "source": "computed: config/seismic_formulas.yaml",
-      "file": " config/seismic_formulas.yaml",
-      "column": "site_parameters.soil_class",
       "filter": "explicit project-approved site parameter; ETABS/Excel value absent"
     },
     "seismic.alpha": {
@@ -618,29 +834,11 @@
       "column": "Type",
       "filter": "beam and column frame assignments; no wall rows"
     },
-    "structural.system_type_period_category": {
-      "source": "computed: config/seismic_formulas.yaml",
-      "file": " config/seismic_formulas.yaml",
-      "column": "response_modification_factor.moment_resisting_frames",
-      "filter": "system_type=Moment Resisting Frames"
-    },
-    "structural.system_type_table_5_2": {
-      "source": "computed: config/seismic_formulas.yaml",
-      "file": " config/seismic_formulas.yaml",
-      "column": "overstrength.moment_resisting",
-      "filter": "system_type=Moment Resisting Frames"
-    },
     "materials.as_building_is_less_than_12_m": {
       "source": "computed: $STORYDATA + CONCRETE",
       "file": " $STORYDATA + CONCRETE",
       "column": "StoryHt, Fc",
       "filter": "height_period_m < 12 m"
-    },
-    "slab.type": {
-      "source": "computed: e2k $SLABPROPERTIES",
-      "file": " e2k $SLABPROPERTIES",
-      "column": "Slab property type",
-      "filter": "slab property exists in parsed ULS e2k"
     },
     "table.design.overstrength_factors": {
       "source": "computed: config/seismic_formulas.yaml",

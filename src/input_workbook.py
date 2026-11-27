@@ -101,6 +101,67 @@ SHEET_DEFS: dict[str, list[dict[str, Any]]] = {
     ],
 }
 
+SAMPLE_VALUES: dict[str, Any] = {
+    "project.report_title": "Structural report of Residence Building of Chatra Bahadur Ramtel",
+    "client.owner_name": "Mr. Chatra Bahadur Ramtel", "building.location": "Damak",
+    "building.occupancy_class": "Residential", "client.designer_name": "Mr. Anij Bhandari",
+    "client.designer_nec_reg": "13925", "client.designer_contact": "9862123845",
+    "client.consultant_name": "Swarup Engineering Consultancy", "consultancy.name": "Swarup Engineering Consultancy",
+    "consultancy.address": "Dharan-16, Sunsari", "designer.name": "Er. Anij Bhandari",
+    "designer.nec_no": "13925", "designer.nec_category": "Civil “A” Category",
+    "client.municipality_reg": "123", "client.application_date": "2026/11/24",
+    "building.num_basements": 0, "foundation.soil_bearing": "Soil Bearing Capacity is taken as 120 kN/m2",
+    "building.story_height_m": 3.175, "building.total_height_m": 9.525,
+    "seismic.soil_class": "C", "seismic.site_soil_category": "Firm soil", "seismic.zone_factor_z": 0.35,
+    "seismic.structural_type": "Ordinary Structures", "codes.edition": "NBC 105:2025",
+    "loads.wall_unit_weight": 19.625, "loads.wall_thickness_mm": 230, "loads.wall_height_m": 3.175,
+    "loads.floor_finish_thickness_mm": 20, "loads.floor_finish_unit_weight": 24.0,
+    "loads.plaster_thickness_mm": 12, "loads.plaster_unit_weight": 20.4,
+    "loads.slab_thickness_mm": 125, "loads.slab_unit_weight": 24.0, "loads.slab_dead_load": 3.0,
+    "loads.live_load_residential": 2.0, "loads.live_load_corridor": 3.0, "loads.roof_live_load": 1.5,
+    "foundation.type": "Combined Footing", "structural.system_type_generic": "Moment Resisting Frames",
+    "structural.system_type_period_category": "Moment Resisting Concrete Frame",
+    "structural.system_type_table_5_2": "Reinforced Concrete Moment Resisting Frame",
+    "slab.type": "Conventional", "building.has_staircase": True, "signoff.date": "2026/11/24",
+}
+
+SHEET_TOPICS = {
+    "project": "Project & Client", "client": "Project & Client", "consultancy": "Consultancy and Designer",
+    "designer": "Consultancy and Designer", "building": "Project & Client", "seismic": "Site & Soil",
+    "codes": "Codes", "loads": "Wall & Finish Loads", "foundation": "Foundation",
+    "structural": "Foundation", "slab": "Foundation", "figure": "Figures", "signoff": "Sign-off",
+}
+
+def registry_sheet_defs() -> dict[str, list[dict[str, Any]]]:
+    """Return the curated fields plus every registry entry whose source is Excel."""
+    result = {name: [dict(field) for field in fields] for name, fields in SHEET_DEFS.items()}
+    # Keep the legacy combined sheets for reader compatibility, while exposing
+    # the topic sheets required by the project brief.
+    result.setdefault("Consultancy and Designer", [])
+    result.setdefault("Live Loads", [])
+    result.setdefault("Irregularity Declarations", [])
+    for field in result["Project & Client"]:
+        if field["key"].startswith(("consultancy.", "designer.")) or field["key"] in {"client.designer_name", "client.designer_nec_reg", "client.designer_contact"}:
+            result["Consultancy and Designer"].append(dict(field))
+    for field in result["Wall & Finish Loads"]:
+        if field["key"].startswith("loads.live_") or field["key"] == "loads.roof_live_load":
+            result["Live Loads"].append(dict(field))
+    for field in result.get("Codes", []):
+        if any(token in field["key"] for token in ("irregularity", "torsional", "soft_storey", "mass_", "reentrant", "diaphragm", "out_of_plane")):
+            result["Irregularity Declarations"].append(dict(field))
+    seen = {field["key"] for fields in result.values() for field in fields}
+    entries = yaml.safe_load(REGISTRY.read_text(encoding="utf-8")).get("items", [])
+    for entry in entries:
+        key = str(entry.get("key", ""))
+        if entry.get("source") != "excel" or not key or key in seen:
+            continue
+        topic = SHEET_TOPICS.get(key.split(".", 1)[0], "Project & Client")
+        result.setdefault(topic, []).append({"key": key, "label": str(entry.get("description") or key),
+            "example": entry.get("example", ""), "registry_type": entry.get("type"),
+            "required": bool(entry.get("required", False)), "condition": entry.get("condition")})
+        seen.add(key)
+    return result
+
 
 class InputWorkbook:
     """Generate and read the Excel input workbook."""
@@ -124,7 +185,7 @@ class InputWorkbook:
         # Remove default sheet
         wb.remove(wb.active)
 
-        for sheet_name, fields in SHEET_DEFS.items():
+        for sheet_name, fields in registry_sheet_defs().items():
             ws = wb.create_sheet(title=sheet_name[:31])  # Excel max 31 chars
             # Header row
             ws.cell(1, 1, "Key").fill = self.HEADER_FILL
@@ -135,7 +196,11 @@ class InputWorkbook:
             ws.cell(1, 3).font = self.HEADER_FONT
             ws.cell(1, 4, "Example").fill = self.HEADER_FILL
             ws.cell(1, 4).font = self.HEADER_FONT
-            for c in range(1, 5):
+            ws.cell(1, 5, "Source / review status").fill = self.HEADER_FILL
+            ws.cell(1, 5).font = self.HEADER_FONT
+            ws.cell(1, 6, "Hypothetical sample").fill = self.HEADER_FILL
+            ws.cell(1, 6).font = self.HEADER_FONT
+            for c in range(1, 7):
                 ws.cell(1, c).border = self.THIN_BORDER
 
             for ri, field in enumerate(fields, start=2):
@@ -143,6 +208,8 @@ class InputWorkbook:
                 ws.cell(ri, 2, field["label"]).border = self.THIN_BORDER
                 # Value cell (yellow, empty — user fills this)
                 val_cell = ws.cell(ri, 3)
+                if field["key"] in SAMPLE_VALUES:
+                    val_cell.value = SAMPLE_VALUES[field["key"]]
                 val_cell.fill = self.YELLOW
                 val_cell.border = self.THIN_BORDER
                 # Example cell (grey)
@@ -150,13 +217,25 @@ class InputWorkbook:
                 ex_cell.fill = self.GREY
                 ex_cell.font = Font(italic=True, color="808080")
                 ex_cell.border = self.THIN_BORDER
+                source = "Sample report — hypothetical; confirm"
+                if field["key"] in {"building.num_basements", "seismic.soil_class", "seismic.zone_factor_z", "building.story_height_m", "building.total_height_m", "loads.slab_dead_load"}:
+                    source = "From ETABS - confirm"
+                ws.cell(ri, 5, source).border = self.THIN_BORDER
+                ws.cell(ri, 6, "Yes").fill = self.GREY
+                ws.cell(ri, 6).font = Font(italic=True, color="808080")
+                ws.cell(ri, 6).border = self.THIN_BORDER
                 # Validation
                 if "validation" in field:
                     dv = DataValidation(type="list", formula1=f'"{field["validation"]}"', allow_blank=True)
                     ws.add_data_validation(dv)
                     dv.add(val_cell)
-                elif field.get("validation_type") == "whole":
-                    dv = DataValidation(type="whole", operator="greaterThanOrEqual", formula1=0, allow_blank=True)
+                elif field.get("validation_type") == "whole" or field.get("registry_type") in {"number", "integer"}:
+                    dtype = "whole" if field.get("validation_type") == "whole" or field.get("registry_type") == "integer" else "decimal"
+                    dv = DataValidation(type=dtype, operator="greaterThanOrEqual", formula1=0, allow_blank=True)
+                    ws.add_data_validation(dv)
+                    dv.add(val_cell)
+                elif field.get("registry_type") == "bool":
+                    dv = DataValidation(type="list", formula1='"True,False"', allow_blank=True)
                     ws.add_data_validation(dv)
                     dv.add(val_cell)
 
@@ -165,6 +244,8 @@ class InputWorkbook:
             ws.column_dimensions["B"].width = 35
             ws.column_dimensions["C"].width = 20
             ws.column_dimensions["D"].width = 30
+            ws.column_dimensions["E"].width = 28
+            ws.column_dimensions["F"].width = 18
 
         wb.save(str(output_path))
 
@@ -236,7 +317,7 @@ class InputWorkbook:
                 d = d.setdefault(p, {})
             d[parts[-1]] = value
 
-        for sheet_name, fields in SHEET_DEFS.items():
+        for sheet_name, fields in registry_sheet_defs().items():
             # Find the sheet (may be truncated to 31 chars)
             ws = None
             for sn in wb.sheetnames:
@@ -254,6 +335,7 @@ class InputWorkbook:
                 value = ws.cell(ri, 3).value
                 if not key:
                     continue
+                field = next((f for f in fields if f["key"] == str(key)), {})
                 if value is None or str(value).strip() == "":
                     missing.append({
                         "sheet": sheet_name, "row": str(ri),
@@ -261,6 +343,25 @@ class InputWorkbook:
                     })
                 else:
                     val_str = str(value).strip()
+                    validation = field.get("validation")
+                    if validation and val_str not in {v.strip() for v in validation.split(",")}:
+                        missing.append({"sheet": sheet_name, "row": str(ri), "key": str(key),
+                                        "reason": f"invalid value {val_str!r}; allowed {validation}"})
+                        continue
+                    rtype = field.get("registry_type")
+                    if rtype in {"number", "integer"}:
+                        try:
+                            numeric = float(val_str)
+                            if rtype == "integer" and numeric != int(numeric):
+                                raise ValueError
+                        except ValueError:
+                            missing.append({"sheet": sheet_name, "row": str(ri), "key": str(key),
+                                            "reason": f"invalid {rtype} value {val_str!r}"})
+                            continue
+                    if rtype == "bool" and val_str.lower() not in {"true", "false"}:
+                        missing.append({"sheet": sheet_name, "row": str(ri), "key": str(key),
+                                        "reason": f"invalid bool value {val_str!r}"})
+                        continue
                     # Type conversion
                     if val_str.lower() == "true":
                         _set_nested(str(key), True)

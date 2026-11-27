@@ -1,6 +1,75 @@
 # Context Builder Unresolved Values
 
-- UNRESOLVED: input workbook not found: inputs/Project_Input.xlsx
+- UNRESOLVED: missing Excel input: Project & Client row 17 key table.client.general_information
+- UNRESOLVED: missing Excel input: Project & Client row 18 key table.codes.references
+- UNRESOLVED: missing Excel input: Project & Client row 19 key building.infill_wall_material
+- UNRESOLVED: missing Excel input: Project & Client row 20 key table.building.general_information
+- UNRESOLVED: missing Excel input: Project & Client row 21 key table.design.system_foundation
+- UNRESOLVED: missing Excel input: Project & Client row 22 key table.modifiers.effective_stiffness
+- UNRESOLVED: missing Excel input: Project & Client row 23 key project.brick_specs
+- UNRESOLVED: missing Excel input: Project & Client row 24 key building.occupancy
+- UNRESOLVED: missing Excel input: Project & Client row 25 key table.loads.live_load_intensity
+- UNRESOLVED: missing Excel input: Project & Client row 26 key table.elements.wall_desc
+- UNRESOLVED: missing Excel input: Project & Client row 27 key table.elements.stair_desc
+- UNRESOLVED: missing Excel input: Project & Client row 28 key table.design.beam_boundary
+- UNRESOLVED: missing Excel input: Project & Client row 29 key building.occupancy_sentence
+- UNRESOLVED: missing Excel input: Project & Client row 30 key table.design.beam_ast_prov
+- UNRESOLVED: missing Excel input: Site & Soil row 8 key seismic.importance_factor_i
+- UNRESOLVED: missing Excel input: Codes row 3 key codes.clauses.material_properties
+- UNRESOLVED: missing Excel input: Codes row 4 key codes.clauses.eccentricity_intro
+- UNRESOLVED: missing Excel input: Codes row 5 key codes.clauses.vertical_force_dist
+- UNRESOLVED: missing Excel input: Codes row 6 key codes.clauses.spectral_shape_factor
+- UNRESOLVED: missing Excel input: Codes row 7 key codes.clauses.seismic_zoning_factor
+- UNRESOLVED: missing Excel input: Codes row 8 key codes.clauses.importance_factor
+- UNRESOLVED: missing Excel input: Codes row 9 key codes.clauses.equivalent_static_method
+- UNRESOLVED: missing Excel input: Codes row 10 key codes.clauses.load_combinations
+- UNRESOLVED: missing Excel input: Codes row 11 key codes.clauses.modal_mass_participation
+- UNRESOLVED: missing Excel input: Codes row 12 key codes.limits.modal_mass_part_pct
+- UNRESOLVED: missing Excel input: Codes row 13 key codes.clauses.serviceability_drift
+- UNRESOLVED: missing Excel input: Codes row 14 key codes.limits.max_deflection_ratio
+- UNRESOLVED: missing Excel input: Codes row 15 key codes.limits.sls_drift_ratio
+- UNRESOLVED: missing Excel input: Codes row 16 key codes.limits.ultimate_story_drift_ratio
+- UNRESOLVED: missing Excel input: Codes row 17 key codes.clauses.irregularity_general
+- UNRESOLVED: missing Excel input: Codes row 18 key codes.clauses.torsional_irregularity
+- UNRESOLVED: missing Excel input: Codes row 19 key codes.limits.torsional_disp_ratio
+- UNRESOLVED: missing Excel input: Codes row 20 key codes.clauses.soft_storey
+- UNRESOLVED: missing Excel input: Codes row 21 key codes.limits.soft_storey_adj_pct
+- UNRESOLVED: missing Excel input: Codes row 22 key codes.limits.soft_storey_avg_pct
+- UNRESOLVED: missing Excel input: Codes row 23 key codes.clauses.mass_irregularity
+- UNRESOLVED: missing Excel input: Codes row 24 key codes.limits.mass_irregularity_diff_pct
+- UNRESOLVED: missing Excel input: Codes row 25 key codes.clauses.reentrant_corner
+- UNRESOLVED: missing Excel input: Codes row 26 key codes.limits.reentrant_proj_pct
+- UNRESOLVED: missing Excel input: Codes row 27 key codes.clauses.diaphragm_discontinuity
+- UNRESOLVED: missing Excel input: Codes row 28 key codes.limits.diaphragm_opening_area_pct
+- UNRESOLVED: missing Excel input: Codes row 29 key codes.limits.diaphragm_stiffness_pct
+- UNRESOLVED: missing Excel input: Codes row 30 key codes.clauses.in_plane_discontinuity
+- UNRESOLVED: missing Excel input: Codes row 31 key codes.clauses.out_of_plane_offset
+- UNRESOLVED: missing Excel input: Foundation row 2 key foundation.type
+- UNRESOLVED: missing Excel input: Foundation row 7 key foundation.soil_class
+- UNRESOLVED: missing Excel input: Figures row 2 key figure.design.slab_sheet
+- UNRESOLVED: missing Excel input: Figures row 3 key figure.project.cover
+- UNRESOLVED: missing Excel input: Figures row 4 key figure.project.report_figure
+- UNRESOLVED: missing Excel input: Figures row 5 key figure.building.plan_of_building
+- UNRESOLVED: missing Excel input: Figures row 6 key figure.building.section_of_building
+- UNRESOLVED: missing Excel input: Figures row 7 key figure.materials.material_property_rebar
+- UNRESOLVED: missing Excel input: Figures row 8 key figure.loads.wall_first
+- UNRESOLVED: missing Excel input: Figures row 9 key figure.loads.wall_second
+- UNRESOLVED: missing Excel input: Figures row 10 key figure.loads.wall_third
+- UNRESOLVED: missing Excel input: Figures row 11 key figure.building.finish_first
+- UNRESOLVED: missing Excel input: Figures row 12 key figure.building.finish_second
+- UNRESOLVED: missing Excel input: Figures row 13 key figure.loads.live_first
+- UNRESOLVED: missing Excel input: Figures row 14 key figure.loads.live_second
+- UNRESOLVED: missing Excel input: Figures row 15 key figure.loads.roof_live_second
+- UNRESOLVED: missing Excel input: Figures row 16 key figure.loads.roof_live_top
+- UNRESOLVED: missing Excel input: Figures row 17 key figure.elements.columns_design
+- UNRESOLVED: missing Excel input: Figures row 18 key figure.elements.columns_design_b
+- UNRESOLVED: missing Excel input: Figures row 19 key figure.staircase.design_main
+- UNRESOLVED: missing Excel input: Figures row 20 key figure.staircase.design_b
+- UNRESOLVED: missing Excel input: Figures row 21 key figure.staircase.design_c
+- UNRESOLVED: missing Excel input: Figures row 22 key figure.summary.design
+- UNRESOLVED: missing Excel input: Figures row 23 key figure.summary.panel_a
+- UNRESOLVED: missing Excel input: Figures row 24 key figure.summary.panel_b
+- UNRESOLVED: missing Excel input: Sign-off row 3 key signoff.engineer_signature
 - UNRESOLVED: foundation.support_condition requires foundation.type and foundation.soil_class
 - UNRESOLVED: figure.materials.concrete: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
 - UNRESOLVED: figure.irregularity.eqx_eccentricity: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
