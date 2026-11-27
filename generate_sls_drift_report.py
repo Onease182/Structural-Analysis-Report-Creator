@@ -101,6 +101,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
+DEFAULT_COLUMN_LADDER = "4-16+4-12,8-16,4-20+4-16,8-20,4-25+4-20,8-25"
+DEFAULT_BEAM_LADDER = "3-12,2-16+1-12,3-16,2-20+1-16,3-20,2-20+2-16,4-20,5-20,6-20,3-25,4-25,5-25"
+
 NAVY, BLUE, GREY = "17365D", "1F4E79", "404040"
 LIGHT_BLUE, LIGHT_GREY, GREEN, YELLOW, RED = "D9EAF7", "F2F4F6", "E2F0D9", "FFF2CC", "FCE4D6"
 FONT = "Arial"
@@ -140,7 +143,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--summary-format", choices=["pdf", "tiff", "both"], default="pdf", help="multi-page file holding the three images, one per page")
     p.add_argument("--no-columns", action="store_true", help="skip the column reinforcement details image")
     p.add_argument("--columns-output", type=Path, default=None, help="default: Column_Reinforcement_Details.jpg beside --output")
-    p.add_argument("--col-ladder", default="4-16+4-12,8-16,4-20+4-16,8-20,4-25+4-20,8-25",
+    p.add_argument("--col-ladder", default=DEFAULT_COLUMN_LADDER,
                    help="allowed bar combinations (n-dia[+n-dia]), comma separated; the smallest one that covers the required As is used")
     p.add_argument("--col-min-steel", type=float, default=1.0, help="minimum column steel, %% of gross area (NBC 105:2025 cl. 4.2.2b: 1.0 %%)")
     p.add_argument("--col-max-steel", type=float, default=4.0, help="maximum column steel, %% of gross area (NBC 105:2025 cl. 4.2.2c: 4.0 %%)")
@@ -161,7 +164,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--beam-plan-output", type=Path, default=None, help="default: Beam_Layout_Plan.jpg beside --output")
     p.add_argument("--column-plan-output", type=Path, default=None, help="default: Column_Layout_Plan.jpg beside --output")
     p.add_argument("--beams-output", type=Path, default=None, help="default: Beam_Reinforcement_Details.jpg beside --output")
-    p.add_argument("--beam-ladder", default="3-12,2-16+1-12,3-16,2-20+1-16,3-20,2-20+2-16,4-20,5-20,6-20,3-25,4-25,5-25",
+    p.add_argument("--beam-ladder", default=DEFAULT_BEAM_LADDER,
                    help="allowed beam bar combinations (n-dia[+n-dia]); the smallest one that covers the required As is used "
                         "(min. 3 bars per face via --beam-min-bars). Bars are split into THROUGH (continuous, meets mid-span req) and EXTRA (at supports only, "
                         "meets support req - through area), shown as '(through)(Th.)+(extra)(Ex.)'")
@@ -1022,6 +1025,10 @@ def parse_ladder(text: str) -> list[tuple[list, int]]:
             parts.append((int(m.group(1)), int(m.group(2))))
         out.append((parts, bar_area(parts)))
     return sorted(out, key=lambda t: t[1])
+
+def select_ladder_area(required_mm2: float, ladder_text: str) -> tuple[list, int] | None:
+    """Return the smallest configured bar combination covering required steel."""
+    return next(((parts, area) for parts, area in parse_ladder(ladder_text) if area >= required_mm2), None)
 
 
 def parse_percent(s: pd.Series) -> pd.Series:

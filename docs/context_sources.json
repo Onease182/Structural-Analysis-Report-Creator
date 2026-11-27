@@ -144,6 +144,30 @@
       "column": "point_restraint_cross_check",
       "filter": "not specified"
     },
+    "table.elements.foundation_desc": {
+      "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
+      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
+      "column": "RESTRAINT",
+      "filter": "POINTASSIGN rows at Story=Base"
+    },
+    "table.elements.slab_desc": {
+      "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
+      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
+      "column": "Section/Thickness/Material",
+      "filter": "$SLABPROPERTIES"
+    },
+    "loads.slab_dead_load": {
+      "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
+      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
+      "column": "SLABTHICKNESS, WEIGHTPERVOLUME",
+      "filter": "$SLABPROPERTIES Section=Slab 125; Material=M20"
+    },
+    "table.elements.sizes_and_materials": {
+      "source": "e2k:tables/Chatra Bahadur Ramel_ULS.e2k",
+      "file": "tables/Chatra Bahadur Ramel_ULS.e2k",
+      "column": "frame_sections/slab_properties/materials",
+      "filter": "unique structural section rows"
+    },
     "modal.modes_included_count": {
       "source": "etabs_csv",
       "file": "etabs_csv",
@@ -205,16 +229,16 @@
       "filter": "not specified"
     },
     "design.column.max_provided_pct": {
-      "source": "etabs_csv:07_Column_Design.csv",
-      "file": "07_Column_Design.csv",
-      "column": "RatioRebar",
-      "filter": "all column design rows"
+      "source": "computed: 07_Column_Design.csv",
+      "file": " 07_Column_Design.csv",
+      "column": "RatioRebar + DesignSect + shared ladder",
+      "filter": "maximum selected ladder area / gross section area"
     },
     "design.column.min_provided_pct": {
-      "source": "etabs_csv:07_Column_Design.csv",
-      "file": "07_Column_Design.csv",
-      "column": "RatioRebar",
-      "filter": "all column design rows"
+      "source": "computed: 07_Column_Design.csv",
+      "file": " 07_Column_Design.csv",
+      "column": "RatioRebar + DesignSect + shared ladder",
+      "filter": "minimum selected ladder area / gross section area"
     },
     "design.column.max_limit_pct": {
       "source": "computed: config/formats.yaml",
@@ -232,13 +256,13 @@
       "source": "computed: config/formats.yaml",
       "file": " config/formats.yaml",
       "column": "status_words",
-      "filter": "max column steel check"
+      "filter": "max selected column ladder steel check"
     },
     "design.column.min_status": {
       "source": "computed: config/formats.yaml",
       "file": " config/formats.yaml",
       "column": "status_words",
-      "filter": "min column steel check"
+      "filter": "min selected column ladder steel check"
     },
     "design.column.max_section_width_mm": {
       "source": "etabs_csv:07_Column_Design.csv",
@@ -255,32 +279,32 @@
     "design.column.max_rebar_area_mm2": {
       "source": "computed: 07_Column_Design.csv",
       "file": " 07_Column_Design.csv",
-      "column": "RatioRebar + DesignSect",
-      "filter": "governing DesignSect=Column 355 x 355"
+      "column": "RatioRebar + DesignSect + shared ladder",
+      "filter": "governing DesignSect=Column 355 x 355; selected ladder area"
     },
     "design.beam.max_rebar_area_mm2": {
-      "source": "etabs_csv:08_Beam_Design.csv",
-      "file": "08_Beam_Design.csv",
-      "column": "AsTop/AsBot",
-      "filter": "maximum over beam rows"
+      "source": "computed: 08_Beam_Design.csv",
+      "file": " 08_Beam_Design.csv",
+      "column": "AsTop/AsBot + DesignSect + shared ladder",
+      "filter": "maximum selected ladder area"
     },
     "design.beam.max_section_width_mm": {
       "source": "etabs_csv:08_Beam_Design.csv",
       "file": "08_Beam_Design.csv",
       "column": "DesignSect",
-      "filter": "DesignSect=Beam 250 x 430"
+      "filter": "DesignSect=S. Beam 250X250"
     },
     "design.beam.max_section_depth_mm": {
       "source": "etabs_csv:08_Beam_Design.csv",
       "file": "08_Beam_Design.csv",
       "column": "DesignSect",
-      "filter": "DesignSect=Beam 250 x 430; effective depth"
+      "filter": "DesignSect=S. Beam 250X250; gross section depth"
     },
     "design.beam.max_provided_pct": {
-      "source": "etabs_csv:08_Beam_Design.csv",
-      "file": "08_Beam_Design.csv",
-      "column": "AsTop/AsBot + DesignSect",
-      "filter": "maximum area divided by 250x355 mm effective section"
+      "source": "computed: 08_Beam_Design.csv",
+      "file": " 08_Beam_Design.csv",
+      "column": "AsTop/AsBot + DesignSect + shared ladder",
+      "filter": "maximum selected area / gross 250x250 mm section"
     },
     "design.beam.max_limit_pct": {
       "source": "computed: config/formats.yaml",
@@ -289,10 +313,10 @@
       "filter": "configured maximum"
     },
     "design.beam.min_provided_pct": {
-      "source": "etabs_csv:08_Beam_Design.csv",
-      "file": "08_Beam_Design.csv",
-      "column": "AsTop/AsBot",
-      "filter": "minimum over beam rows"
+      "source": "computed: 08_Beam_Design.csv",
+      "file": " 08_Beam_Design.csv",
+      "column": "AsTop/AsBot + DesignSect + shared ladder",
+      "filter": "minimum selected area / gross section area"
     },
     "design.beam.min_limit_pct": {
       "source": "computed: config/formats.yaml",
@@ -570,6 +594,18 @@
       "column": "Ch, Z, Omega_s",
       "filter": "SLS factor=0.20; T <= Tc"
     },
+    "seismic.elastic_site_spectra_c": {
+      "source": "computed: config/nbc105_spectrum.yaml + config/seismic_formulas.yaml",
+      "file": " config/nbc105_spectrum.yaml + config/seismic_formulas.yaml",
+      "column": "Ch, Z, I",
+      "filter": "plateau branch; T <= Tc"
+    },
+    "seismic.elastic_site_spectra_cs": {
+      "source": "computed: config/nbc105_spectrum.yaml + config/seismic_formulas.yaml",
+      "file": " config/nbc105_spectrum.yaml + config/seismic_formulas.yaml",
+      "column": "Ch, Z, I, serviceability factor",
+      "filter": "plateau branch; T <= Tc"
+    },
     "seismic.time_coefficient_kt": {
       "source": "computed: config/seismic_formulas.yaml",
       "file": " config/seismic_formulas.yaml",
@@ -725,12 +761,6 @@
       "file": "S01_Story_Drifts.csv",
       "column": "sls_story_drift_figures_x_y",
       "filter": "not specified"
-    },
-    "table.elements.sizes_and_materials": {
-      "source": "etabs_api",
-      "file": "",
-      "column": "",
-      "filter": "no resolved etabs_api source value was found in the available ETABS exports"
     },
     "figure.materials.concrete": {
       "source": "etabs_api",
@@ -989,36 +1019,6 @@
       "file": "",
       "column": "",
       "filter": "Select the result variant from computed project checks."
-    },
-    "table.elements.slab_desc": {
-      "source": "etabs_api",
-      "file": "",
-      "column": "",
-      "filter": "no resolved etabs_api source value was found in the available ETABS exports"
-    },
-    "seismic.elastic_site_spectra_c": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
-    "seismic.elastic_site_spectra_cs": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
-    "loads.slab_dead_load": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
-    },
-    "table.elements.foundation_desc": {
-      "source": "computed",
-      "file": "",
-      "column": "",
-      "filter": "no resolved computed source value was found in the available ETABS exports"
     },
     "table.design.beam_effective_span": {
       "source": "computed",

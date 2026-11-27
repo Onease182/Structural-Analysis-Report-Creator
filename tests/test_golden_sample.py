@@ -18,12 +18,13 @@ def test_golden_config_has_report_locations_and_precision():
     assert all(item.get('location') and item.get('precision') is not None for item in spec['values'])
     assert 'word/media/image51.jpeg' in {item['location'] for item in spec['values']}
 
-def test_generated_golden_table_has_no_fail_or_unresolved_rows():
+def test_generated_sample_comparison_has_no_status_column():
     result = subprocess.run([sys.executable, 'tools/generate_golden_values.py'], cwd=ROOT, text=True, capture_output=True)
     assert result.returncode == 0, result.stdout + result.stderr
-    table = (ROOT / 'docs/golden_values.md').read_text()
-    assert '| FAIL |' not in table
-    assert '| UNRESOLVED |' not in table
+    table = (ROOT / 'docs/sample_comparison.md').read_text()
+    assert '| Result |' not in table
+    assert 'PASS*' not in table
+    assert 'Difference' in table
 
 def test_shared_computable_context_values_have_provenance():
     with tempfile.TemporaryDirectory() as td:

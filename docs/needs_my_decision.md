@@ -85,4 +85,8 @@ Beam deflection check keys require the authoritative source table/columns and ap
 
 ## Reinforcement golden mismatch requiring source confirmation
 
-The sample report values `1.026%` (column minimum) and `0.764%` (beam steel) are confirmed report references, but the committed ETABS CSV design exports resolve to `1.230%` and `0.530%`, respectively. Git history before `747525d` contained the sample beam arithmetic `678.584/(250*355)*100`, not a source-backed derivation of the report's design-output totals. The builder therefore retains the real CSV values and does not invent an effective-section formula; `docs/golden_values.md` marks these rows `PASS*` as documented non-comparable references. Please provide the authoritative ETABS design-output columns/rows if exact reconciliation is required.
+The sample report values `1.026%` (column minimum) and `0.764%` (beam steel) are confirmed report references, but the committed ETABS CSV design exports resolve to different values. Git history before `747525d` contained the sample beam arithmetic `678.584/(250*355)*100`, not a source-backed derivation of the report's design-output totals. The builder therefore retains the real CSV values and does not invent an effective-section formula; `docs/sample_comparison.md` records the numerical differences and provenance. Please provide the authoritative ETABS design-output columns/rows if exact reconciliation is required.
+
+## Proposed changes requiring owner review
+
+- **Torsion-clause wording:** The sample card cites clause `5.4.2.2` for both torsional thresholds. NBC 105:2025 distinguishes `5.4.2.1` (torsional irregularity) from `5.4.2.2` (extreme torsional irregularity). `generate_sls_drift_report.py` currently uses the sample-style wording; confirm whether the report should cite the distinct clauses by threshold, or retain the sample wording for format compatibility.

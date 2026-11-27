@@ -2,7 +2,6 @@
 
 - UNRESOLVED: input workbook not found: inputs/Project_Input.xlsx
 - UNRESOLVED: foundation.support_condition requires foundation.type and foundation.soil_class
-- UNRESOLVED: table.elements.sizes_and_materials: no resolved etabs_api source value was found in the available ETABS exports
 - UNRESOLVED: figure.materials.concrete: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
 - UNRESOLVED: figure.irregularity.eqx_eccentricity: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
 - UNRESOLVED: figure.irregularity.eqx_eccentricity_b: Generated from ETABS or supplied by the user; the figure manager must resolve its source.
@@ -46,11 +45,6 @@
 - UNRESOLVED: analysis.foundation_reaction_combination: Caption text is variable; retain the existing foundation reaction image.
 - UNRESOLVED: analysis.in_plane_discontinuity_result: Select the result variant from computed project checks.
 - UNRESOLVED: analysis.reentrant_corner_result: Select the result variant from computed project checks.
-- UNRESOLVED: table.elements.slab_desc: no resolved etabs_api source value was found in the available ETABS exports
-- UNRESOLVED: seismic.elastic_site_spectra_c: no resolved computed source value was found in the available ETABS exports
-- UNRESOLVED: seismic.elastic_site_spectra_cs: no resolved computed source value was found in the available ETABS exports
-- UNRESOLVED: loads.slab_dead_load: no resolved computed source value was found in the available ETABS exports
-- UNRESOLVED: table.elements.foundation_desc: no resolved computed source value was found in the available ETABS exports
 - UNRESOLVED: table.design.beam_effective_span: no resolved computed source value was found in the available ETABS exports
 - UNRESOLVED: table.design.beam_overall_depth: no resolved computed source value was found in the available ETABS exports
 - UNRESOLVED: table.design.beam_effective_depth: no resolved computed source value was found in the available ETABS exports

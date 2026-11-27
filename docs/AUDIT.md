@@ -1,6 +1,6 @@
 # Phase 0 — Script and Integration Audit
 
-**Repository:** `/home/ubuntu/Structural-Analysis-Report-Creator`  
+**Repository:** repository root
 **Scope:** Static audit of the seven supplied script-audit results, together with `README.md`, `.gitignore`, and `docs/needs_my_decision.md`. This document records existing behavior; it does not change code or decide engineering questions.
 
 ## Reading this audit

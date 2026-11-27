@@ -34,12 +34,17 @@ except ImportError:  # pragma: no cover - direct execution from another cwd
         EXPECTED_COLUMNS, load_csvs, validate_tables = {}, None, None
 
 try:
-    from generate_sls_drift_report import build_stories, evaluate, tidy_joint_drifts, tidy_story_drifts
+    from generate_sls_drift_report import (DEFAULT_BEAM_LADDER, DEFAULT_COLUMN_LADDER,
+                                           build_stories, evaluate, tidy_joint_drifts,
+                                           tidy_story_drifts, select_ladder_area)
 except ImportError:  # pragma: no cover
     try:
-        from generate_sls_drift_report import build_stories, evaluate, tidy_joint_drifts, tidy_story_drifts
+        from generate_sls_drift_report import (DEFAULT_BEAM_LADDER, DEFAULT_COLUMN_LADDER,
+                                               build_stories, evaluate, tidy_joint_drifts,
+                                               tidy_story_drifts, select_ladder_area)
     except ImportError:
-        build_stories = evaluate = tidy_joint_drifts = tidy_story_drifts = None
+        DEFAULT_BEAM_LADDER = DEFAULT_COLUMN_LADDER = None
+        build_stories = evaluate = tidy_joint_drifts = tidy_story_drifts = select_ladder_area = None
 
 
 class ContextBuilder:
@@ -189,6 +194,7 @@ class ContextBuilder:
         try:
             from src.e2k_parser import E2KParser
             data = E2KParser().parse_file(path)
+            self._e2k_data = data
             seismic_text = path.read_text(encoding="utf-8", errors="replace")
             for direction in ("X", "Y"):
                 match = re.search(rf'SEISMIC\s+"EQ{direction}-ULS".*?ECC\s+([0-9.]+).*?SHEARCOEFF\s+([0-9.]+)\s+HEIGHTEXPONENT\s+([0-9.]+)', seismic_text)
@@ -252,6 +258,27 @@ class ContextBuilder:
             restraints = data.get("restraints", [])
             if restraints:
                 self._set("foundation.point_restraint_cross_check", restraints[0], "e2k")
+                self._set("table.elements.foundation_desc", "Fixed support at Base", f"e2k:{self._repo_path(path)}", "RESTRAINT", "POINTASSIGN rows at Story=Base")
+            frame_rows = []
+            for section in data.get("frame_sections", []):
+                name = section.get("Section") or section.get("Name")
+                if name:
+                    frame_rows.append({"element": "Beam" if "beam" in name.lower() else "Column" if "column" in name.lower() else name,
+                                       "description": name, "grade_of_concrete": section.get("Material") or section.get("MATERIAL"),
+                                       "remarks": f"I2/I3 modifiers {section.get('I2MOD', '')}/{section.get('I3MOD', '')}"})
+            for slab in data.get("slab_properties", []):
+                name = slab.get("Section") or slab.get("Name")
+                if name:
+                    frame_rows.append({"element": "Slab", "description": name, "grade_of_concrete": slab.get("Material") or slab.get("MATERIAL"),
+                                       "remarks": f"thickness {slab.get('Thickness') or slab.get('SLABTHICKNESS')} mm"})
+                    self._set("table.elements.slab_desc", name, f"e2k:{self._repo_path(path)}", "Section/Thickness/Material", "$SLABPROPERTIES")
+                    thickness = float(slab.get("Thickness") or slab.get("SLABTHICKNESS"))
+                    mat_name = slab.get("Material") or slab.get("MATERIAL")
+                    mat = next((m for m in data.get("materials", []) if (m.get("Material") or m.get("MATERIAL")) == mat_name), None)
+                    if mat and mat.get("WEIGHTPERVOLUME"):
+                        self._set("loads.slab_dead_load", thickness * float(mat["WEIGHTPERVOLUME"]) * 1000.0, f"e2k:{self._repo_path(path)}", "SLABTHICKNESS, WEIGHTPERVOLUME", f"$SLABPROPERTIES Section={name}; Material={mat_name}")
+            if frame_rows:
+                self._set("table.elements.sizes_and_materials", frame_rows, f"e2k:{self._repo_path(path)}", "frame_sections/slab_properties/materials", "unique structural section rows")
         except Exception as exc:
             raise RuntimeError(f"error reading .e2k {path}") from exc
 
@@ -385,26 +412,40 @@ class ContextBuilder:
         if not ratio:
             self._unresolved(f"{file}: missing column steel percentage column")
             return
-        vals = [self._number(r, ratio) for r in rows]
-        vals = [v for v in vals if v is not None]
-        if vals: self._set("design.column.max_provided_pct", max(vals) if max(vals) > 1 else max(vals) * 100, f"etabs_csv:{file}", ratio, "all column design rows")
-        if vals:
-            normalized = [v if v > 1 else v * 100 for v in vals]
-            governing = rows[vals.index(max(vals))] if vals else {}
-            section = str(governing.get("DesignSect", ""))
+        if select_ladder_area is None or DEFAULT_COLUMN_LADDER is None:
+            self._unresolved(f"{file}: shared column reinforcement ladder is unavailable")
+            return
+        selected: list[tuple[float, float, float, str]] = []
+        for row in rows:
+            required_pct = self._number(row, ratio)
+            if required_pct is None:
+                continue
+            required_pct = required_pct if required_pct > 1 else required_pct * 100
+            required_pct = max(required_pct, float(self.config.get("limits", {}).get("min_column_steel_pct", 1.0)))
+            section = str(row.get("DesignSect", ""))
             dims = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", section)]
-            width = dims[0] if dims else None
+            if not dims:
+                continue
+            width = dims[0]
             depth = dims[1] if len(dims) > 1 else width
-            self._set("design.column.min_provided_pct", min(normalized), f"etabs_csv:{file}", ratio, "all column design rows")
+            area = width * depth
+            pick = select_ladder_area(required_pct / 100.0 * area, DEFAULT_COLUMN_LADDER)
+            if pick is not None:
+                selected.append((pick[1] / area * 100.0, pick[1], area, section))
+        if selected:
+            max_provided, max_area, max_section_area, max_section = max(selected, key=lambda x: x[0])
+            min_provided = min(item[0] for item in selected)
+            self._set("design.column.max_provided_pct", max_provided, f"computed: {file}", f"{ratio} + DesignSect + shared ladder", "maximum selected ladder area / gross section area")
+            self._set("design.column.min_provided_pct", min_provided, f"computed: {file}", f"{ratio} + DesignSect + shared ladder", "minimum selected ladder area / gross section area")
             max_limit = float(self.config.get("limits", {}).get("max_column_steel_pct", 4.0)); min_limit = float(self.config.get("limits", {}).get("min_column_steel_pct", 1.0))
             self._set("design.column.max_limit_pct", max_limit, "computed: config/formats.yaml", "limits.max_column_steel_pct", "configured maximum")
             self._set("design.column.min_limit_pct", min_limit, "computed: config/formats.yaml", "limits.min_column_steel_pct", "configured minimum")
-            self._set("design.column.max_status", "Ok" if max(normalized) <= max_limit else "Not Ok", "computed: config/formats.yaml", "status_words", "max column steel check")
-            self._set("design.column.min_status", "Ok" if min(normalized) >= min_limit else "Not Ok", "computed: config/formats.yaml", "status_words", "min column steel check")
-            if width is not None: self._set("design.column.max_section_width_mm", width, f"etabs_csv:{file}", "DesignSect", f"DesignSect={section}")
-            if depth is not None: self._set("design.column.max_section_depth_mm", depth, f"etabs_csv:{file}", "DesignSect", f"DesignSect={section}")
-            if width is not None and depth is not None:
-                self._set("design.column.max_rebar_area_mm2", max(normalized) / 100.0 * width * depth, f"computed: {file}", "RatioRebar + DesignSect", f"governing DesignSect={section}")
+            self._set("design.column.max_status", "Ok" if max_provided <= max_limit else "Not Ok", "computed: config/formats.yaml", "status_words", "max selected column ladder steel check")
+            self._set("design.column.min_status", "Ok" if min_provided >= min_limit else "Not Ok", "computed: config/formats.yaml", "status_words", "min selected column ladder steel check")
+            dims = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", max_section)]
+            self._set("design.column.max_section_width_mm", dims[0], f"etabs_csv:{file}", "DesignSect", f"DesignSect={max_section}")
+            self._set("design.column.max_section_depth_mm", dims[1] if len(dims) > 1 else dims[0], f"etabs_csv:{file}", "DesignSect", f"DesignSect={max_section}")
+            self._set("design.column.max_rebar_area_mm2", max_area, f"computed: {file}", f"{ratio} + DesignSect + shared ladder", f"governing DesignSect={max_section}; selected ladder area")
 
     def _process_beam_design(self, rows: list[dict[str, Any]], file: str) -> None:
         if not rows:
@@ -416,26 +457,41 @@ class ContextBuilder:
                 if value is not None:
                     areas.append(value * 1_000_000 if value < 1 else value)
         if areas:
-            # ETABS design area is m² in this export; dimensions come from the
-            # DesignSect assignment and the effective-depth offset is configured.
-            section = next((str(r.get("DesignSect", "")) for r in rows if "Beam" in str(r.get("DesignSect", ""))), "")
-            dims = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", section)]
-            width = dims[0] if dims else None
-            overall_depth = dims[1] if len(dims) > 1 else None
-            offset = self.formulas.get("beam_design", {}).get("effective_depth_offset_mm")
-            effective_depth = overall_depth - float(offset) if overall_depth is not None and offset is not None else None
-            if width is None or effective_depth is None:
-                self._unresolved(f"{file}: beam effective depth cannot be derived from DesignSect")
+            if select_ladder_area is None or DEFAULT_BEAM_LADDER is None:
+                self._unresolved(f"{file}: shared beam reinforcement ladder is unavailable")
                 return
-            pct = max(areas) / (width * effective_depth) * 100.0
-            self._set("design.beam.max_rebar_area_mm2", max(areas), f"etabs_csv:{file}", "AsTop/AsBot", "maximum over beam rows")
+            selected: list[tuple[float, float, float, str]] = []
+            for row in rows:
+                section = str(row.get("DesignSect", ""))
+                if "hidden" in section.lower():
+                    continue
+                dims = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", section)]
+                if not dims:
+                    continue
+                width = dims[0]; depth = dims[1] if len(dims) > 1 else width
+                gross_area = width * depth
+                for col in ("AsTop", "AsBot"):
+                    value = self._number(row, col)
+                    if value is None:
+                        continue
+                    required = value * 1_000_000 if value < 1 else value
+                    pick = select_ladder_area(required, DEFAULT_BEAM_LADDER)
+                    if pick is not None:
+                        selected.append((pick[1] / gross_area * 100.0, pick[1], gross_area, section))
+            if not selected:
+                self._unresolved(f"{file}: no beam rows could be matched to the shared reinforcement ladder")
+                return
+            pct, provided_area, section_area, section = max(selected, key=lambda x: x[0])
+            min_pct = min(item[0] for item in selected)
+            self._set("design.beam.max_rebar_area_mm2", provided_area, f"computed: {file}", "AsTop/AsBot + DesignSect + shared ladder", "maximum selected ladder area")
+            dims = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", section)]
+            width = dims[0]; depth = dims[1] if len(dims) > 1 else width
             self._set("design.beam.max_section_width_mm", width, f"etabs_csv:{file}", "DesignSect", f"DesignSect={section}")
-            self._set("design.beam.max_section_depth_mm", effective_depth, f"etabs_csv:{file}", "DesignSect", f"DesignSect={section}; effective depth")
-            self._set("design.beam.max_provided_pct", pct, f"etabs_csv:{file}", "AsTop/AsBot + DesignSect", f"maximum area divided by {width:g}x{effective_depth:g} mm effective section")
+            self._set("design.beam.max_section_depth_mm", depth, f"etabs_csv:{file}", "DesignSect", f"DesignSect={section}; gross section depth")
+            self._set("design.beam.max_provided_pct", pct, f"computed: {file}", "AsTop/AsBot + DesignSect + shared ladder", f"maximum selected area / gross {width:g}x{depth:g} mm section")
             max_limit = float(self.config.get("limits", {}).get("max_beam_steel_pct", 2.5)); min_limit = float(self.config.get("limits", {}).get("min_beam_steel_pct", 0.26))
-            min_pct = min(areas) / (width * effective_depth) * 100.0
             self._set("design.beam.max_limit_pct", max_limit, "computed: config/formats.yaml", "limits.max_beam_steel_pct", "configured maximum")
-            self._set("design.beam.min_provided_pct", min_pct, f"etabs_csv:{file}", "AsTop/AsBot", "minimum over beam rows")
+            self._set("design.beam.min_provided_pct", min_pct, f"computed: {file}", "AsTop/AsBot + DesignSect + shared ladder", "minimum selected area / gross section area")
             self._set("design.beam.min_limit_pct", min_limit, "computed: config/formats.yaml", "limits.min_beam_steel_pct", "configured minimum")
             self._set("design.beam.maximum_reinforcement.status", "Ok" if pct <= max_limit else "Not Ok", "computed: config/formats.yaml", "status_words", "maximum beam steel check")
             self._set("design.beam.minimum_reinforcement.status", "Ok" if min_pct >= min_limit else "Not Ok", "computed: config/formats.yaml", "status_words", "minimum beam steel check")
@@ -642,6 +698,8 @@ class ContextBuilder:
                 self._set("seismic.hsc_uls", ch * z * imp / (rmu * omega_u), "computed: config/nbc105_spectrum.yaml + config/seismic_formulas.yaml", "Ch, Z, I, Rmu, Omega_s", "T <= Tc")
                 omega_s = float(self.formulas.get("overstrength", {}).get("moment_resisting", {}).get("serviceability", 1.25))
                 self._set("seismic.hsc_sls", ch * z / omega_s * 0.2, "computed: config/nbc105_spectrum.yaml + config/seismic_formulas.yaml", "Ch, Z, Omega_s", "SLS factor=0.20; T <= Tc")
+                self._set("seismic.elastic_site_spectra_c", ch * z * imp, "computed: config/nbc105_spectrum.yaml + config/seismic_formulas.yaml", "Ch, Z, I", "plateau branch; T <= Tc")
+                self._set("seismic.elastic_site_spectra_cs", ch * z * imp * 0.2, "computed: config/nbc105_spectrum.yaml + config/seismic_formulas.yaml", "Ch, Z, I, serviceability factor", "plateau branch; T <= Tc")
         kt = self.formulas.get("empirical_period", {}).get("Ct")
         if kt is not None:
             self._set("seismic.time_coefficient_kt", float(kt), "computed: config/seismic_formulas.yaml", "empirical_period.Ct", "Ta = kt * H^0.75")
